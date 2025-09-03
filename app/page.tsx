@@ -2,54 +2,47 @@
 
 import { Button } from '../components/ui/button';
 import { MapPin, Users, Settings, HelpCircle } from 'lucide-react';
-import Lottie from 'lottie-react';
-import { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { Header } from '../components/Header';
 import Link from 'next/link';
 
 export default function HomePage() {
-	const [animationData, setAnimationData] = useState<any>(null);
 	const { t } = useLanguage();
-
-	useEffect(() => {
-		(async () => {
-			try {
-				const res = await fetch('https://assets10.lottiefiles.com/packages/lf20_1pxqjqps.json');
-				setAnimationData(await res.json());
-			} catch (e) {}
-		})();
-	}, []);
 
 	return (
 		<main className="container-page flex min-h-dvh flex-col">
-			{/* 使用公共头部组件 */}
-			<Header transparent />
+			{/* 动画区域（全屏背景） */}
+			<section className="relative min-h-dvh isolate">
+				<video
+					src="/earth.mp4"
+					autoPlay
+					loop
+					muted
+					playsInline
+					className="absolute inset-0 -z-10 h-full w-full object-cover"
+				/>
 
-			{/* 动画区域 */}
-			<section className="flex flex-1 items-center justify-center py-2">
-				<div className="w-full max-w-[360px]">
-					{animationData ? (
-						<Lottie animationData={animationData} loop autoplay style={{ width: '100%', height: 'auto' }} />
-					) : (
-						<div className="aspect-square w-full rounded-full bg-card/60 shadow-inner" />
-					)}
+				{/* 顶部导航悬浮在视频上 */}
+				<div className="relative z-10">
+					<Header transparent />
 				</div>
-			</section>
 
-			{/* 标题与按钮 */}
-			<section className="pb-6">
-				<h1 className="mb-5 text-center text-2xl font-bold tracking-tight">Spin. Discover. Connect.</h1>
-				<div className="space-y-3">
-					<Button className="w-full btn-gradient text-white shadow-md" size="lg">
-						{t('buttons.spinToDiscover')}
-					</Button>
-					<Link href="/register">
-						<Button className="w-full" variant="outline" size="lg">
-							{t('buttons.createAccount')}
-						</Button>
-					</Link>
+				{/* 核心文案与按钮悬浮在视频上 */}
+				<div className="relative z-10 flex h-[calc(100dvh-64px)] items-center justify-center px-4">
+					<div className="w-full max-w-md space-y-3 text-center">
+						<h1 className="text-2xl font-bold tracking-tight">Spin. Discover. Connect.</h1>
+						<div className="space-y-3">
+							<Button className="w-full btn-gradient text-white shadow-md" size="lg">
+								{t('buttons.spinToDiscover')}
+							</Button>
+							<Link href="/register">
+								<Button className="w-full" variant="outline" size="lg">
+									{t('buttons.createAccount')}
+								</Button>
+							</Link>
+						</div>
+					</div>
 				</div>
 			</section>
 
