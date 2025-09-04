@@ -21,6 +21,15 @@ export interface Translations {
   };
   auth: {
     createAccount: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    passwordsNotMatch: string;
+    acceptTerms: string;
+    termsOfUse: string;
+    privacyPolicy: string;
+    submit: string;
+    alreadyHaveAccount: string;
   };
   discover: {
     searchPlaceholder: string;
@@ -96,6 +105,15 @@ export const translations: Record<Language, Translations> = {
     },
     auth: {
       createAccount: 'Create a new account',
+      email: 'E-mail',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      passwordsNotMatch: 'Passwords do not match',
+      acceptTerms: 'Read and accept the',
+      termsOfUse: 'terms of use',
+      privacyPolicy: 'Privacy Policy',
+      submit: 'Submit',
+      alreadyHaveAccount: 'I already have an account',
     },
     discover: {
       searchPlaceholder: 'Search places...',
@@ -143,15 +161,15 @@ export const translations: Record<Language, Translations> = {
       },
       links: {
         about: 'About Us',
-        privacy: 'Privacy Policy',
+        privacy: 'PrivacyPolicy',
       },
-      copyright: '© 2025 Spin to Discover',
+      copyright: '©2025 Spin to Discover',
     },
   },
   zh: {
     appName: {
-      title: '旋转',
-      subtitle: '发现',
+      title: 'Spin to',
+      subtitle: 'Discover',
     },
     header: {
       searchPlaceholder: '搜索...',
@@ -169,6 +187,15 @@ export const translations: Record<Language, Translations> = {
     },
     auth: {
       createAccount: '创建新账户',
+      email: '邮箱',
+      password: '密码',
+      confirmPassword: '确认密码',
+      passwordsNotMatch: '密码不匹配',
+      acceptTerms: '阅读并接受',
+      termsOfUse: '使用条款',
+      privacyPolicy: '隐私政策',
+      submit: '提交',
+      alreadyHaveAccount: '我已有账户',
     },
     discover: {
       searchPlaceholder: '搜索地点...',
@@ -218,7 +245,7 @@ export const translations: Record<Language, Translations> = {
         about: '关于我们',
         privacy: '隐私政策',
       },
-      copyright: '© 2025 旋转发现',
+      copyright: '© 2025 Spin to Discover',
     },
   },
 };

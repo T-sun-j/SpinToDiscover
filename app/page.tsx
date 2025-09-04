@@ -3,87 +3,90 @@
 import { Button } from '../components/ui/button';
 import { MapPin, Users, Settings, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 import Link from 'next/link';
 
 export default function HomePage() {
 	const { t } = useLanguage();
 
 	return (
-		<main className="container-page flex min-h-dvh flex-col">
-			{/* 动画区域（全屏背景） */}
-			<section className="relative min-h-dvh isolate">
-				<video
-					src="/earth.mp4"
-					autoPlay
-					loop
-					muted
-					playsInline
-					className="absolute inset-0 -z-10 h-full w-full object-cover"
-				/>
+		<main className="h-screen w-full overflow-hidden">
+			{/* 全屏视频背景 */}
+			<video
+				src="/earth.mp4"
+				autoPlay
+				loop
+				muted
+				playsInline
+				className="absolute inset-0 -z-10 h-full w-full object-cover"
+			/>
 
-				{/* 顶部导航悬浮在视频上 */}
-				<div className="relative z-10">
-					<Header transparent />
-				</div>
+			{/* 顶部导航 */}
+			<div className="relative z-10">
+				<Header transparent showUser />
+			</div>
 
-				{/* 核心文案与按钮悬浮在视频上 */}
-				<div className="relative z-10 flex h-[calc(100dvh-64px)] items-center justify-center px-4">
-					<div className="w-full max-w-md space-y-3 text-center">
-						<h1 className="text-2xl font-bold tracking-tight">Spin. Discover. Connect.</h1>
-						<div className="space-y-3">
-							<Button className="w-full btn-gradient text-white shadow-md" size="lg">
+			{/* 主要内容区域 - 使用flex布局自适应屏幕 */}
+			<div className="relative z-10 flex h-[calc(100vh-64px)] flex-col justify-between px-4">
+				{/* 空白区域 - 占据上半部分 */}
+				<div className="flex-1"></div>
+
+				{/* 核心文案与按钮 - 定位在下半部分 */}
+				<div className="flex items-end justify-center pb-20">
+					<div className="w-full max-w-md space-y-4 text-center">
+						<h1 className="text-2xl font-bold tracking-tight text-white">Spin. Discover. Connect.</h1>
+						<div className="space-y-3 px-18 ">
+							<Button className="w-full btn-gradient text-white shadow-md h-10" size="lg">
 								{t('buttons.spinToDiscover')}
 							</Button>
 							<Link href="/register">
-								<Button className="w-full" variant="outline" size="lg">
+								<Button className="w-full h-10" variant="outline" size="lg">
 									{t('buttons.createAccount')}
 								</Button>
 							</Link>
 						</div>
 					</div>
 				</div>
-			</section>
 
-			{/* 功能导航 */}
-			<section className="pb-6">
-				<h2 className="text-lg font-semibold text-white mb-3 text-center">{t('navigation.quickAccess')}</h2>
-				<div className="grid grid-cols-2 gap-3">
-					<Link href="/discover">
-						<Button variant="outline" className="w-full h-16 flex-col gap-2" size="lg">
-							<MapPin className="h-5 w-5" />
-							<span className="text-sm">{t('navigation.discover')}</span>
-						</Button>
-					</Link>
-					<Link href="/community">
-						<Button variant="outline" className="w-full h-16 flex-col gap-2" size="lg">
-							<Users className="h-5 w-5" />
-							<span className="text-sm">{t('navigation.community')}</span>
-						</Button>
-					</Link>
-					<Link href="/settings">
-						<Button variant="outline" className="w-full h-16 flex-col gap-2" size="lg">
-							<Settings className="h-5 w-5" />
-							<span className="text-sm">{t('navigation.settings')}</span>
-						</Button>
-					</Link>
-					<Link href="/help">
-						<Button variant="outline" className="w-full h-16 flex-col gap-2" size="lg">
-							<HelpCircle className="h-5 w-5" />
-							<span className="text-sm">{t('navigation.help')}</span>
-						</Button>
-					</Link>
-				</div>
-			</section>
 
-			{/* 页脚 */}
-			<footer className="mb-3 mt-auto text-center text-xs text-muted-foreground">
-				<LanguageSwitcher />
-				<div className="mt-2">
-					{t('footer.links.about')}  {t('footer.links.privacy')}  {t('footer.copyright')}
+				{/* 页脚固定在底部 */}
+				<div className="relative z-10 mt-auto p-2">
+					<Footer />
 				</div>
-			</footer>
+				{/* 功能导航 - 底部区域 */}
+				{/* <div className="pb-4">
+					<h2 className="text-lg font-semibold text-white mb-3 text-center">{t('navigation.quickAccess')}</h2>
+					<div className="grid grid-cols-2 gap-3">
+						<Link href="/discover">
+							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
+								<MapPin className="h-4 w-4" />
+								<span className="text-xs">{t('navigation.discover')}</span>
+							</Button>
+						</Link>
+						<Link href="/community">
+							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
+								<Users className="h-4 w-4" />
+								<span className="text-xs">{t('navigation.community')}</span>
+							</Button>
+						</Link>
+						<Link href="/settings">
+							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
+								<Settings className="h-4 w-4" />
+								<span className="text-xs">{t('navigation.settings')}</span>
+							</Button>
+						</Link>
+						<Link href="/help">
+							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
+								<HelpCircle className="h-4 w-4" />
+								<span className="text-xs">{t('navigation.help')}</span>
+							</Button>
+						</Link>
+					</div>
+				</div> */}
+			</div>
+
 		</main>
+
 	);
 }

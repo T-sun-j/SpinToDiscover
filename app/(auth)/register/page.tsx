@@ -3,8 +3,8 @@
 import { Button } from '../../../components/ui/button';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { LanguageSwitcher } from '../../../components/LanguageSwitcher';
 import { Header } from '../../../components/Header';
+import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -26,28 +26,37 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<main className="container-page flex min-h-dvh flex-col">
+		<div className="min-h-screen flex items-center justify-center bg-white">
+			<main className="container-page flex min-h-[100vh] flex-col">
 			{/* 使用公共头部组件 */}
-			<Header 
-				showBackButton 
+			<Header  
 				backUrl="/"
 				title={t('auth.createAccount')}
-				transparent
+				showLanguage
 			/>
 
+			{/* 页面标题 */}
+			<div className="flex items-center justify-between px-6 py-4">
+				<h1 className="text-xl font-semibold text-[#093966]">{t('auth.createAccount')}</h1>
+				<button className="text-[#093966] hover:text-[#093966]">
+					<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+					</svg>
+				</button>
+			</div>
+
 			{/* 注册表单 */}
-			<form onSubmit={handleSubmit} className="flex-1 space-y-6">
+			<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
 				{/* 邮箱输入 */}
 				<div className="space-y-2">
-					<label className="text-sm font-medium text-white">E-mail</label>
 					<div className="relative">
-						<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 						<input
 							type="email"
 							value={formData.email}
 							onChange={(e) => setFormData({...formData, email: e.target.value})}
-							placeholder="E-mail"
-							className="w-full rounded-lg bg-card/60 px-10 py-3 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+							placeholder={t('auth.email')}
+							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
 					</div>
@@ -55,21 +64,20 @@ export default function RegisterPage() {
 
 				{/* 密码输入 */}
 				<div className="space-y-2">
-					<label className="text-sm font-medium text-white">Password</label>
 					<div className="relative">
-						<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 						<input
 							type={showPassword ? "text" : "password"}
 							value={formData.password}
 							onChange={(e) => setFormData({...formData, password: e.target.value})}
-							placeholder="Password"
-							className="w-full rounded-lg bg-card/60 px-10 py-3 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+							placeholder={t('auth.password')}
+							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
 						<button
 							type="button"
 							onClick={() => setShowPassword(!showPassword)}
-							className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white"
+							className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
 						>
 							{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
 						</button>
@@ -78,21 +86,20 @@ export default function RegisterPage() {
 
 				{/* 确认密码输入 */}
 				<div className="space-y-2">
-					<label className="text-sm font-medium text-white">Confirm Password</label>
 					<div className="relative">
-						<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 						<input
 							type={showConfirmPassword ? "text" : "password"}
 							value={formData.confirmPassword}
 							onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-							placeholder="Confirm Password"
-							className="w-full rounded-lg bg-card/60 px-10 py-3 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/60"
+							placeholder={t('auth.confirmPassword')}
+							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
 						<button
 							type="button"
 							onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-							className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white"
+							className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
 						>
 							{showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
 						</button>
@@ -101,9 +108,9 @@ export default function RegisterPage() {
 
 				{/* 错误信息 */}
 				{formData.password !== formData.confirmPassword && formData.confirmPassword && (
-					<div className="flex items-center gap-2 text-red-400 text-sm">
-						<div className="h-2 w-2 rounded-full bg-red-400"></div>
-						<span>Passwords do not match</span>
+					<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="h-2 w-2 rounded-full bg-red-500"></div>
+						<span>{t('auth.passwordsNotMatch')}</span>
 					</div>
 				)}
 
@@ -114,41 +121,37 @@ export default function RegisterPage() {
 						id="acceptTerms"
 						checked={formData.acceptTerms}
 						onChange={(e) => setFormData({...formData, acceptTerms: e.target.checked})}
-						className="mt-1 h-4 w-4 rounded border-gray-300 bg-card text-primary focus:ring-primary/60"
+						className="mt-1 h-4 w-4 rounded border-gray-300 bg-white text-primary focus:ring-primary/60"
 					/>
-					<label htmlFor="acceptTerms" className="text-sm text-muted-foreground">
-						Read and accept the{' '}
-						<Link href="/terms" className="underline hover:text-white">terms of use</Link>
+					<label htmlFor="acceptTerms" className="text-sm text-gray-600">
+						{t('auth.acceptTerms')}{' '}
+						<Link href="/terms" className="underline hover:text-gray-800">{t('auth.termsOfUse')}</Link>
 						{' '}and{' '}
-						<Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>
+						<Link href="/privacy" className="underline hover:text-gray-800">{t('auth.privacyPolicy')}</Link>
 					</label>
 				</div>
 
 				{/* 提交按钮 */}
 				<Button 
 					type="submit" 
-					className="w-full btn-gradient text-white shadow-md" 
+					className="w-full bg-[#093966] text-white shadow-md rounded-lg" 
 					size="lg"
 					disabled={!formData.acceptTerms}
 				>
-					Submit
+					{t('auth.submit')}
 				</Button>
 
 				{/* 登录链接 */}
 				<div className="text-center">
-					<Link href="/login" className="text-sm text-muted-foreground hover:text-white underline">
-						I already have an account
+					<Link href="/login" className="text-sm text-gray-600 hover:text-gray-800 font-bold ">
+						{t('auth.alreadyHaveAccount')}
 					</Link>
 				</div>
 			</form>
 
-			{/* 页脚 */}
-			<footer className="mt-auto text-center text-xs text-muted-foreground py-4">
-				<LanguageSwitcher />
-				<div className="mt-2">
-					{t('footer.links.about')}  {t('footer.links.privacy')}  {t('footer.copyright')}
-				</div>
-			</footer>
+			{/* 使用公共页脚组件 */}
+			<Footer />
 		</main>
+		</div>
 	);
 }

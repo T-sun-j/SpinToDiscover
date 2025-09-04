@@ -8,27 +8,26 @@ export function LanguageSwitcher() {
   const { language, setLanguage, t } = useLanguage();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 mr-1">
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          "text-xs px-2 py-1 h-auto",
-          language === 'en' ? "text-white" : "text-muted-foreground"
+          "text-xs px-0 py-1 h-auto",
+          language === 'en' ? "text-muted-foreground" : "text-muted-foreground"
         )}
-        onClick={() => setLanguage('en')}
+        // onClick={() => setLanguage('en')}
       >
         {t('footer.language.en')}
       </Button>
-      <span className="text-muted-foreground text-xs">·</span>
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          "text-xs px-2 py-1 h-auto",
-          language === 'zh' ? "text-white" : "text-muted-foreground"
+          "text-xs px-0 py-1 h-auto",
+          language === 'zh' ? "text-muted-foreground" : "text-muted-foreground"
         )}
-        onClick={() => setLanguage('zh')}
+        // onClick={() => setLanguage('zh')}
       >
         {t('footer.language.zh')}
       </Button>
