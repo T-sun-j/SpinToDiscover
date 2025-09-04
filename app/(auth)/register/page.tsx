@@ -35,8 +35,6 @@ export default function RegisterPage() {
 			<main className="container-page flex min-h-[100vh] flex-col">
 			{/* 使用公共头部组件 */}
 			<Header  
-				backUrl="/"
-				title={t('auth.createAccount')}
 				showLanguage
 			/>
 

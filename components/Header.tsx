@@ -11,9 +11,6 @@ interface HeaderProps {
   showSearch?: boolean;
   showLanguage?: boolean;
   showUser?: boolean;
-  backUrl?: string;
-  title?: string;
-  rightAction?: React.ReactNode;
   className?: string;
   transparent?: boolean;
 }
@@ -22,11 +19,8 @@ export function Header({
   showSearch = false,
   showLanguage = false,
   showUser = false,
-  backUrl = '/',
-  title,
-  rightAction,
   className = '',
-  transparent = false
+  transparent = false,
 }: HeaderProps) {
   const { t } = useLanguage();
 

@@ -65,6 +65,12 @@ export interface Translations {
     language: string;
     languageDesc: string;
     version: string;
+    setupTitle?: string;
+    newEmail?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    errorMessage?: string;
+    submit?: string;
   };
   help: {
     welcome: string;
@@ -160,6 +166,12 @@ export const translations: Record<Language, Translations> = {
       language: 'Language',
       languageDesc: 'Choose your preferred language',
       version: 'Version',
+      setupTitle: 'Setup',
+      newEmail: 'New E-mail',
+      newPassword: 'New Passwords',
+      confirmPassword: 'Confirm passwords',
+      errorMessage: 'Error Message',
+      submit: 'Submit',
     },
     help: {
       welcome: 'How can we help you?',
@@ -253,6 +265,12 @@ export const translations: Record<Language, Translations> = {
       language: '语言',
       languageDesc: '选择您偏好的语言',
       version: '版本',
+      setupTitle: '设置',
+      newEmail: '新邮箱',
+      newPassword: '新密码',
+      confirmPassword: '确认密码',
+      errorMessage: '错误信息',
+      submit: '提交',
     },
     help: {
       welcome: '我们如何帮助您？',
