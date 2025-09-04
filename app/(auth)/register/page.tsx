@@ -7,9 +7,11 @@ import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
 	const { t } = useLanguage();
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [formData, setFormData] = useState({
@@ -23,6 +25,9 @@ export default function RegisterPage() {
 		e.preventDefault();
 		// 处理注册逻辑
 		console.log('注册数据:', formData);
+		
+		// 注册成功后跳转到个人化页面
+		router.push('/personalization');
 	};
 
 	return (
@@ -39,7 +44,7 @@ export default function RegisterPage() {
 			<div className="flex items-center justify-between px-6 py-4">
 				<h1 className="text-xl font-semibold text-[#093966]">{t('auth.createAccount')}</h1>
 				<button className="text-[#093966] hover:text-[#093966]">
-					<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
 					</svg>
 				</button>

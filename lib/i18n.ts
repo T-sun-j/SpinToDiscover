@@ -31,6 +31,17 @@ export interface Translations {
     submit: string;
     alreadyHaveAccount: string;
   };
+  personalization: {
+    title: string;
+    avatarUpload: string;
+    clickToUpload: string;
+    nickname: string;
+    nicknamePlaceholder: string;
+    errorMessage: string;
+    submit: string;
+    skip: string;
+    back: string;
+  };
   discover: {
     searchPlaceholder: string;
     mapPlaceholder: string;
@@ -115,6 +126,17 @@ export const translations: Record<Language, Translations> = {
       submit: 'Submit',
       alreadyHaveAccount: 'I already have an account',
     },
+    personalization: {
+      title: 'Personalization',
+      avatarUpload: 'Avatar upload',
+      clickToUpload: 'click to upload',
+      nickname: 'New nick name',
+      nicknamePlaceholder: 'New nick name',
+      errorMessage: 'Error Message',
+      submit: 'Submit',
+      skip: 'Skip',
+      back: 'Back',
+    },
     discover: {
       searchPlaceholder: 'Search places...',
       mapPlaceholder: 'Interactive map will be displayed here',
@@ -196,6 +218,17 @@ export const translations: Record<Language, Translations> = {
       privacyPolicy: '隐私政策',
       submit: '提交',
       alreadyHaveAccount: '我已有账户',
+    },
+    personalization: {
+      title: '个人化',
+      avatarUpload: '头像上传',
+      clickToUpload: '点击上传',
+      nickname: '新昵称',
+      nicknamePlaceholder: '新昵称',
+      errorMessage: '错误信息',
+      submit: '提交',
+      skip: '跳过',
+      back: '返回',
     },
     discover: {
       searchPlaceholder: '搜索地点...',
