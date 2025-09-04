@@ -98,8 +98,6 @@ export default function PersonalizationPage() {
             <main className="container-page flex min-h-[100vh] flex-col">
                 {/* 使用公共头部组件 */}
                 <Header
-                    backUrl="/"
-                    title={t('personalization.title')}
                     showLanguage
                 />
 
@@ -170,7 +168,7 @@ export default function PersonalizationPage() {
                         size="lg"
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? '提交中...' : t('personalization.submit')}
+                        {isSubmitting ? t('personalization.submitting') : t('personalization.submit')}
                     </Button>
 
                     {/* 跳过按钮 */}

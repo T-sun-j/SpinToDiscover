@@ -41,6 +41,7 @@ export interface Translations {
     submit: string;
     skip: string;
     back: string;
+    submitting?: string;
   };
   discover: {
     searchPlaceholder: string;
@@ -142,6 +143,7 @@ export const translations: Record<Language, Translations> = {
       submit: 'Submit',
       skip: 'Skip',
       back: 'Back',
+      submitting: 'Submitting...'
     },
     discover: {
       searchPlaceholder: 'Search places...',
@@ -241,6 +243,7 @@ export const translations: Record<Language, Translations> = {
       submit: '提交',
       skip: '跳过',
       back: '返回',
+      submitting: '提交中...'
     },
     discover: {
       searchPlaceholder: '搜索地点...',
