@@ -73,10 +73,7 @@ export default function ChangePasswordPage() {
 				{/* 使用公共头部组件 */}
 				<Header
 					showLanguage
-					showSearch
 					showUser
-					searchUrl="/discover"
-					userUrl="/login"
 				/>
 
 				{/* 页面标题和返回按钮 */}
