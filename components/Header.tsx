@@ -13,6 +13,7 @@ interface HeaderProps {
   showUser?: boolean;
   className?: string;
   transparent?: boolean;
+  logoLink?: string;
 }
 
 export function Header({
@@ -21,6 +22,7 @@ export function Header({
   showUser = false,
   className = '',
   transparent = false,
+  logoLink = '/',
 }: HeaderProps) {
   const { t } = useLanguage();
 
@@ -28,16 +30,16 @@ export function Header({
     <header className={`flex items-center justify-between py-3 w-full  ${className}`}>
       {/* 左侧：Logo 和语言切换 */}
       <div className="flex items-center gap-3">
-        <Link href="/" className="flex items-center gap-2 ml-4">
+        <Link href={logoLink} className="flex items-center gap-2 ml-4">
           <Image
             src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
             alt="logo"
-            width={72}
+            width={84}
             height={48}
             priority
             className="h-14 w-36"
           />
-        </Link>
+        </Link>  
         {showLanguage ? <LanguageToggle /> : null}
       </div>
 
@@ -48,9 +50,11 @@ export function Header({
         </Button> : null}
 
         {showUser ? (
-          <Button variant="ghost" size="icon" aria-label="account" className="text-foreground">
-            <UserRound className="h-5 w-5" />
-          </Button>
+          <Link href="/login" aria-label="account">
+            <Button variant="ghost" size="icon" className="text-foreground">
+              <UserRound className="h-5 w-5" />
+            </Button>
+          </Link>
         ) : null}
       </div>
     </header>

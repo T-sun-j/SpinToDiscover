@@ -24,7 +24,7 @@ export default function HomePage() {
 
 			{/* 顶部导航 */}
 			<div className="relative z-10">
-				<Header transparent showUser userUrl="/login" />
+				<Header transparent showUser/>
 			</div>
 
 			{/* 主要内容区域 - 使用flex布局自适应屏幕 */}
@@ -36,10 +36,12 @@ export default function HomePage() {
 				<div className="flex items-end justify-center pb-20">
 					<div className="w-full max-w-md space-y-4 text-center">
 						<h1 className="text-2xl font-bold tracking-tight text-white">Spin. Discover. Connect.</h1>
-						<div className="space-y-3 px-18 ">
-							<Button className="w-full btn-gradient text-white shadow-md h-10" size="lg">
-								{t('buttons.spinToDiscover')}
-							</Button>
+						<div className="px-18 flex flex-col gap-4">
+							<Link href="/square">
+								<Button className="w-full btn-gradient text-white shadow-md h-10" size="lg">
+									{t('buttons.spinToDiscover')}
+								</Button>
+							</Link>
 							<Link href="/register">
 								<Button className="w-full h-10" variant="outline" size="lg">
 									{t('buttons.createAccount')}

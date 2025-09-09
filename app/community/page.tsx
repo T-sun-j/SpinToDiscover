@@ -12,14 +12,6 @@ export default function CommunityPage() {
 		<main className="container-page flex min-h-dvh flex-col">
 			{/* 使用公共头部组件 */}
 			<Header 
-				showBackButton 
-				backUrl="/"
-				title={t('navigation.community')}
-				rightAction={
-					<Button variant="ghost" size="icon" aria-label="add friend">
-						<UserPlus className="h-5 w-5" />
-					</Button>
-				}
 			/>
 
 			{/* 内容区域 */}

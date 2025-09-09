@@ -12,15 +12,7 @@ export default function DiscoverPage() {
 		<main className="container-page flex min-h-dvh flex-col">
 			{/* 使用公共头部组件，启用搜索功能 */}
 			<Header 
-				showBackButton 
-				backUrl="/"
-				title={t('navigation.discover')}
-				showSearch
-				rightAction={
-					<Button variant="ghost" size="icon" aria-label="filter">
-						<Filter className="h-5 w-5" />
-					</Button>
-				}
+				
 			/>
 
 			{/* 地图区域 */}

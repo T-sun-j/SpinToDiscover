@@ -34,14 +34,7 @@ export default function HelpPage() {
 		<main className="container-page flex min-h-dvh flex-col">
 			{/* 使用公共头部组件 */}
 			<Header 
-				showBackButton 
-				backUrl="/"
-				title={t('navigation.help')}
-				rightAction={
-					<Button variant="ghost" size="icon" aria-label="help">
-						<HelpCircle className="h-5 w-5" />
-					</Button>
-				}
+				
 			/>
 
 			{/* 帮助内容 */}
