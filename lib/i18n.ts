@@ -129,6 +129,24 @@ export interface Translations {
     quickHelp3: string;
     footer: string;
   };
+  search: {
+    title: string;
+    back: string;
+    searchConditions: {
+      all: string;
+      articles: string;
+      users: string;
+      brands: string;
+    };
+    keywordInput: string;
+    history: string;
+    deleteHistory: string;
+    searchResults: string;
+    users: string;
+    articles: string;
+    noResults: string;
+    searchPlaceholder: string;
+  };
   footer: {
     language: {
       en: string;
@@ -272,6 +290,24 @@ export const translations: Record<Language, Translations> = {
       quickHelp3: 'Join community discussions',
       footer: 'Need more help? Contact our support team',
     },
+    search: {
+      title: 'Search',
+      back: 'Back',
+      searchConditions: {
+        all: 'All',
+        articles: 'Articles',
+        users: 'Users',
+        brands: 'Brands',
+      },
+      keywordInput: 'Enter keywords',
+      history: 'History',
+      deleteHistory: 'Delete search history',
+      searchResults: 'Search Results',
+      users: 'Users',
+      articles: 'Articles',
+      noResults: 'No results found',
+      searchPlaceholder: 'Search...',
+    },
     footer: {
       language: {
         en: 'English (US)',
@@ -412,6 +448,24 @@ export const translations: Record<Language, Translations> = {
       quickHelp2: '点击地图标记查看详情',
       quickHelp3: '加入社区讨论',
       footer: '需要更多帮助？联系我们的支持团队',
+    },
+    search: {
+      title: '搜索',
+      back: '返回',
+      searchConditions: {
+        all: '全部',
+        articles: '文章',
+        users: '用户',
+        brands: '品牌',
+      },
+      keywordInput: '输入关键词',
+      history: '历史记录',
+      deleteHistory: '删除搜索历史',
+      searchResults: '搜索结果',
+      users: '用户',
+      articles: '文章',
+      noResults: '未找到结果',
+      searchPlaceholder: '搜索...',
     },
     footer: {
       language: {

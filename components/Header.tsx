@@ -45,9 +45,13 @@ export function Header({
 
       {/* 右侧：搜索和用户图标 */}
       <div className="flex items-center gap-2">
-        {showSearch ? <Button variant="ghost" size="icon" aria-label="search" className="text-foreground">
-          <Search className="h-5 w-5" />
-        </Button> : null}
+        {showSearch ? (
+          <Link href="/search" aria-label="search">
+            <Button variant="ghost" size="icon" className="text-foreground">
+              <Search className="h-5 w-5" />
+            </Button>
+          </Link>
+        ) : null}
 
         {showUser ? (
           <Link href="/login" aria-label="account">
