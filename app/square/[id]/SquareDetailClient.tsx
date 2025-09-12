@@ -137,7 +137,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 				{/* 标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4 border-b">
-					<h1 className="text-lg font-semibold text-[#093966]">{post.title}</h1>
+					<h1 className="text-lg font-nunito text-[#093966]">{post.title}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#093966] hover:text-[#093966]"
@@ -161,16 +161,16 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								alt="avatar"
 								className="w-8 h-8 rounded-full object-cover bg-gray-300"
 							/>
-							<span className="font-medium text-gray-900">{post.publisher}</span>
+							<span className="font-medium text-gray-900 font-nunito">{post.publisher}</span>
 						</button>
 						<div className="flex items-center gap-1 ml-auto">
 							<MapPin className="h-4 w-4 text-gray-500" />
-							<span className="text-sm text-gray-600">{post.location}</span>
+							<span className="text-sm text-gray-600 font-nunito">{post.location}</span>
 						</div>
 					</div>
 
 					{/* 描述文本 */}
-					<p className="text-gray-700 leading-relaxed text-sm">{post.description}</p>
+					<p className="text-gray-700 leading-relaxed text-sm font-inter">{post.description}</p>
 
 					{/* 视频区域 */}
 					<div className="relative w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
@@ -211,7 +211,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 									className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
 								>
 									<ChevronDown className={`h-5 w-5 transition-transform ${showAllImages ? 'rotate-180' : ''}`} />
-									<span className="text-sm">
+									<span className="text-sm font-inter">
 										{showAllImages ? t('square.collapse') : t('square.showAll')}
 									</span>
 								</button>
@@ -223,74 +223,76 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<div className="space-y-4">
 						{/* 品牌网站 */}
 						<div className="flex items-center gap-3">
-							<Globe className="h-5 w-5 text-gray-500" />
-							<a href={`https://${post.brandWebsite}`} className="text-blue-600 hover:underline">
+							<img src="/img/Icon-website.png" alt="Globe" className="h-6 w-6" />
+							<a href={`https://${post.brandWebsite}`} className="text-[#093966] hover:underline">
 								{post.brandWebsite}
 							</a>
 						</div>
 
 						{/* 营业时间 */}
 						<div className="flex items-start gap-3">
-							<Clock className="h-5 w-5 text-gray-500 mt-0.5" />
+							<img src="/img/Icon-introduction.png" alt="Clock" className="h-6 w-6" />
 							<div className="flex-1">
-								<p className="text-sm text-gray-700">{post.operatingHours}</p>
-								<div className="flex items-center gap-2 mt-2">
-									<div className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-										{post.brandLogo}
+								<p className="text-sm text-gray-700 font-nunito leading-relaxed">{post.operatingHours}</p>
+								<div className="flex items-center gap-2 mt-3">
+									{/* 品牌Logo - 使用实际的Logo图片 */}
+									<div className="flex items-center gap-2">
+										<img 
+											src="/img/band.png" 
+											alt="Loro Piana Logo" 
+											className="h-8 w-auto"
+										/>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						{/* 客服热线 */}
-						<div className="flex items-center gap-3">
-							<Phone className="h-5 w-5 text-gray-500" />
-							<span className="text-sm text-gray-700">{post.customerService}</span>
+						<div className="flex items-center gap-3 ml-8">
+							<span className="text-sm text-gray-700 font-inter">{post.customerService}</span>
 						</div>
 
 						{/* 工作时间 */}
-						<div className="flex items-center gap-3">
-							<Clock className="h-5 w-5 text-gray-500" />
-							<span className="text-sm text-gray-700">{post.workingHours}</span>
+						<div className="flex items-center gap-3 ml-8">
+							<span className="text-sm text-gray-700 font-inter">{post.workingHours}</span>
 						</div>
 
 						{/* 邮箱 */}
-						<div className="flex items-center gap-3">
-							<Mail className="h-5 w-5 text-gray-500" />
-							<span className="text-sm text-gray-700">{post.email}</span>
+						<div className="flex items-center gap-3 ml-8">
+							<span className="text-sm text-gray-700 font-inter">{post.email}</span>
 						</div>
 					</div>
 
 					{/* 互动按钮 */}
-					<div className="flex items-center gap-6 py-4 border-t border-b">
+					<div className="flex items-center justify-center gap-6 py-4 border-t border-b">
 						<button 
 							onClick={handleBookmark}
 							className={`flex items-center gap-2 transition-colors ${isBookmarked ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
 						>
-							<Bookmark className={`h-5 w-5 ${isBookmarked ? 'fill-current' : ''}`} />
-							<span className="text-sm">{bookmarks}</span>
+							<Bookmark className={`h-6 w-6 ${isBookmarked ? 'fill-current' : ''}`} />
+							<span className="text-sm font-nunito">{bookmarks.toLocaleString()}</span>
 						</button>
 						<button 
 							onClick={handleLike}
 							className={`flex items-center gap-2 transition-colors ${isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'}`}
 						>
-							<Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
-							<span className="text-sm">{post.likes},{post.totalLikes}</span>
+							<Heart className={`h-6 w-6 ${isLiked ? 'fill-current' : ''}`} />
+							<span className="text-sm font-nunito">{likes.toLocaleString()}</span>
 						</button>
 						<button 
 							onClick={handleShare}
 							className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
 						>
-							<Share2 className="h-5 w-5" />
-							<span className="text-sm">{t('square.share')}</span>
+							<Share2 className="h-6 w-6" />
+							<span className="text-sm font-nunito">{t('square.share')}</span>
 						</button>
 					</div>
 
 					{/* 评论区域 */}
 					<div className="space-y-4">
 						<div className="flex items-center gap-2">
-							<h3 className="text-lg font-semibold text-gray-900">{t('square.comments')}</h3>
-							<span className="text-sm text-gray-500">({post.comments.length})</span>
+							<h3 className="text-lg font-nunito text-gray-900">{t('square.comments')}</h3>
+							<span className="text-sm text-gray-500 font-nunito">({post.comments.length})</span>
 						</div>
 						
 						{/* 评论列表 */}
@@ -300,14 +302,14 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 									<div className="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"></div>
 									<div className="flex-1">
 										<div className="flex items-center gap-2 mb-1">
-											<span className="font-medium text-gray-900">{comment.author}</span>
+											<span className="font-sm text-gray-900 font-inter">{comment.author}</span>
 										</div>
-										<p className="text-gray-700 mb-2">{comment.content}</p>
+										<p className="text-gray-700 mb-2 font-inter">{comment.content}</p>
 										<button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
-											<MessageCircle className="h-4 w-4" />
-											<span className="text-xs">{t('square.reply')}</span>
+											<MessageCircle className="h-6 w-6" />
+											<span className="text-sm font-inter">{t('square.reply')}</span>
 											{comment.replies > 0 && (
-												<span className="text-xs text-gray-400">({comment.replies})</span>
+												<span className="text-sm text-gray-400 font-inter">({comment.replies})</span>
 											)}
 										</button>
 									</div>

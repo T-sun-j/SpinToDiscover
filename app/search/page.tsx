@@ -81,7 +81,7 @@ export default function SearchPage() {
 
         {/* 页面标题和返回按钮 */}
         <div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#093966]">{t('search.title')}</h1>
+					<h1 className="text-xl font-semibold text-[#093966] font-poppins">{t('search.title')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#093966] hover:text-[#093966]"
@@ -148,7 +148,7 @@ export default function SearchPage() {
         {searchHistory.length > 0 && (
           <div className="px-4 mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-medium text-gray-900">{t('search.history')}</h2>
+              <h2 className="text-base font-medium text-gray-900 font-poppins">{t('search.history')}</h2>
               <Button
                 variant="ghost"
                 size="sm"

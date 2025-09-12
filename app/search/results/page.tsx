@@ -139,7 +139,7 @@ export default function SearchResultsPage() {
         <div className="p-4">
           {/* 页面标题和返回按钮 */}
           <div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#093966]">{t('search.title')}</h1>
+					<h1 className="text-xl font-semibold text-[#093966] font-poppins">{t('search.title')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#093966] hover:text-[#093966]"
@@ -213,7 +213,7 @@ export default function SearchResultsPage() {
               {/* User Results */}
               {userResults.length > 0 && (
                 <div>
-                  <h2 className="text-base font-medium text-gray-900 mb-3">
+                  <h2 className="text-base font-medium text-gray-900 mb-3 font-poppins">
                     {t('search.users')}
                   </h2>
                   <div className="space-y-2">
@@ -242,7 +242,7 @@ export default function SearchResultsPage() {
               {/* Article Results */}
               {articleResults.length > 0 && (
                 <div>
-                  <h2 className="text-base font-medium text-gray-900 mb-3">
+                  <h2 className="text-base font-medium text-gray-900 mb-3 font-poppins">
                     {t('search.articles')}
                   </h2>
                   <div className="space-y-3">

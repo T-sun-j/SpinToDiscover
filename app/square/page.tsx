@@ -122,7 +122,7 @@ export default function SquarePage() {
 					<div className="flex space-x-3">
 						<button
 							onClick={() => setActiveTab('recommend')}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${
+							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -132,7 +132,7 @@ export default function SquarePage() {
 						</button>
 						<button
 							onClick={() => setActiveTab('following')}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${
+							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -142,7 +142,7 @@ export default function SquarePage() {
 						</button>
 						<button
 							onClick={() => setActiveTab('nearby')}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all ${
+							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -184,10 +184,10 @@ export default function SquarePage() {
 									</div>
 
 									{/* 标题 */}
-									<h3 className="font-semibold text-gray-900 mb-2 text-sm">{post.title}</h3>
+									<h3 className=" text-gray-900 mb-2 text-sm font-nunito">{post.title}</h3>
 
 									{/* 描述 */}
-									<p className="text-xs text-gray-600 mb-3 line-clamp-2 leading-relaxed">{post.description}</p>
+									<p className="text-xs text-gray-600 mb-3 line-clamp-2 leading-relaxed font-inter">{post.description}</p>
 
 									{/* 发布者信息和互动按钮 */}
 									<div className="flex items-center justify-between">
@@ -198,22 +198,22 @@ export default function SquarePage() {
 												alt="avatar"
 												className="w-8 h-8 object-cover rounded-full"
 											/>
-											<span className="text-sm text-gray-600">{post.publisher}</span>
+											<span className="text-sm text-gray-600 font-nunito">{post.publisher}</span>
 										</div>
 
 										{/* 互动按钮 */}
 										<div className="flex items-center gap-3">
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Bookmark className="h-4 w-4" />
-												<span className="text-xs">{post.likes}</span>
+												<span className="text-xs font-nunito">{post.likes}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-500">
 												<Heart className="h-4 w-4" />
-												<span className="text-xs">{post.shares}</span>
+												<span className="text-xs font-nunito">{post.shares}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Share2 className="h-4 w-4" />
-												<span className="text-xs">{t('square.share')}</span>
+												<span className="text-xs font-nunito">{t('square.share')}</span>
 											</button>
 										</div>
 									</div>

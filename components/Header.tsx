@@ -48,7 +48,7 @@ export function Header({
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Search className="h-5 w-5" />
+              <Search className="h-7 w-7 text-[#093966]" />
             </Button>
           </Link>
         ) : null}
@@ -56,7 +56,7 @@ export function Header({
         {showUser ? (
           <Link href="/login" aria-label="account">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <UserRound className="h-5 w-5" />
+              <UserRound className="h-7 w-7 text-[#093966]" />
             </Button>
           </Link>
         ) : null}

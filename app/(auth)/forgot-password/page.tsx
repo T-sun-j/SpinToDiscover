@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-white">
-			<main className="container-page flex min-h-[100vh] flex-col">
+			<main className=" flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
 					showLanguage

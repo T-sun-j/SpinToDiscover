@@ -9,7 +9,7 @@ export default function CommunityPage() {
 	const { t } = useLanguage();
 
 	return (
-		<main className="container-page flex min-h-dvh flex-col">
+		<main className=" flex min-h-dvh flex-col">
 			{/* 使用公共头部组件 */}
 			<Header 
 			/>

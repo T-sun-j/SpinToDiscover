@@ -9,6 +9,11 @@ export default {
 	],
 	theme: {
 		extend: {
+			fontFamily: {
+				'poppins': ['var(--font-poppins)'],
+				'inter': ['var(--font-inter)'],
+				'nunito': ['var(--font-nunito)'],
+			},
 			colors: {
 				background: 'hsl(var(--color-background))',
 				foreground: 'hsl(var(--color-foreground))',
