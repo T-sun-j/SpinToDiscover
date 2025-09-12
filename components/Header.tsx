@@ -56,7 +56,7 @@ export function Header({
         {showUser ? (
           <Link href="/login" aria-label="account">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <UserRound className="h-7 w-7 text-[#093966]" />
+              <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#093966]'}`} />
             </Button>
           </Link>
         ) : null}
