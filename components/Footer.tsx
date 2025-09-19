@@ -9,7 +9,7 @@ export function Footer() {
 	const { t } = useLanguage();
 
 	return (
-		<footer className={`mt-auto text-xs text-muted-foreground py-4 w-full font-inter`}>
+		<footer className={`mt-auto text-[11px] text-muted-foreground py-2 px-2 w-full font-inter`}>
 			<div className="flex justify-between items-center w-full">
 				{/* Left side - Language options */}
 				<div className="flex items-center gap-2 font-inter">

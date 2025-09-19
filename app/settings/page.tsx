@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock,ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SettingsPage() {
 	const { t } = useLanguage();
@@ -31,11 +32,9 @@ export default function SettingsPage() {
 			/>
 			{/* 页面标题 */}
 			<div className="flex items-center justify-between px-6 py-4">
-				<h1 className="text-xl font-semibold text-[#093966]">{t('settings.setupTitle')}</h1>
-				<button className="text-[#093966] hover:text-[#093966]">
-					<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-					</svg>
+				<h1 className="text-xl text-[#101729]">{t('settings.setupTitle')}</h1>
+				<button className="text-[#101729] hover:text-[#101729]">
+					<ChevronLeft className="h-7 w-7" />
 				</button>
 			</div>
 
@@ -93,14 +92,16 @@ export default function SettingsPage() {
 					</div>
 				)}
 
-				{/* 提交按钮 */}
-				<Button
-					type="submit"
-					className="w-full bg-[#093966] text-white shadow-md rounded-lg"
-					size="lg"
-				>
-					{t('settings.submit')}
-				</Button>
+				{/* 提交按钮，点击后跳转到个人中心页 */}
+				<Link href="/personal-center" passHref>
+					<Button
+						type="button"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						size="lg"
+					>
+						{t('settings.submit')}
+					</Button>
+				</Link>
 			</form>
 		</main>
 	);

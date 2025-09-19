@@ -103,10 +103,10 @@ export default function PersonalizationPage() {
 
                 {/* 页面标题和返回按钮 */}
                 <div className="flex items-center justify-between px-6 py-4">
-                    <h1 className="text-xl font-semibold text-[#093966]">{t('personalization.title')}</h1>
+                    <h1 className="text-xl font-semibold text-[#101729]">{t('personalization.title')}</h1>
                     <button
                         onClick={handleBack}
-                        className="text-[#093966] hover:text-[#093966]"
+                        className="text-[#101729] hover:text-[#101729]"
                     >
                         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -119,7 +119,7 @@ export default function PersonalizationPage() {
                     {/* 头像上传区域 */}
                     <div className="flex flex-col items-center space-y-4">
                         <div
-                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 hover:border-[#093966] transition-colors"
+                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 hover:border-[#101729] transition-colors"
                             onClick={() => fileInputRef.current?.click()}
                         >
                             {formData.avatarPreview ? (
@@ -149,7 +149,7 @@ export default function PersonalizationPage() {
                             value={formData.nickname}
                             onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             placeholder={t('personalization.nicknamePlaceholder')}
-                            className="w-full rounded-lg bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#093966]/60"
+                            className="w-full rounded-lg bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#101729]/60"
                         />
                     </div>
 
@@ -164,7 +164,7 @@ export default function PersonalizationPage() {
                     {/* 提交按钮 */}
                     <Button
                         type="submit"
-                        className="w-full bg-[#093966] text-white shadow-md rounded-lg"
+                        className="w-full bg-[#101729] text-white shadow-md rounded-lg"
                         size="lg"
                         disabled={isSubmitting}
                     >

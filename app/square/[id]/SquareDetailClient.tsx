@@ -137,10 +137,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 				{/* 标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4 border-b">
-					<h1 className="text-lg font-nunito text-[#093966]">{post.title}</h1>
+					<h1 className="text-lg font-nunito text-[#101729]">{post.title}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#093966] hover:text-[#093966]"
+						className="text-[#101729] hover:text-[#101729]"
 					>
 						<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -224,7 +224,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						{/* 品牌网站 */}
 						<div className="flex items-center gap-3">
 							<img src="/img/Icon-website.png" alt="Globe" className="h-6 w-6" />
-							<a href={`https://${post.brandWebsite}`} className="text-[#093966] hover:underline">
+							<a href={`https://${post.brandWebsite}`} className="text-[#101729] hover:underline">
 								{post.brandWebsite}
 							</a>
 						</div>

@@ -115,6 +115,7 @@ export default function SquarePage() {
 					showLanguage
 					showSearch
 					showUser
+					userLink="/personal-center"
 				/>
 
 				{/* 排序标签 */}

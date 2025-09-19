@@ -40,8 +40,8 @@ export default function RegisterPage() {
 
 				{/* 页面标题 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#093966]">{t('auth.createAccount')}</h1>
-					<button className="text-[#093966] hover:text-[#093966]">
+					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.createAccount')}</h1>
+					<button className="text-[#101729] hover:text-[#101729]">
 						<Link href="/">
 							<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -139,7 +139,7 @@ export default function RegisterPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#093966] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
 						size="lg"
 						disabled={!formData.acceptTerms}
 					>

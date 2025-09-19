@@ -14,6 +14,7 @@ interface HeaderProps {
   className?: string;
   transparent?: boolean;
   logoLink?: string;
+  userLink?: string;
 }
 
 export function Header({
@@ -23,6 +24,7 @@ export function Header({
   className = '',
   transparent = false,
   logoLink = '/',
+  userLink = '/login',
 }: HeaderProps) {
   const { t } = useLanguage();
 
@@ -48,15 +50,15 @@ export function Header({
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Search className="h-7 w-7 text-[#093966]" />
+              <Search className="h-7 w-7 text-[#101729]" />
             </Button>
           </Link>
         ) : null}
 
         {showUser ? (
-          <Link href="/login" aria-label="account">
+          <Link href={userLink} aria-label="account">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#093966]'}`} />
+              <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
             </Button>
           </Link>
         ) : null}

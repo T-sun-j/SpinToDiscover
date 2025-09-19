@@ -158,6 +158,56 @@ export interface Translations {
     };
     copyright: string;
   };
+  personalCenter: {
+    title: string;
+    back: string;
+    profile: {
+      edit: string;
+      settings: string;
+    };
+    menu: {
+      myPage: string;
+      followed: string;
+      history: string;
+      favorites: string;
+    };
+    post: {
+      button: string;
+      notifications: string;
+    };
+  };
+  personalPage: {
+    title: string;
+    brief: string;
+    customerServiceHotline: string;
+    workingHours: string;
+    email: string;
+    myPosts: string;
+    follow: string;
+    followed: string;
+    editInfo: string;
+    delete: string;
+    hide: string;
+  };
+  releasePage: {
+    title: string;
+    fieldTitle: string;
+    fieldContent: string;
+    location: string;
+    advantageInfo: string;
+    fillBrandInfo: string;
+    brandProductionName: string;
+    briefDescription: string;
+    errorMessage: string;
+    allowingComments: string;
+    releaseButton: string;
+  };
+  followedPage: {
+    title: string;
+    following: string;
+    follower: string;
+    username: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -315,9 +365,59 @@ export const translations: Record<Language, Translations> = {
       },
       links: {
         about: 'About Us',
-        privacy: 'PrivacyPolicy',
+        privacy: 'Privacy Policy',
       },
-      copyright: '©2025 Spin to Discover',
+      copyright: '© 2025 Spin to Discover',
+    },
+    personalCenter: {
+      title: 'User center',
+      back: 'Back',
+      profile: {
+        edit: 'Edit',
+        settings: 'Settings',
+      },
+      menu: {
+        myPage: 'My page',
+        followed: 'Followed & Following',
+        history: 'Browsing History',
+        favorites: 'Favorite',
+      },
+      post: {
+        button: 'POST',
+        notifications: 'Notifications',
+      },
+    },
+    personalPage: {
+      title: 'Personal Page',
+      brief: 'Brief description of the personal page',
+      customerServiceHotline: 'Customer Service Hotline',
+      workingHours: 'Working Hours',
+      email: 'Email',
+      myPosts: 'My Posts',
+      follow: 'Follow',
+      followed: 'Followed',
+      editInfo: 'Edit Info',
+      delete: 'Delete',
+      hide: 'Hide',
+    },
+    releasePage: {
+      title: 'Release',
+      fieldTitle: 'Field Title',
+      fieldContent: 'Field Content',
+      location: 'Location',
+      advantageInfo: 'Advantage Info.',
+      fillBrandInfo: 'Fill Brand Info',
+      brandProductionName: 'Brand Production Name',
+      briefDescription: 'Brief Description',
+      errorMessage: 'Error Message',
+      allowingComments: 'Allowing Comments',
+      releaseButton: 'Release',
+    },
+    followedPage: {
+      title: 'Followed Page',
+      following: 'Following',
+      follower: 'Follower',
+      username: 'Username',
     },
   },
   zh: {
@@ -477,6 +577,56 @@ export const translations: Record<Language, Translations> = {
         privacy: '隐私政策',
       },
       copyright: '© 2025 Spin to Discover',
+    },
+    personalCenter: {
+      title: '个人中心',
+      back: '返回',
+      profile: {
+        edit: '修改',
+        settings: '设置',
+      },
+      menu: {
+        myPage: '我的页面',
+        followed: '关注与被关注',
+        history: '浏览记录',
+        favorites: '我的收藏',
+      },
+      post: {
+        button: '发布',
+        notifications: '通知',
+      },
+    },
+    personalPage: {
+      title: '个人页面',
+      brief: '个人页面的简要描述',
+      customerServiceHotline: '客服热线',
+      workingHours: '工作时间',
+      email: '邮箱',
+      myPosts: '我的帖子',
+      follow: '关注',
+      followed: '已关注',
+      editInfo: '编辑信息',
+      delete: '删除',
+      hide: '隐藏',
+    },
+    releasePage: {
+      title: '发布页面',
+      fieldTitle: '字段标题',
+      fieldContent: '字段内容',
+      location: '位置',
+      advantageInfo: '优势信息',
+      fillBrandInfo: '填写品牌信息',
+      brandProductionName: '品牌生产名称',
+      briefDescription: '简要描述',
+      errorMessage: '错误信息',
+      allowingComments: '允许评论',
+      releaseButton: '发布按钮',
+    },
+    followedPage: {
+      title: '关注页面',
+      following: '关注',
+      follower: '粉丝',
+      username: '用户名',
     },
   },
 };

@@ -5,7 +5,7 @@
 ### 搜索页面应用示例
 ```tsx
 // 页面标题 - 使用 Poppins
-<h1 className="text-xl font-semibold text-[#093966] font-poppins">
+<h1 className="text-xl font-semibold text-[#101729] font-poppins">
   {t('search.title')}
 </h1>
 
