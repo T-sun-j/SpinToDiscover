@@ -61,7 +61,7 @@ export default function FollowedPage() {
       {/* User List */}
       <div className="flex-1 px-4 py-4 space-y-4">
         {users.map((user) => (
-          <Link href={`/personal/${user.id}`} key={user.id}>
+          <Link href={`/personal`} key={user.id}>
             <div className="flex items-center gap-4 p-2 hover:bg-gray-50 rounded-lg">
               <Image
                 src={user.avatar}

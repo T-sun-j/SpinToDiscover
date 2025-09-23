@@ -1,8 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/followed/page": "app/followed/page.js",
-  "/personal-center/page": "app/personal-center/page.js",
-  "/square/page": "app/square/page.js",
-  "/personal/page": "app/personal/page.js",
+  "/favorite/page": "app/favorite/page.js",
+  "/privacy/page": "app/privacy/page.js",
+  "/about/page": "app/about/page.js",
   "/release/page": "app/release/page.js"
 }

@@ -208,6 +208,65 @@ export interface Translations {
     follower: string;
     username: string;
   };
+  favoritePage: {
+    title: string;
+    favoriting: string;
+    follower: string;
+    username: string;
+    back: string;
+    favoriteItem: string;
+    removeFromFavorites: string;
+    publisher: string;
+    emptyTitle: string;
+    emptyDescription: string;
+  };
+  about: {
+    title: string;
+    back: string;
+    introduction: string;
+    belief: string;
+    missionTitle: string;
+    mission: string;
+    valuesTitle: string;
+    values: string;
+    experience: string;
+    motto: string;
+    protectTitle: string;
+    protectDescription: string;
+  };
+  privacy: {
+    title: string;
+    back: string;
+    purposeTitle: string;
+    purpose: string;
+    designTitle: string;
+    design: string;
+    findingsTitle: string;
+    findings: string;
+    trustTitle: string;
+    trust: string;
+    securityTitle: string;
+    security: string;
+    dataCollectionTitle: string;
+    dataCollection: string;
+    dataUsageTitle: string;
+    dataUsage: string;
+    contactTitle: string;
+    contact: string;
+  };
+  protect: {
+    title: string;
+    back: string;
+    mainTitle: string;
+    craftImageAlt: string;
+    artisanImageAlt: string;
+    introduction: string;
+    mission: string;
+    impact: string;
+    donateLink: string;
+    transparencyTitle: string;
+    transparency: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -419,6 +478,65 @@ export const translations: Record<Language, Translations> = {
       follower: 'Follower',
       username: 'Username',
     },
+    favoritePage: {
+      title: 'Favorite',
+      favoriting: 'Following',
+      follower: 'Follower',
+      username: 'Username',
+      back: 'Back',
+      favoriteItem: 'Favorite item',
+      removeFromFavorites: 'Remove from favorites',
+      publisher: 'Publisher',
+      emptyTitle: 'No favorites yet',
+      emptyDescription: 'Start exploring and save your favorite places and content to see them here.',
+    },
+    about: {
+      title: 'About Us',
+      back: 'Back',
+      introduction: 'Spin to Discover is not just a platform - it is a stage for meaningful connections.',
+      belief: 'We believe that every brand and every artist has a story, a vision, and a spark of soul that deserves to be seen.',
+      missionTitle: 'Our Mission',
+      mission: 'Our mission is to bring together independent creators, artisans, designers, and artists from around the world, curating a global map of light - where every point you see is a story waiting to be discovered.',
+      valuesTitle: 'Our Values',
+      values: 'Here, we value originality, craftsmanship, creativity, and authenticity. Every brand and artist that joins Spin to Discover is chosen for their unique identity, meaningful vision, and cultural significance.',
+      experience: 'By spinning the globe, you are not just exploring products or artworks - you are discovering stories, dreams, and the people behind them.',
+      motto: 'Spin. Discover. Connect. Because the world shines brighter when we share our light.',
+      protectTitle: 'Together, let\'s protect what truly matters',
+      protectDescription: 'Spin to Protect is the charitable initiative of Spin to Discover',
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      back: 'Back',
+      purposeTitle: 'Purpose',
+      purpose: 'The purpose of this paper is to analyze the effect of privacy and perceived security on the level of trust shown by the consumer in the internet. It also aims to reveal and test the close relationship between the trust in a web site and the degree of loyalty to it.',
+      designTitle: 'Design/Methodology/Approach',
+      design: 'This study employs a comprehensive approach to examine the relationship between privacy, security, trust, and user loyalty in online platforms.',
+      findingsTitle: 'Findings',
+      findings: 'The research reveals that an individual\'s loyalty to a web site is closely linked to the levels of trust. Trust affects intention to buy, effective purchasing behavior, preference, cost and frequency of visits, and profitability.',
+      trustTitle: 'Trust and Loyalty',
+      trust: 'Trust in the internet is particularly influenced by the security perceived by consumers. When users feel secure about their personal information, they are more likely to engage with the platform and develop loyalty.',
+      securityTitle: 'Security Measures',
+      security: 'We implement industry-standard security measures to protect your personal information, including encryption, secure data transmission, and regular security audits.',
+      dataCollectionTitle: 'Data Collection',
+      dataCollection: 'We collect only the information necessary to provide our services and improve your experience. This includes account information, usage data, and preferences you choose to share.',
+      dataUsageTitle: 'Data Usage',
+      dataUsage: 'Your data is used to personalize your experience, provide customer support, and improve our services. We never sell your personal information to third parties.',
+      contactTitle: 'Contact Us',
+      contact: 'If you have any questions about this Privacy Policy, please contact us at privacy@spintodiscover.com',
+    },
+    protect: {
+      title: 'Spin to Protect',
+      back: 'Back',
+      mainTitle: 'Together, let\'s protect what truly matters',
+      craftImageAlt: 'Hands working on traditional craft',
+      artisanImageAlt: 'Artisan woman in her workshop',
+      introduction: 'Spin to Protect is the charitable initiative of Spin to Discover, inviting you to contribute and transform your brand\'s light into real-world impact.',
+      mission: 'All donations will support disaster relief, education, and essential aid for underserved communities through trusted global partners. We commit to 100% transparency—every donation will be tracked and reported, and you may choose your preferred cause or allow the platform to allocate it where it\'s most needed.',
+      impact: 'No matter the amount, your contribution is a beam of hope that brings light to the world\'s darkest corners.',
+      donateLink: 'How to donate?',
+      transparencyTitle: 'Transparency Commitment',
+      transparency: 'We provide detailed reports on how every donation is used, ensuring complete transparency in our charitable activities.',
+    },
   },
   zh: {
     appName: {
@@ -627,6 +745,65 @@ export const translations: Record<Language, Translations> = {
       following: '关注',
       follower: '粉丝',
       username: '用户名',
+    },
+    favoritePage: {
+      title: '我的收藏',
+      favoriting: '关注',
+      follower: '粉丝',
+      username: '用户名',
+      back: '返回',
+      favoriteItem: '收藏项目',
+      removeFromFavorites: '从收藏中移除',
+      publisher: '发布者',
+      emptyTitle: '暂无收藏',
+      emptyDescription: '开始探索并保存您喜欢的地点和内容，它们将显示在这里。',
+    },
+    about: {
+      title: '关于我们',
+      back: '返回',
+      introduction: 'Spin to Discover 不仅仅是一个平台——它是有意义连接的舞台。',
+      belief: '我们相信每个品牌和每位艺术家都有自己的故事、愿景和值得被看见的灵魂火花。',
+      missionTitle: '我们的使命',
+      mission: '我们的使命是将来自世界各地的独立创作者、工匠、设计师和艺术家聚集在一起，策划一个全球光明地图——您看到的每个点都是一个等待被发现的故事。',
+      valuesTitle: '我们的价值观',
+      values: '在这里，我们重视原创性、工艺、创造力和真实性。每个加入 Spin to Discover 的品牌和艺术家都因其独特的身份、有意义的愿景和文化意义而被选中。',
+      experience: '通过旋转地球仪，您不仅仅是在探索产品或艺术品——您正在发现故事、梦想和背后的人们。',
+      motto: '旋转。发现。连接。因为当我们分享光明时，世界会更加明亮。',
+      protectTitle: '让我们一起保护真正重要的东西',
+      protectDescription: 'Spin to Protect 是 Spin to Discover 的慈善倡议',
+    },
+    privacy: {
+      title: '隐私政策',
+      back: '返回',
+      purposeTitle: '目的',
+      purpose: '本文的目的是分析隐私和感知安全对消费者在互联网上表现出的信任水平的影响。它还旨在揭示和测试网站信任度与忠诚度之间的密切关系。',
+      designTitle: '设计/方法/方法',
+      design: '本研究采用综合方法来检验在线平台中隐私、安全、信任和用户忠诚度之间的关系。',
+      findingsTitle: '发现',
+      findings: '研究显示，个人对网站的忠诚度与信任水平密切相关。信任影响购买意图、有效购买行为、偏好、访问成本和频率以及盈利能力。',
+      trustTitle: '信任与忠诚',
+      trust: '对互联网的信任特别受到消费者感知安全的影响。当用户对其个人信息感到安全时，他们更有可能与平台互动并发展忠诚度。',
+      securityTitle: '安全措施',
+      security: '我们实施行业标准的安全措施来保护您的个人信息，包括加密、安全数据传输和定期安全审计。',
+      dataCollectionTitle: '数据收集',
+      dataCollection: '我们只收集提供服务和改善您体验所需的信息。这包括账户信息、使用数据和您选择分享的偏好。',
+      dataUsageTitle: '数据使用',
+      dataUsage: '您的数据用于个性化您的体验、提供客户支持和改善我们的服务。我们从不向第三方出售您的个人信息。',
+      contactTitle: '联系我们',
+      contact: '如果您对此隐私政策有任何疑问，请通过 privacy@spintodiscover.com 联系我们',
+    },
+    protect: {
+      title: 'Spin to Protect',
+      back: '返回',
+      mainTitle: '让我们一起保护真正重要的东西',
+      craftImageAlt: '制作传统工艺品的双手',
+      artisanImageAlt: '工作坊中的女工匠',
+      introduction: 'Spin to Protect 是 Spin to Discover 的慈善倡议，邀请您贡献并将您品牌的光明转化为现实世界的影响。',
+      mission: '所有捐款将通过可信的全球合作伙伴支持救灾、教育和为服务不足社区提供基本援助。我们承诺100%透明度——每笔捐款都将被跟踪和报告，您可以选择您偏好的事业或让平台将其分配到最需要的地方。',
+      impact: '无论金额多少，您的贡献都是为世界最黑暗角落带来光明的希望之光。',
+      donateLink: '如何捐款？',
+      transparencyTitle: '透明度承诺',
+      transparency: '我们提供每笔捐款使用情况的详细报告，确保我们慈善活动的完全透明度。',
     },
   },
 };

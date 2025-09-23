@@ -99,7 +99,7 @@ export default function PersonalCenterPage() {
                         </Button>
                     </Link>
                     <div className="h-2" />
-                    <Link href="/favorites">
+                    <Link href="/favorite">
                         <Button
                             variant="ghost"
                             className="w-full justify-start bg-[#101729] text-white h-14 rounded-xl font-nunito text-lg font-bold"

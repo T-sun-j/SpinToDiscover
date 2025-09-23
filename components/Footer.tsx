@@ -2,8 +2,7 @@
 
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
-
-
+import Link from 'next/link';
 
 export function Footer() {
 	const { t } = useLanguage();
@@ -18,7 +17,19 @@ export function Footer() {
 				
 				{/* Right side - Links and copyright */}
 				<div className="flex items-center gap-2">
-					<span className="whitespace-nowrap font-inter">{t('footer.links.about')} {t('footer.links.privacy')} {t('footer.copyright')}</span>
+					<Link 
+						href="/about" 
+						className="text-[#101729]/60 hover:text-[#101729] transition-colors font-inter"
+					>
+						{t('footer.links.about')}
+					</Link>
+					<Link 
+						href="/privacy" 
+						className="text-[#101729]/60 hover:text-[#101729] transition-colors font-inter"
+					>
+						{t('footer.links.privacy')}
+					</Link>
+					<span className="text-[#101729]/60 font-inter">{t('footer.copyright')}</span>
 				</div>
 			</div>
 		</footer>
