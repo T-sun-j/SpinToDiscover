@@ -54,7 +54,7 @@ export default function HomePage() {
 
 
 				{/* 页脚固定在底部 */}
-				<div className="relative z-10 mt-auto p-2">
+				<div className="relative z-10 mt-auto py-2">
 					<Footer />
 				</div>
 				{/* 功能导航 - 底部区域 */}

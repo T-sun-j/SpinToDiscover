@@ -16,20 +16,20 @@ export function Footer() {
 				</div>
 				
 				{/* Right side - Links and copyright */}
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 whitespace-nowrap">
 					<Link 
 						href="/about" 
-						className="text-[#101729]/60 hover:text-[#101729] transition-colors font-inter"
+						className="text-muted-foreground font-inter"
 					>
 						{t('footer.links.about')}
 					</Link>
 					<Link 
 						href="/privacy" 
-						className="text-[#101729]/60 hover:text-[#101729] transition-colors font-inter"
+						className="text-muted-foreground font-inter"
 					>
 						{t('footer.links.privacy')}
 					</Link>
-					<span className="text-[#101729]/60 font-inter">{t('footer.copyright')}</span>
+					<span className="text-muted-foreground font-inter">{t('footer.copyright')}</span>
 				</div>
 			</div>
 		</footer>
