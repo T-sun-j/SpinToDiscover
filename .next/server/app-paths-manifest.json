@@ -1,6 +1,11 @@
 {
-  "/favorite/page": "app/favorite/page.js",
-  "/privacy/page": "app/privacy/page.js",
-  "/about/page": "app/about/page.js",
-  "/release/page": "app/release/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
+  "/(auth)/personalization/page": "app/(auth)/personalization/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/personal-center/page": "app/personal-center/page.js",
+  "/page": "app/page.js",
+  "/square/page": "app/square/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/personal/page": "app/personal/page.js"
 }

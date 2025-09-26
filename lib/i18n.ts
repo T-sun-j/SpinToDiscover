@@ -41,6 +41,35 @@ export interface Translations {
     changePasswordTitle: string;
     newPassword: string;
     confirmNewPassword: string;
+    resetPasswordTitle: string;
+    resetPasswordSuccess: string;
+    resetPasswordError: string;
+    invalidResetLink: string;
+    resetPasswordSubmitting: string;
+    resetPasswordSuccessMessage: string;
+    resetPasswordRedirecting: string;
+    forgotPasswordSuccessMessage: string;
+    forgotPasswordErrorMessage: string;
+    forgotPasswordSubmitting: string;
+    forgotPasswordSuccess: string;
+    loginErrorMessage: string;
+    loginError: string;
+    loginSubmitting: string;
+    registerErrorMessage: string;
+    registerError: string;
+    registerSubmitting: string;
+    passwordMismatch: string;
+    termsAnd: string;
+    locationPermissionDenied: string;
+    locationError: string;
+    gettingLocation: string;
+    defaultLocation: string;
+    getUserInfoError: string;
+    updateUserInfoError: string;
+    updateUserInfoSuccess: string;
+    avatarUploadError: string;
+    fileSizeError: string;
+    fileTypeError: string;
   };
   personalization: {
     title: string;
@@ -311,6 +340,35 @@ export const translations: Record<Language, Translations> = {
       changePasswordTitle: 'Change passwords',
       newPassword: 'New Passwords',
       confirmNewPassword: 'Confirm passwords',
+      resetPasswordTitle: 'Reset Password',
+      resetPasswordSuccess: 'Password reset successfully!',
+      resetPasswordError: 'Failed to reset password, please try again',
+      invalidResetLink: 'Reset password link is invalid or expired',
+      resetPasswordSubmitting: 'Resetting...',
+      resetPasswordSuccessMessage: 'Password reset successfully! Redirecting to login page...',
+      resetPasswordRedirecting: 'Redirecting...',
+      forgotPasswordSuccessMessage: 'Reset email sent, please check your inbox',
+      forgotPasswordErrorMessage: 'Failed to send reset email, please try again',
+      forgotPasswordSubmitting: 'Sending...',
+      forgotPasswordSuccess: 'Email sent',
+      loginErrorMessage: 'Invalid email format',
+      loginError: 'Login failed, please try again',
+      loginSubmitting: 'Logging in...',
+      registerErrorMessage: 'Registration failed, please try again',
+      registerError: 'An error occurred during registration',
+      registerSubmitting: 'Registering...',
+      passwordMismatch: 'Passwords do not match',
+      termsAnd: 'and',
+      locationPermissionDenied: 'Location permission denied, using default location',
+      locationError: 'Failed to get location, using default location',
+      gettingLocation: 'Getting location...',
+      defaultLocation: 'Default Location',
+      getUserInfoError: 'Failed to get user information',
+      updateUserInfoError: 'Failed to update user information',
+      updateUserInfoSuccess: 'User information updated successfully',
+      avatarUploadError: 'Avatar upload failed',
+      fileSizeError: 'File size too large (max 5MB)',
+      fileTypeError: 'Invalid file type (only images allowed)',
     },
     personalization: {
       title: 'Personalization',
@@ -579,6 +637,35 @@ export const translations: Record<Language, Translations> = {
       changePasswordTitle: '修改密码',
       newPassword: '新密码',
       confirmNewPassword: '确认密码',
+      resetPasswordTitle: '重置密码',
+      resetPasswordSuccess: '密码重置成功！',
+      resetPasswordError: '重置密码失败，请重试',
+      invalidResetLink: '重置密码链接无效或已过期',
+      resetPasswordSubmitting: '重置中...',
+      resetPasswordSuccessMessage: '密码重置成功！正在跳转到登录页面...',
+      resetPasswordRedirecting: '跳转中...',
+      forgotPasswordSuccessMessage: '重置邮件已发送，请检查您的邮箱',
+      forgotPasswordErrorMessage: '发送重置邮件失败，请重试',
+      forgotPasswordSubmitting: '发送中...',
+      forgotPasswordSuccess: '邮件已发送',
+      loginErrorMessage: '邮箱格式无效',
+      loginError: '登录失败，请重试',
+      loginSubmitting: '登录中...',
+      registerErrorMessage: '注册失败，请重试',
+      registerError: '注册过程中发生错误',
+      registerSubmitting: '注册中...',
+      passwordMismatch: '密码不匹配',
+      termsAnd: '和',
+      locationPermissionDenied: '位置权限被拒绝，使用默认位置',
+      locationError: '获取位置失败，使用默认位置',
+      gettingLocation: '获取位置中...',
+      defaultLocation: '默认位置',
+      getUserInfoError: '获取用户信息失败',
+      updateUserInfoError: '更新用户信息失败',
+      updateUserInfoSuccess: '用户信息更新成功',
+      avatarUploadError: '头像上传失败',
+      fileSizeError: '文件大小过大（最大5MB）',
+      fileTypeError: '无效的文件类型（仅支持图片）',
     },
     personalization: {
       title: '个人化',

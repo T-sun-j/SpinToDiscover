@@ -8,6 +8,7 @@ import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginUser } from '../../../lib/auth';
 
 export default function LoginPage() {
 	const { t } = useLanguage();
@@ -37,7 +38,7 @@ export default function LoginPage() {
 
 		// 验证邮箱格式
 		if (!formData.email || !formData.email.includes('@')) {
-			setErrorMessage(t('auth.errorMessage') || 'Invalid email format');
+			setErrorMessage(t('auth.loginErrorMessage'));
 			setIsSubmitting(false);
 			return;
 		}
@@ -50,13 +51,21 @@ export default function LoginPage() {
 		}
 
 		try {
-			// 模拟API调用
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			// 调用登录API
+			const response = await loginUser(
+				formData.email,
+				formData.password,
+				'en' // 可以根据用户选择设置语言
+			);
 			
-			// 登录成功后跳转到广场页（首页）
-			router.push('/');
+			if (response.success) {
+				// 登录成功，跳转到首页
+				router.push('/');
+			} else {
+				setErrorMessage(response.message || t('auth.loginError'));
+			}
 		} catch (error) {
-			setErrorMessage(t('auth.errorMessage') || 'Login failed');
+			setErrorMessage(error instanceof Error ? error.message : t('auth.loginError'));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -77,7 +86,7 @@ export default function LoginPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.loginTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.loginTitle')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#101729] hover:text-[#101729]"
@@ -87,7 +96,7 @@ export default function LoginPage() {
 				</div>
 
 				{/* 登录表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6 font-inter">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
 						<div className="relative">
@@ -105,7 +114,7 @@ export default function LoginPage() {
 
 					{/* 密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showPassword ? "text" : "password"}
@@ -127,7 +136,7 @@ export default function LoginPage() {
 
 					{/* 错误信息显示 */}
 					{errorMessage && (
-						<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
 							<RefreshCw className="h-4 w-4" />
 							<span>{errorMessage}</span>
 						</div>
@@ -136,23 +145,23 @@ export default function LoginPage() {
 					{/* 登录按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
 						disabled={isSubmitting}
 					>
-						{isSubmitting ? t('auth.submitting') || 'Logging in...' : t('auth.login')}
+						{isSubmitting ? t('auth.loginSubmitting') : t('auth.login')}
 					</Button>
 
 					{/* 忘记密码链接 */}
 					<div className="text-center">
-						<Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 font-bold">
+						<Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
 							{t('auth.forgetPassword')}
 						</Link>
 					</div>
 
 					{/* 创建新账户链接 */}
 					<div className="text-center">
-						<Link href="/register" className="text-sm text-gray-600 hover:text-gray-800 font-bold">
+						<Link href="/register" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
 							{t('auth.createAccount')}
 						</Link>
 					</div>

@@ -1,13 +1,15 @@
 "use client";
 
 import { Button } from '../../../components/ui/button';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { registerUser } from '../../../lib/auth';
+import { RegisterRequest } from '../../../lib/api';
 
 export default function RegisterPage() {
 	const { t } = useLanguage();
@@ -20,14 +22,100 @@ export default function RegisterPage() {
 		confirmPassword: '',
 		acceptTerms: false
 	});
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState('');
+	const [userLocation, setUserLocation] = useState('');
+	const [isGettingLocation, setIsGettingLocation] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	// 获取用户位置
+	const getUserLocation = async () => {
+		if (!navigator.geolocation) {
+			console.log('Geolocation is not supported by this browser.');
+			setUserLocation('');
+			return;
+		}
+
+		setIsGettingLocation(true);
+
+		try {
+			const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition(resolve, reject, {
+					enableHighAccuracy: true,
+					timeout: 10000,
+					maximumAge: 300000 // 5分钟缓存
+				});
+			});
+
+			const { latitude, longitude } = position.coords;
+			
+			// 使用反向地理编码获取地址信息
+			try {
+				const response = await fetch(
+					`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+				);
+				const data = await response.json();
+				
+				if (data.city && data.countryName) {
+					setUserLocation(`${data.city}, ${data.countryName}`);
+				} else if (data.locality && data.countryName) {
+					setUserLocation(`${data.locality}, ${data.countryName}`);
+				} else {
+					setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+				}
+			} catch (geocodeError) {
+				// 如果反向地理编码失败，使用坐标
+				setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+			}
+		} catch (error) {
+			console.log('Error getting location:', error);
+			// 用户拒绝授权或其他错误，设置为空值
+			setUserLocation('');
+		} finally {
+			setIsGettingLocation(false);
+		}
+	};
+
+	// 组件挂载时获取位置
+	useEffect(() => {
+		getUserLocation();
+	}, []);
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// 处理注册逻辑
-		console.log('注册数据:', formData);
+		setError('');
+		setIsLoading(true);
 
-		// 注册成功后跳转到个人化页面
-		router.push('/personalization');
+		try {
+			// 验证密码匹配
+			if (formData.password !== formData.confirmPassword) {
+				setError(t('auth.passwordMismatch'));
+				setIsLoading(false);
+				return;
+			}
+
+			// 准备注册数据
+			const registerData: RegisterRequest = {
+				email: formData.email,
+				password: formData.password,
+				language: 'en', // 可以根据用户选择设置
+				acceptTerms: formData.acceptTerms,
+				location: userLocation || '', // 使用获取到的用户位置，如果为空则传空字符串
+			};
+
+			// 调用注册API
+			const response = await registerUser(registerData);
+			
+			if (response.success) {
+				// 注册成功，跳转到个人化页面，并标记来源为注册
+				router.push('/personalization?from=register');
+			} else {
+				setError(response.message || t('auth.registerErrorMessage'));
+			}
+		} catch (error) {
+			setError(error instanceof Error ? error.message : t('auth.registerError'));
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -40,12 +128,10 @@ export default function RegisterPage() {
 
 				{/* 页面标题 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.createAccount')}</h1>
+					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.createAccount')}</h1>
 					<button className="text-[#101729] hover:text-[#101729]">
 						<Link href="/">
-							<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-							</svg>
+							<ChevronLeft className="h-7 w-7" />
 						</Link>
 					</button>
 				</div>
@@ -54,7 +140,7 @@ export default function RegisterPage() {
 				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type="email"
@@ -69,7 +155,7 @@ export default function RegisterPage() {
 
 					{/* 密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showPassword ? "text" : "password"}
@@ -91,7 +177,7 @@ export default function RegisterPage() {
 
 					{/* 确认密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showConfirmPassword ? "text" : "password"}
@@ -113,9 +199,47 @@ export default function RegisterPage() {
 
 					{/* 错误信息 */}
 					{formData.password !== formData.confirmPassword && formData.confirmPassword && (
-						<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
 							<div className="h-2 w-2 rounded-full bg-red-500"></div>
 							<span>{t('auth.passwordsNotMatch')}</span>
+						</div>
+					)}
+					
+					{/* API错误信息 */}
+					{error && (
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
+							<div className="h-2 w-2 rounded-full bg-red-500"></div>
+							<span>{error}</span>
+						</div>
+					)}
+
+					{/* 位置状态信息（使用小图标展示） */}
+					{isGettingLocation && (
+						<div className="flex items-center gap-2 text-blue-500 text-sm font-inter">
+							<svg className="h-4 w-4 animate-spin text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+								<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+							</svg>
+							<span>{t('auth.gettingLocation')}</span>
+						</div>
+					)}
+					
+					{!isGettingLocation && userLocation && (
+						<div className="flex items-center gap-2 text-green-500 text-sm font-inter">
+							<svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" />
+							</svg>
+							<span>{t('auth.defaultLocation')}: {userLocation}</span>
+						</div>
+					)}
+					
+					{!isGettingLocation && !userLocation && (
+						<div className="flex items-center gap-2 text-gray-500 text-sm font-inter">
+							<svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" />
+								<line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="2" />
+							</svg>
+							<span>{t('auth.locationPermissionDenied')}</span>
 						</div>
 					)}
 
@@ -128,10 +252,10 @@ export default function RegisterPage() {
 							onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
 							className="mt-1 h-4 w-4 rounded border-gray-300 bg-white text-primary focus:ring-primary/60"
 						/>
-						<label htmlFor="acceptTerms" className="text-sm text-gray-600">
+						<label htmlFor="acceptTerms" className="text-sm text-gray-600 font-inter text-[12px]">
 							{t('auth.acceptTerms')}{' '}
-							<Link href="/terms" className="underline hover:text-gray-800">{t('auth.termsOfUse')}</Link>
-							{' '}and{' '}
+							<Link href="/about" className="underline hover:text-gray-800">{t('auth.termsOfUse')}</Link>
+							{' '}{t('auth.termsAnd')}{' '}
 							<Link href="/privacy" className="underline hover:text-gray-800">{t('auth.privacyPolicy')}</Link>
 						</label>
 					</div>
@@ -139,16 +263,16 @@ export default function RegisterPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
-						disabled={!formData.acceptTerms}
+						disabled={!formData.acceptTerms || isLoading}
 					>
-						{t('auth.submit')}
+						{isLoading ? t('auth.registerSubmitting') : t('auth.submit')}
 					</Button>
 
 					{/* 登录链接 */}
 					<div className="text-center">
-						<Link href="/login" className="text-sm text-gray-600 hover:text-gray-800 font-bold ">
+						<Link href="/login" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
 							{t('auth.alreadyHaveAccount')}
 						</Link>
 					</div>
