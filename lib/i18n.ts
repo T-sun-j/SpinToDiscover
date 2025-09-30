@@ -59,7 +59,6 @@ export interface Translations {
     registerError: string;
     registerSubmitting: string;
     registerSuccess: string;
-    registerRedirecting: string;
     passwordMismatch: string;
     termsAnd: string;
     locationPermissionDenied: string;
@@ -383,8 +382,7 @@ export const translations: Record<Language, Translations> = {
       registerErrorMessage: 'Registration failed, please try again',
       registerError: 'An error occurred during registration',
       registerSubmitting: 'Registering...',
-      registerSuccess: 'Registration successful!',
-      registerRedirecting: 'Please wait while we redirect you...',
+      registerSuccess: 'Registration successful! Redirecting...',
       passwordMismatch: 'Passwords do not match',
       termsAnd: 'and',
       locationPermissionDenied: 'Location permission denied, using default location',
@@ -706,8 +704,7 @@ export const translations: Record<Language, Translations> = {
       registerErrorMessage: '注册失败，请重试',
       registerError: '注册过程中发生错误',
       registerSubmitting: '注册中...',
-      registerSuccess: '注册成功！',
-      registerRedirecting: '请稍等，正在为您跳转...',
+      registerSuccess: '注册成功！正在跳转...',
       passwordMismatch: '密码不匹配',
       termsAnd: '和',
       locationPermissionDenied: '位置权限被拒绝，使用默认位置',
