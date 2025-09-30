@@ -241,7 +241,13 @@ export default function RegisterPage() {
 							</svg>
 							<div className="text-center">
 								<div className="font-semibold">{t('auth.registerSuccess')}</div>
-								<div className="text-xs text-green-600 mt-1">Please wait while we redirect you...</div>
+								<div className="flex items-center justify-center gap-2 text-xs text-green-600 mt-1">
+									<svg className="h-3 w-3 animate-spin text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+										<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+									</svg>
+									{t('auth.registerRedirecting')}
+								</div>
 							</div>
 						</div>
 					)}
