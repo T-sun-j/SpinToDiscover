@@ -76,7 +76,7 @@ export async function request<T = any>(
     const data = await response.json();
     
     // 检查业务逻辑错误
-    if (data.error || data.code !== 0) {
+    if (data.error || (data.code !== undefined && data.code !== 0) || data.success === false) {
       throw new RequestError(
         data.message || data.error || 'Unknown error',
         response.status,

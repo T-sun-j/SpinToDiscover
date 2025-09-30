@@ -3,15 +3,20 @@
 import { Button } from '../../components/ui/button';
 import { ChevronLeft, Camera, MapPin, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { postSquareContent } from '../../lib/auth';
+import { PostSquareRequest } from '../../lib/api';
+import { LoadingSpinner } from '../../components/ui/LoadingStates';
 
 export default function ReleasePage() {
   const { t } = useLanguage();
+  const { authInfo, isAuthenticated } = useAuth();
   const router = useRouter();
   const [brandInfoChecked, setBrandInfoChecked] = useState(false);
   const [images, setImages] = useState<string[]>(['/img/band.png']); // Placeholder image
@@ -20,6 +25,23 @@ export default function ReleasePage() {
   const [brandName, setBrandName] = useState('');
   const [briefDescription, setBriefDescription] = useState('');
   const [allowingComments, setAllowingComments] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+
+  // 验证表单数据
+  const validateForm = useCallback(() => {
+    if (!title.trim()) {
+      setErrorMessage('标题不能为空');
+      return false;
+    }
+    if (!content.trim()) {
+      setErrorMessage('内容不能为空');
+      return false;
+    }
+    return true;
+  }, [title, content]);
 
   const handleBack = () => {
     router.back();
@@ -40,19 +62,48 @@ export default function ReleasePage() {
     setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      title,
-      content,
-      images,
-      brandInfoChecked,
-      brandName,
-      briefDescription,
-      allowingComments,
-    });
-    router.push('/personal'); // Navigate to personal page after release
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      // 验证必填字段
+      if (!validateForm()) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 准备发布数据
+      const postData: PostSquareRequest = {
+        userId: authInfo!.userId,
+        token: authInfo!.token,
+        title: title.trim(),
+        description: content.trim(),
+        location: '中国，北京', // 可以从用户位置获取
+        images: images.filter(img => img !== '/img/band.png').join(','), // 过滤掉占位图片
+        intro: brandInfoChecked ? briefDescription : '',
+        // 其他可选字段可以根据需要添加
+      };
+
+      // 调用发布API
+      const response = await postSquareContent(postData);
+
+      if (response.success) {
+        setSuccessMessage('发布成功！');
+        // 成功后跳转到广场页面
+        setTimeout(() => {
+          router.push('/square');
+        }, 2000);
+      } else {
+        setErrorMessage(response.message || '发布失败，请重试');
+      }
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : '发布过程中发生错误');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -169,11 +220,19 @@ export default function ReleasePage() {
           {/* )} */}
         </div>
 
-        {/* Error Message (placeholder) */}
-        {false && (
+        {/* Error Message */}
+        {errorMessage && (
           <div className="flex items-center gap-2 text-red-500 text-sm">
             <div className="h-2 w-2 rounded-full bg-red-500"></div>
-            <span>{t('releasePage.errorMessage')}</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="flex items-center gap-2 text-green-500 text-sm">
+            <div className="h-2 w-2 rounded-full bg-green-500"></div>
+            <span>{successMessage}</span>
           </div>
         )}
 
@@ -193,8 +252,14 @@ export default function ReleasePage() {
           type="submit"
           className="w-full bg-[#101729] text-white shadow-md rounded-lg"
           size="lg"
+          disabled={isSubmitting || !!successMessage}
         >
-          {t('releasePage.releaseButton')}
+          {isSubmitting 
+            ? '发布中...' 
+            : successMessage 
+              ? '发布成功' 
+              : t('releasePage.releaseButton')
+          }
         </Button>
       </form>
 

@@ -205,19 +205,31 @@ export interface Translations {
       notifications: string;
     };
   };
-  personalPage: {
-    title: string;
-    brief: string;
-    customerServiceHotline: string;
-    workingHours: string;
-    email: string;
-    myPosts: string;
-    follow: string;
-    followed: string;
-    editInfo: string;
-    delete: string;
-    hide: string;
-  };
+    personalPage: {
+      title: string;
+      brief: string;
+      customerServiceHotline: string;
+      workingHours: string;
+      email: string;
+      myPosts: string;
+      follow: string;
+      followed: string;
+      editInfo: string;
+      delete: string;
+      hide: string;
+      loading: string;
+      error: string;
+      noPosts: string;
+      noPostsDescription: string;
+      refresh: string;
+    };
+    userInfo: {
+      loading: string;
+      error: string;
+      followers: string;
+      following: string;
+      posts: string;
+    };
   releasePage: {
     title: string;
     fieldTitle: string;
@@ -295,6 +307,18 @@ export interface Translations {
     donateLink: string;
     transparencyTitle: string;
     transparency: string;
+  };
+  history: {
+    title: string;
+    back: string;
+    refresh: string;
+    loading: string;
+    error: string;
+    noHistory: string;
+    noHistoryDescription: string;
+    noImage: string;
+    viewedOn: string;
+    location: string;
   };
 }
 
@@ -516,6 +540,18 @@ export const translations: Record<Language, Translations> = {
       editInfo: 'Edit Info',
       delete: 'Delete',
       hide: 'Hide',
+      loading: 'Loading posts...',
+      error: 'Failed to load posts',
+      noPosts: 'No Posts Found',
+      noPostsDescription: 'Start creating content to see your posts here.',
+      refresh: 'Refresh',
+    },
+    userInfo: {
+      loading: 'Loading user info...',
+      error: 'Failed to load user info',
+      followers: 'followers',
+      following: 'following',
+      posts: 'posts',
     },
     releasePage: {
       title: 'Release',
@@ -594,6 +630,18 @@ export const translations: Record<Language, Translations> = {
       donateLink: 'How to donate?',
       transparencyTitle: 'Transparency Commitment',
       transparency: 'We provide detailed reports on how every donation is used, ensuring complete transparency in our charitable activities.',
+    },
+    history: {
+      title: 'Browsing History',
+      back: 'Back',
+      refresh: 'Refresh',
+      loading: 'Loading history...',
+      error: 'Failed to load history',
+      noHistory: 'No History Found',
+      noHistoryDescription: 'Your browsing history will appear here once you start exploring content.',
+      noImage: 'No Image',
+      viewedOn: 'Viewed on',
+      location: 'Location',
     },
   },
   zh: {
@@ -813,6 +861,18 @@ export const translations: Record<Language, Translations> = {
       editInfo: '编辑信息',
       delete: '删除',
       hide: '隐藏',
+      loading: '加载帖子中...',
+      error: '加载帖子失败',
+      noPosts: '暂无帖子',
+      noPostsDescription: '开始创建内容，您的帖子将显示在这里。',
+      refresh: '刷新',
+    },
+    userInfo: {
+      loading: '加载用户信息中...',
+      error: '加载用户信息失败',
+      followers: '关注者',
+      following: '关注中',
+      posts: '帖子',
     },
     releasePage: {
       title: '发布页面',
@@ -891,6 +951,18 @@ export const translations: Record<Language, Translations> = {
       donateLink: '如何捐款？',
       transparencyTitle: '透明度承诺',
       transparency: '我们提供每笔捐款使用情况的详细报告，确保我们慈善活动的完全透明度。',
+    },
+    history: {
+      title: '浏览记录',
+      back: '返回',
+      refresh: '刷新',
+      loading: '加载历史记录中...',
+      error: '加载历史记录失败',
+      noHistory: '暂无浏览记录',
+      noHistoryDescription: '当您开始探索内容时，您的浏览记录将显示在这里。',
+      noImage: '无图片',
+      viewedOn: '浏览于',
+      location: '位置',
     },
   },
 };

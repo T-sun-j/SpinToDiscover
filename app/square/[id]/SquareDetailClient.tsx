@@ -14,14 +14,20 @@ import {
 	Mail,
 	ChevronDown,
 	Play,
-	Expand
+	Expand,
+	UserPlus
 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getSquareContentDetail, toggleLove, toggleCollect, toggleFollowUser } from '../../../lib/auth';
+import { SquareContent } from '../../../lib/api';
+import { LoadingSpinner, ErrorState, EmptyState } from '../../../components/ui/LoadingStates';
+import { OptimizedImage } from '../../../components/ui/OptimizedImage';
 
 interface SquareDetailClientProps {
 	params: { id: string };
@@ -29,37 +35,68 @@ interface SquareDetailClientProps {
 
 export default function SquareDetailClient({ params }: SquareDetailClientProps) {
 	const { t } = useLanguage();
+	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
 	const [showAllImages, setShowAllImages] = useState(false);
 	const [comment, setComment] = useState('');
 	const [isLiked, setIsLiked] = useState(false);
 	const [isBookmarked, setIsBookmarked] = useState(false);
-	const [likes, setLikes] = useState(23565);
-	const [bookmarks, setBookmarks] = useState(1232);
+	const [isFollowed, setIsFollowed] = useState(false);
+	const [likes, setLikes] = useState(0);
+	const [bookmarks, setBookmarks] = useState(0);
+	const [isInteracting, setIsInteracting] = useState(false);
 	const [expandedImage, setExpandedImage] = useState<number | null>(null);
+	
+	// API相关状态
+	const [post, setPost] = useState<SquareContent | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState('');
 
-	// 模拟数据
-	const post = {
-		id: params.id,
-		title: t('square.titleContent'),
-		location: t('square.location'),
-		publisher: t('square.publisher'),
-		description: t('square.description'),
-		likes: 23,
-		totalLikes: 505,
-		shares: 1232,
-		collects: 1232,
-		images: [
-			'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-			'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
-			'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&h=300&fit=crop'
-		],
+
+	// 加载广场详情
+	const loadSquareDetail = useCallback(async (postId: string) => {
+		if (!authInfo?.userId || !authInfo?.token) {
+			setPost(null);
+			return;
+		}
+
+		setIsLoading(true);
+		setError('');
+		
+		try {
+			const response = await getSquareContentDetail({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				postId
+			});
+
+			if (response.success && response.data) {
+				setPost(response.data);
+				// 设置初始互动状态
+				setLikes(response.data.likes || 0);
+				setBookmarks(response.data.collects || 0);
+				// 注意：这里需要根据实际API响应来设置isLiked, isBookmarked, isFollowed状态
+				// 如果API返回用户是否已点赞/收藏/关注的状态，可以在这里设置
+			} else {
+				setError('加载详情失败');
+			}
+		} catch (error) {
+			setError('加载详情时发生错误');
+		} finally {
+			setIsLoading(false);
+		}
+	}, [authInfo]);
+
+	// 加载详情数据
+	useEffect(() => {
+		loadSquareDetail(params.id);
+	}, [params.id, loadSquareDetail]);
+
+	// 模拟数据（用于扩展功能）
+	const mockData = {
 		video: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
 		brandWebsite: t('square.brandWebsite'),
 		brandLogo: t('square.brandLogo'),
-		operatingHours: t('square.operatingHours'),
-		customerService: t('square.customerService'),
-		workingHours: t('square.workingHours'),
 		email: t('square.email'),
 		comments: [
 			{
@@ -89,18 +126,64 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		}
 	};
 
-	const handleLike = () => {
-		setIsLiked(!isLiked);
-		setLikes(prev => isLiked ? prev - 1 : prev + 1);
+	const handleLike = async () => {
+		if (!authInfo?.userId || !authInfo?.token || isInteracting) {
+			return;
+		}
+
+		setIsInteracting(true);
+		try {
+			const response = await toggleLove({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				productId: params.id,
+				isLove: isLiked ? 0 : 1
+			});
+
+			if (response.success) {
+				setIsLiked(!isLiked);
+				setLikes(prev => isLiked ? prev - 1 : prev + 1);
+			} else {
+				alert('操作失败，请重试');
+			}
+		} catch (error) {
+			console.error('点赞失败:', error);
+			alert('操作失败，请重试');
+		} finally {
+			setIsInteracting(false);
+		}
 	};
 
-	const handleBookmark = () => {
-		setIsBookmarked(!isBookmarked);
-		setBookmarks(prev => isBookmarked ? prev - 1 : prev + 1);
+	const handleBookmark = async () => {
+		if (!authInfo?.userId || !authInfo?.token || isInteracting) {
+			return;
+		}
+
+		setIsInteracting(true);
+		try {
+			const response = await toggleCollect({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				productId: params.id,
+				isCollect: isBookmarked ? 0 : 1
+			});
+
+			if (response.success) {
+				setIsBookmarked(!isBookmarked);
+				setBookmarks(prev => isBookmarked ? prev - 1 : prev + 1);
+			} else {
+				alert('操作失败，请重试');
+			}
+		} catch (error) {
+			console.error('收藏失败:', error);
+			alert('操作失败，请重试');
+		} finally {
+			setIsInteracting(false);
+		}
 	};
 
 	const handleShare = () => {
-		if (navigator.share) {
+		if (post && navigator.share) {
 			navigator.share({
 				title: post.title,
 				text: post.description,
@@ -119,8 +202,96 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 	const handlePublisherClick = () => {
 		// 跳转到发布者个人页面
-		router.push(`/user/${post.publisher}`);
+		if (post) {
+			router.push(`/user/${post.publisher.id}`);
+		}
 	};
+
+	const handleFollowAuthor = async () => {
+		if (!authInfo?.userId || !authInfo?.token || !post || isInteracting) {
+			return;
+		}
+
+		setIsInteracting(true);
+		try {
+			const response = await toggleFollowUser({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				authorId: post.publisher.id,
+				isCollect: isFollowed ? 0 : 1
+			});
+
+			if (response.success) {
+				setIsFollowed(!isFollowed);
+			} else {
+				alert('操作失败，请重试');
+			}
+		} catch (error) {
+			console.error('关注失败:', error);
+			alert('操作失败，请重试');
+		} finally {
+			setIsInteracting(false);
+		}
+	};
+
+	// 加载状态
+	if (isLoading) {
+		return (
+			<div className="min-h-screen bg-white">
+				<main className="flex min-h-[100vh] flex-col">
+					<Header showLanguage showSearch showUser logoLink="/square" />
+					<div className="flex-1 flex items-center justify-center">
+						<LoadingSpinner size="lg" text="加载中..." />
+					</div>
+					<Footer />
+				</main>
+			</div>
+		);
+	}
+
+	// 错误状态
+	if (error && !post) {
+		return (
+			<div className="min-h-screen bg-white">
+				<main className="flex min-h-[100vh] flex-col">
+					<Header showLanguage showSearch showUser logoLink="/square" />
+					<div className="flex-1 flex items-center justify-center">
+						<ErrorState 
+							error={error}
+							onRetry={() => isAuthenticated && loadSquareDetail(params.id)}
+						/>
+					</div>
+					<Footer />
+				</main>
+			</div>
+		);
+	}
+
+	// 空状态
+	if (!post && !isLoading && !error) {
+		return (
+			<div className="min-h-screen bg-white">
+				<main className="flex min-h-[100vh] flex-col">
+					<Header showLanguage showSearch showUser logoLink="/square" />
+					<div className="flex-1 flex items-center justify-center">
+						<EmptyState 
+							title="内容不存在"
+							description={isAuthenticated 
+								? "您访问的内容可能已被删除或不存在" 
+								: "请先登录以查看内容详情"
+							}
+						/>
+					</div>
+					<Footer />
+				</main>
+			</div>
+		);
+	}
+
+	// 如果没有post数据，不渲染内容
+	if (!post) {
+		return null;
+	}
 
 	const displayedImages = showAllImages ? post.images : post.images.slice(0, 2);
 
@@ -157,12 +328,29 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							className="flex items-center gap-3 hover:opacity-80 transition-opacity"
 						>
 							<img
-								src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop"
-								alt="avatar"
+								src={post.publisher.avatar}
+								alt={post.publisher.nickname}
 								className="w-8 h-8 rounded-full object-cover bg-gray-300"
 							/>
-							<span className="font-medium text-gray-900 font-nunito">{post.publisher}</span>
+							<span className="font-medium text-gray-900 font-nunito">{post.publisher.nickname}</span>
 						</button>
+						
+						{/* 关注按钮 */}
+						{isAuthenticated && (
+							<button
+								onClick={handleFollowAuthor}
+								disabled={isInteracting}
+								className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+									isFollowed 
+										? 'bg-green-100 text-green-600 hover:bg-green-200' 
+										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+								} ${isInteracting ? 'opacity-50 cursor-not-allowed' : ''}`}
+							>
+								<UserPlus className={`h-3 w-3 ${isFollowed ? 'fill-current' : ''}`} />
+								<span>{isFollowed ? '已关注' : '关注'}</span>
+							</button>
+						)}
+						
 						<div className="flex items-center gap-1 ml-auto">
 							<MapPin className="h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-600 font-nunito">{post.location}</span>
@@ -174,16 +362,14 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 					{/* 视频区域 */}
 					<div className="relative w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
-						<img
-							src={post.video}
+						<OptimizedImage
+							src={mockData.video}
 							alt="Video thumbnail"
 							className="w-full h-full object-cover"
 						/>
 						<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
 							<button className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all">
-								<svg className="w-6 h-6 text-gray-800 ml-1" fill="currentColor" viewBox="0 0 24 24">
-									<path d="M8 5v14l11-7z"/>
-								</svg>
+								<Play className="w-6 h-6 text-gray-800 ml-1" />
 							</button>
 						</div>
 					</div>
@@ -192,7 +378,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<div className="space-y-4">
 						{displayedImages.map((image, index) => (
 							<div key={index} className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden group cursor-pointer" onClick={() => handleImageClick(index)}>
-								<img
+								<OptimizedImage
 									src={image}
 									alt={`Gallery image ${index + 1}`}
 									className="w-full h-full object-cover transition-transform group-hover:scale-105"
@@ -223,23 +409,23 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<div className="space-y-4">
 						{/* 品牌网站 */}
 						<div className="flex items-center gap-3">
-							<img src="/img/Icon-website.png" alt="Globe" className="h-6 w-6" />
-							<a href={`https://${post.brandWebsite}`} className="text-[#101729] hover:underline">
-								{post.brandWebsite}
+							<Globe className="h-6 w-6 text-gray-500" />
+							<a href={`https://${mockData.brandWebsite}`} className="text-[#101729] hover:underline">
+								{mockData.brandWebsite}
 							</a>
 						</div>
 
 						{/* 营业时间 */}
 						<div className="flex items-start gap-3">
-							<img src="/img/Icon-introduction.png" alt="Clock" className="h-6 w-6" />
+							<Clock className="h-6 w-6 text-gray-500" />
 							<div className="flex-1">
 								<p className="text-sm text-gray-700 font-nunito leading-relaxed">{post.operatingHours}</p>
 								<div className="flex items-center gap-2 mt-3">
 									{/* 品牌Logo - 使用实际的Logo图片 */}
 									<div className="flex items-center gap-2">
-										<img 
+										<OptimizedImage 
 											src="/img/band.png" 
-											alt="Loro Piana Logo" 
+											alt="Brand Logo" 
 											className="h-8 w-auto"
 										/>
 									</div>
@@ -249,17 +435,20 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 						{/* 客服热线 */}
 						<div className="flex items-center gap-3 ml-8">
+							<Phone className="h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-700 font-inter">{post.customerService}</span>
 						</div>
 
 						{/* 工作时间 */}
 						<div className="flex items-center gap-3 ml-8">
+							<Clock className="h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-700 font-inter">{post.workingHours}</span>
 						</div>
 
 						{/* 邮箱 */}
 						<div className="flex items-center gap-3 ml-8">
-							<span className="text-sm text-gray-700 font-inter">{post.email}</span>
+							<Mail className="h-4 w-4 text-gray-500" />
+							<span className="text-sm text-gray-700 font-inter">{mockData.email}</span>
 						</div>
 					</div>
 
@@ -267,14 +456,22 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<div className="flex items-center justify-center gap-6 py-4 border-t border-b">
 						<button 
 							onClick={handleBookmark}
-							className={`flex items-center gap-2 transition-colors ${isBookmarked ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'}`}
+							disabled={isInteracting || !isAuthenticated}
+							className={`flex items-center gap-2 transition-colors ${
+								isBookmarked ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'
+							} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
+							title={!isAuthenticated ? '请先登录' : ''}
 						>
 							<Bookmark className={`h-6 w-6 ${isBookmarked ? 'fill-current' : ''}`} />
 							<span className="text-sm font-nunito">{bookmarks.toLocaleString()}</span>
 						</button>
 						<button 
 							onClick={handleLike}
-							className={`flex items-center gap-2 transition-colors ${isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'}`}
+							disabled={isInteracting || !isAuthenticated}
+							className={`flex items-center gap-2 transition-colors ${
+								isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'
+							} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
+							title={!isAuthenticated ? '请先登录' : ''}
 						>
 							<Heart className={`h-6 w-6 ${isLiked ? 'fill-current' : ''}`} />
 							<span className="text-sm font-nunito">{likes.toLocaleString()}</span>
@@ -292,14 +489,18 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<div className="space-y-4">
 						<div className="flex items-center gap-2">
 							<h3 className="text-lg font-nunito text-gray-900">{t('square.comments')}</h3>
-							<span className="text-sm text-gray-500 font-nunito">({post.comments.length})</span>
+							<span className="text-sm text-gray-500 font-nunito">({mockData.comments.length})</span>
 						</div>
 						
 						{/* 评论列表 */}
 						<div className="space-y-4">
-							{post.comments.map((comment) => (
+							{mockData.comments.map((comment) => (
 								<div key={comment.id} className="flex gap-3">
-									<div className="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"></div>
+									<OptimizedImage
+										src={post.images[0]}
+										alt="avatar"
+										className="w-8 h-8 rounded-full flex-shrink-0"
+									/>
 									<div className="flex-1">
 										<div className="flex items-center gap-2 mb-1">
 											<span className="font-sm text-gray-900 font-inter">{comment.author}</span>
@@ -319,7 +520,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 						{/* 评论输入框 */}
 						<div className="flex gap-3 pt-4 border-t">
-							<img
+							<OptimizedImage
 								src={post.images[0]}
 								alt="avatar"
 								className="w-8 h-8 object-cover rounded-full flex-shrink-0"
