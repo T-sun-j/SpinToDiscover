@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 export interface AuthInfo {
   userId: string;
   token: string;
+  email: string;
 }
 
 // 认证上下文类型
@@ -18,6 +19,7 @@ interface AuthContextType {
   // 便捷方法
   getUserId: () => string | null;
   getToken: () => string | null;
+  getEmail: () => string | null;
 }
 
 // 创建认证上下文
@@ -28,28 +30,107 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// 存储键名常量
+const AUTH_STORAGE_KEY = 'auth_info';
+const AUTH_COOKIE_KEY = 'auth_info';
+
+// Cookie工具函数
+function setCookie(name: string, value: string, days: number = 30) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+}
+
+function getCookie(name: string): string | null {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function deleteCookie(name: string) {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+}
+
+// 从存储中获取认证信息
+function getStoredAuthInfo(): AuthInfo | null {
+  try {
+    // 优先从localStorage获取
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+    
+    // 如果localStorage没有，尝试从cookie获取
+    const cookieData = getCookie(AUTH_COOKIE_KEY);
+    if (cookieData) {
+      return JSON.parse(cookieData);
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error reading stored auth info:', error);
+    return null;
+  }
+}
+
+// 存储认证信息
+function storeAuthInfo(authInfo: AuthInfo | null) {
+  try {
+    if (authInfo) {
+      const authData = JSON.stringify(authInfo);
+      // 存储到localStorage
+      localStorage.setItem(AUTH_STORAGE_KEY, authData);
+      // 存储到cookie（30天过期）
+      setCookie(AUTH_COOKIE_KEY, authData, 30);
+    } else {
+      // 清除存储
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      deleteCookie(AUTH_COOKIE_KEY);
+    }
+  } catch (error) {
+    console.error('Error storing auth info:', error);
+  }
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [authInfo, setAuthInfoState] = useState<AuthInfo | null>(null);
   const searchParams = useSearchParams();
 
-  // 从URL参数中获取认证信息
+  // 初始化时从存储中获取认证信息
   useEffect(() => {
+    // 首先尝试从URL参数获取
     const userId = searchParams.get('userId');
     const token = searchParams.get('token');
+    const email = searchParams.get('email');
     
-    if (userId && token) {
-      setAuthInfoState({ userId, token });
+    if (userId && token && email) {
+      const urlAuthInfo = { userId, token, email };
+      setAuthInfoState(urlAuthInfo);
+      storeAuthInfo(urlAuthInfo);
+    } else {
+      // 如果URL没有参数，从存储中获取
+      const storedAuthInfo = getStoredAuthInfo();
+      if (storedAuthInfo) {
+        setAuthInfoState(storedAuthInfo);
+      }
     }
   }, [searchParams]);
 
   // 设置认证信息
   const setAuthInfo = (newAuthInfo: AuthInfo | null) => {
     setAuthInfoState(newAuthInfo);
+    storeAuthInfo(newAuthInfo);
   };
 
   // 清除认证信息
   const clearAuthInfo = () => {
     setAuthInfoState(null);
+    storeAuthInfo(null);
   };
 
   // 获取用户ID
@@ -62,8 +143,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return authInfo?.token || null;
   };
 
+  // 获取邮箱
+  const getEmail = () => {
+    return authInfo?.email || null;
+  };
+
   // 是否已认证
-  const isAuthenticated = !!(authInfo?.userId && authInfo?.token);
+  const isAuthenticated = !!(authInfo?.userId && authInfo?.token && authInfo?.email);
 
   const value: AuthContextType = {
     authInfo,
@@ -72,6 +158,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     clearAuthInfo,
     getUserId,
     getToken,
+    getEmail,
   };
 
   return (
@@ -97,7 +184,8 @@ export function useUserParams() {
   return {
     userParams: authInfo ? {
       userId: authInfo.userId,
-      token: authInfo.token
+      token: authInfo.token,
+      email: authInfo.email
     } : null,
     isAuthenticated
   };

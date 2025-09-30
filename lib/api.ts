@@ -65,8 +65,9 @@ export interface RegisterRequest {
 
 // 注册响应类型
 export interface RegisterResponse {
-  userId?: string;
-  token?: string;
+  userId: string;
+  token: string;
+  email: string;
   message?: string;
 }
 

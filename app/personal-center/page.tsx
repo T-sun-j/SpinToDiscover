@@ -14,17 +14,19 @@ import { getUserInfo } from '../../lib/services';
 import { UserInfo } from '../../lib/api';
 import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } from '../../lib/constants';
 import { classNames } from '../../lib/utils/classNames';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function PersonalCenterPage() {
     const { t } = useLanguage();
     const router = useRouter();
+    const { getEmail } = useAuth();
     const [userData, setUserData] = useState<UserInfo | null>(null);
 
     // 使用API Hook获取用户信息
     const { data, loading, error, execute, userParams } = useApi(
         async (params) => {
             const response = await getUserInfo({
-                email: 'a@gmail.com', // 从URL参数或状态中获取
+                email: params.email || getEmail() || '', // 优先使用存储的email
                 userId: params.userId,
                 token: params.token,
             });

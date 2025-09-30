@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useUserParams } from '../../contexts/AuthContext';
 
 // 通用API状态类型
 export interface ApiState<T> {
@@ -18,6 +19,7 @@ export interface ApiState<T> {
 export interface UserParams {
   userId: string;
   token: string;
+  email?: string;
 }
 
 // 通用API Hook
@@ -33,17 +35,25 @@ export function useApi<T>(
   });
 
   const searchParams = useSearchParams();
+  const { userParams: storedUserParams } = useUserParams();
 
   // 获取用户参数
   const getUserParams = useCallback((): UserParams | null => {
+    // 优先从存储的认证信息获取
+    if (storedUserParams) {
+      return storedUserParams;
+    }
+    
+    // 如果存储中没有，尝试从URL参数获取
     const userId = searchParams.get('userId');
     const token = searchParams.get('token');
+    const email = searchParams.get('email');
     
     if (userId && token) {
-      return { userId, token };
+      return { userId, token, email: email || undefined };
     }
     return null;
-  }, [searchParams]);
+  }, [searchParams, storedUserParams]);
 
   // 执行API调用
   const execute = useCallback(async (params?: UserParams) => {

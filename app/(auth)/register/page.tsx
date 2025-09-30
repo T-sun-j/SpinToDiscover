@@ -10,10 +10,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '../../../lib/auth';
 import { RegisterRequest } from '../../../lib/api';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function RegisterPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
+	const { setAuthInfo } = useAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [formData, setFormData] = useState({
@@ -24,6 +26,7 @@ export default function RegisterPage() {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [success, setSuccess] = useState(false);
 	const [userLocation, setUserLocation] = useState('');
 	const [isGettingLocation, setIsGettingLocation] = useState(false);
 
@@ -83,6 +86,7 @@ export default function RegisterPage() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
+		setSuccess(false);
 		setIsLoading(true);
 
 		try {
@@ -105,9 +109,25 @@ export default function RegisterPage() {
 			// 调用注册API
 			const response = await registerUser(registerData);
 			
-			if (response.success) {
-				// 注册成功，跳转到个人化页面，并标记来源为注册
-				router.push('/personalization?from=register');
+			if (response.success && response.data) {
+				// 注册成功，存储认证信息
+				const authData = {
+					userId: response.data.userId,
+					token: response.data.token,
+					email: response.data.email
+				};
+				
+				// 存储到AuthContext（会自动存储到localStorage和cookie）
+				setAuthInfo(authData);
+				
+				// 显示成功消息
+				setSuccess(true);
+				setIsLoading(false);
+				
+				// 延迟跳转到个人化页面，让用户看到成功消息
+				setTimeout(() => {
+					router.push('/personalization?from=register');
+				}, 2000);
 			} else {
 				setError(response.message || t('auth.registerErrorMessage'));
 			}
@@ -213,6 +233,19 @@ export default function RegisterPage() {
 						</div>
 					)}
 
+					{/* 成功信息 */}
+					{success && (
+						<div className="flex items-center justify-center gap-3 bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 text-sm font-inter">
+							<svg className="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+							</svg>
+							<div className="text-center">
+								<div className="font-semibold">{t('auth.registerSuccess')}</div>
+								<div className="text-xs text-green-600 mt-1">Please wait while we redirect you...</div>
+							</div>
+						</div>
+					)}
+
 					{/* 位置状态信息（使用小图标展示） */}
 					{isGettingLocation && (
 						<div className="flex items-center gap-2 text-blue-500 text-sm font-inter">
@@ -263,11 +296,17 @@ export default function RegisterPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
+						className={`w-full shadow-md rounded-lg font-nunito font-bold ${
+							success 
+								? 'bg-green-500 text-white' 
+								: 'bg-[#101729] text-white'
+						}`}
 						size="lg"
-						disabled={!formData.acceptTerms || isLoading}
+						disabled={!formData.acceptTerms || isLoading || success}
 					>
-						{isLoading ? t('auth.registerSubmitting') : t('auth.submit')}
+						{success ? t('auth.registerSuccess') : 
+						 isLoading ? t('auth.registerSubmitting') : 
+						 t('auth.submit')}
 					</Button>
 
 					{/* 登录链接 */}

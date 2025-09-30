@@ -14,10 +14,12 @@ import { getMyPageList } from '../../lib/services';
 import { MyPageItem } from '../../lib/api';
 import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } from '../../lib/constants';
 import { classNames } from '../../lib/utils/classNames';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function PersonalPage() {
     const { t } = useLanguage();
     const router = useRouter();
+    const { getEmail } = useAuth();
     const [isFollowing, setIsFollowing] = useState(false);
     const [postsData, setPostsData] = useState<MyPageItem[]>([]);
 
