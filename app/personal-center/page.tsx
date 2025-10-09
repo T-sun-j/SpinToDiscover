@@ -8,11 +8,12 @@ import { Footer } from '../../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApi } from '../../lib/hooks/useApi';
 import { getUserInfo } from '../../lib/services';
-import { UserInfo } from '../../lib/api';
+import { UserInfoResponse } from '../../lib/api';
 import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } from '../../lib/constants';
+import { buildAvatarUrl } from '../../lib/api';
 import { classNames } from '../../lib/utils/classNames';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -20,7 +21,8 @@ export default function PersonalCenterPage() {
     const { t } = useLanguage();
     const router = useRouter();
     const { getEmail } = useAuth();
-    const [userData, setUserData] = useState<UserInfo | null>(null);
+    const [userData, setUserData] = useState<UserInfoResponse | null>(null);
+    const hasLoaded = useRef(false);
 
     // 使用API Hook获取用户信息
     const { data, loading, error, execute, userParams } = useApi(
@@ -30,22 +32,23 @@ export default function PersonalCenterPage() {
                 userId: params.userId,
                 token: params.token,
             });
-            return response.data;
+            return response.data; // API直接返回用户数据，不需要.user
         },
-        { user: null as UserInfo | null }
+        null as UserInfoResponse | null
     );
 
     // 组件挂载时获取数据
     useEffect(() => {
-        if (userParams) {
+        if (userParams && userParams.email && userParams.userId && userParams.token && !hasLoaded.current) {
+            hasLoaded.current = true;
             execute();
         }
-    }, [execute, userParams]);
+    }, [userParams?.userId, userParams?.token, userParams?.email, execute]);
 
     // 更新用户数据
     useEffect(() => {
-        if (data?.user) {
-            setUserData(data.user);
+        if (data) {
+            setUserData(data);
         }
     }, [data]);
 
@@ -66,7 +69,8 @@ export default function PersonalCenterPage() {
             <div className={classNames(
                 HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
                 UI_CONSTANTS.SPACING.PX_6,
-                'py-4'
+                'py-4',
+                'text-[#101729]'
             )}>
                 <h1 className={classNames(
                     'text-xl',
@@ -137,7 +141,7 @@ export default function PersonalCenterPage() {
                         {/* Profile picture */}
                         <div className="relative">
                             <Image
-                                src={userData?.avatar || "/img/avatar.png"}
+                                src={buildAvatarUrl(userData?.avatar)}
                                 alt="Profile"
                                 width={12}
                                 height={12}
@@ -149,7 +153,7 @@ export default function PersonalCenterPage() {
                         </div>
 
                         {/* Username and user info */}
-                        <div className="flex-1 flex items-center">
+                        <div className="flex-1 flex items-center text-[#101729]">
                             <div className="flex-1">
                                 <h2 className={classNames(
                                     'text-lg',
@@ -157,7 +161,7 @@ export default function PersonalCenterPage() {
                                     UI_CONSTANTS.FONTS.POPPINS,
                                     'flex items-center gap-1'
                                 )}>
-                                    {userData?.nickname || 'Miaham'}
+                                    {userData?.nickname || userData?.email || 'User'}
                                     <Link href="/personalization">
                                         <Button variant="ghost" size="icon" className={classNames(
                                             UI_CONSTANTS.COLORS.PRIMARY,
@@ -167,29 +171,11 @@ export default function PersonalCenterPage() {
                                         </Button>
                                     </Link>
                                 </h2>
-                                {userData?.bio && (
-                                    <p className={classNames(
-                                        'text-sm',
-                                        UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
-                                        UI_CONSTANTS.FONTS.INTER
-                                    )}>
-                                        {userData.bio}
-                                    </p>
-                                )}
-                                <div className={classNames(
-                                    'flex items-center gap-4 mt-1',
-                                    HISTORY_CONSTANTS.TEXT_SIZES.SMALL,
-                                    UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60
-                                )}>
-                                    <span>{userData?.followersCount || 0} {t("userInfo.followers")}</span>
-                                    <span>{userData?.followingCount || 0} {t("userInfo.following")}</span>
-                                    <span>{userData?.postsCount || 0} {t("userInfo.posts")}</span>
-                                </div>
                             </div>
                         </div>
 
                         {/* Edit and Settings buttons */}
-                        <div className={classNames('flex items-center', UI_CONSTANTS.SPACING.GAP_2)}>
+                        <div className={classNames('flex items-center', 'text-[#101729]',UI_CONSTANTS.SPACING.GAP_2)}>
                             <Link href="/settings">
                                 <Button variant="ghost" size="icon" className={UI_CONSTANTS.COLORS.PRIMARY}>
                                     <Settings className={UI_CONSTANTS.SIZES.ICON_LG} />

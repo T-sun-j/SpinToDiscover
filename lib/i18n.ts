@@ -68,7 +68,10 @@ export interface Translations {
     getUserInfoError: string;
     updateUserInfoError: string;
     updateUserInfoSuccess: string;
+    noAuthInfo: string;
     avatarUploadError: string;
+    avatarUploading: string;
+    skipping: string;
     fileSizeError: string;
     fileTypeError: string;
   };
@@ -392,7 +395,10 @@ export const translations: Record<Language, Translations> = {
       getUserInfoError: 'Failed to get user information',
       updateUserInfoError: 'Failed to update user information',
       updateUserInfoSuccess: 'User information updated successfully',
+      noAuthInfo: 'No authentication information found. Please try registering again.',
       avatarUploadError: 'Avatar upload failed',
+      avatarUploading: 'Uploading avatar...',
+      skipping: 'Skipping...',
       fileSizeError: 'File size too large (max 5MB)',
       fileTypeError: 'Invalid file type (only images allowed)',
     },
@@ -714,7 +720,10 @@ export const translations: Record<Language, Translations> = {
       getUserInfoError: '获取用户信息失败',
       updateUserInfoError: '更新用户信息失败',
       updateUserInfoSuccess: '用户信息更新成功',
+      noAuthInfo: '未找到认证信息，请重新注册。',
       avatarUploadError: '头像上传失败',
+      avatarUploading: '正在上传头像...',
+      skipping: '正在跳过...',
       fileSizeError: '文件大小过大（最大5MB）',
       fileTypeError: '无效的文件类型（仅支持图片）',
     },

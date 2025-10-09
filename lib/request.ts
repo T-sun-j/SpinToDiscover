@@ -84,12 +84,7 @@ export async function request<T = any>(
       );
     }
     
-    return {
-      success: true,
-      data: data.data || data,
-      message: data.message,
-      code: data.code,
-    };
+    return data;
     
   } catch (error) {
     // 处理不同类型的错误

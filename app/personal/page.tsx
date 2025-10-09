@@ -8,7 +8,7 @@ import { Footer } from '../../components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApi } from '../../lib/hooks/useApi';
 import { getMyPageList } from '../../lib/services';
 import { MyPageItem } from '../../lib/api';
@@ -22,6 +22,7 @@ export default function PersonalPage() {
     const { getEmail } = useAuth();
     const [isFollowing, setIsFollowing] = useState(false);
     const [postsData, setPostsData] = useState<MyPageItem[]>([]);
+    const hasLoaded = useRef(false);
 
     // 使用API Hook获取个人作品数据
     const { data, loading, error, execute, userParams } = useApi(
@@ -48,10 +49,11 @@ export default function PersonalPage() {
 
     // 组件挂载时获取数据
     useEffect(() => {
-        if (userParams) {
+        if (userParams && userParams.userId && userParams.token && !hasLoaded.current) {
+            hasLoaded.current = true;
             execute();
         }
-    }, [execute, userParams]);
+    }, [userParams?.userId, userParams?.token, execute]);
 
     // 更新作品数据
     useEffect(() => {

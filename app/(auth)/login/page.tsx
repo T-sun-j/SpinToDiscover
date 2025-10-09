@@ -9,10 +9,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginUser } from '../../../lib/auth';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function LoginPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
+	const { setAuthInfo } = useAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
 		email: '',
@@ -21,14 +23,9 @@ export default function LoginPage() {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// 密码验证
+	// 基本密码验证 - 登录时只需要检查密码不为空
 	const validatePassword = (password: string) => {
-		const hasUpperCase = /[A-Z]/.test(password);
-		const hasLowerCase = /[a-z]/.test(password);
-		const hasNumbers = /\d/.test(password);
-		const hasMinLength = password.length >= 8;
-		
-		return hasUpperCase && hasLowerCase && hasNumbers && hasMinLength;
+		return password && password.length > 0;
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -59,12 +56,23 @@ export default function LoginPage() {
 			);
 			
 			if (response.success) {
-				// 登录成功，跳转到首页
-				router.push('/');
+				// 登录成功，存储认证信息
+				if (response as any) {
+					console.log('Login response:', response);
+					setAuthInfo({
+						userId: (response as any).data.userId || '',
+						token: (response as any).token,
+						email: (response as any).data.email || formData.email,
+					});
+				}
+				
+				// 跳转到广场页
+				router.push('/square');
 			} else {
-				setErrorMessage(response.message || t('auth.loginError'));
+				setErrorMessage(response.message || response.error || t('auth.loginError'));
 			}
 		} catch (error) {
+			console.error('Login error:', error);
 			setErrorMessage(error instanceof Error ? error.message : t('auth.loginError'));
 		} finally {
 			setIsSubmitting(false);

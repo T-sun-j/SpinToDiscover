@@ -7,6 +7,7 @@ import { request, RequestError } from './request';
 import { 
   RegisterRequest, 
   RegisterResponse, 
+  LoginResponse,
   ApiResponse,
   PostSquareRequest, 
   GetHomeListRequest, 
@@ -20,7 +21,10 @@ import {
   FollowUserRequest,
   InteractionResponse,
   GetUserInfoRequest,
-  UserInfoResponse
+  UserInfoResponse,
+  UploadAvatarRequest,
+  UploadAvatarResponse,
+  API_CONFIG
 } from './api';
 
 /**
@@ -53,15 +57,15 @@ export async function registerUser(registerData: RegisterRequest): Promise<ApiRe
  * @param email 邮箱
  * @param password 密码
  * @param language 语言设置
- * @returns Promise<ApiResponse>
+ * @returns Promise<ApiResponse<LoginResponse>>
  */
 export async function loginUser(
   email: string, 
   password: string, 
   language: string = 'en'
-): Promise<ApiResponse> {
+): Promise<ApiResponse<LoginResponse>> {
   try {
-    const response = await request('login', {
+    const response = await request<LoginResponse>('login', {
       email,
       password,
       language,
@@ -372,5 +376,120 @@ export async function toggleFollowUser(followData: FollowUserRequest): Promise<A
       throw new Error(`关注操作失败: ${error.message}`);
     }
     throw new Error('关注操作过程中发生未知错误');
+  }
+}
+
+/**
+ * 上传头像API
+ * @param file 头像文件
+ * @returns Promise<ApiResponse<UploadAvatarResponse>>
+ */
+export async function uploadAvatar(file: File): Promise<ApiResponse<UploadAvatarResponse>> {
+  try {
+    // 将文件转换为base64
+    const base64String = await fileToBase64(file);
+    
+    // 使用与其他API相同的请求模式，使用集中配置的端点
+    const response = await uploadRequest<UploadAvatarResponse>(API_CONFIG.ENDPOINTS.UPLOAD_IMG, base64String);
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`头像上传失败: ${error.message}`);
+    }
+    throw new Error('头像上传过程中发生未知错误');
+  }
+}
+
+/**
+ * 将文件转换为base64字符串
+ * @param file 文件对象
+ * @returns Promise<string> base64字符串
+ */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result);
+    };
+    reader.onerror = () => reject(new Error('文件读取失败'));
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * 文件上传请求函数 - 使用与其他API相同的模式
+ * @param action 操作名称
+ * @param base64Data base64数据
+ * @returns Promise<ApiResponse<T>>
+ */
+async function uploadRequest<T = any>(
+  action: string,
+  base64Data: string
+): Promise<ApiResponse<T>> {
+  try {
+    // 构建上传URL，使用集中配置
+    const url = `${API_CONFIG.UPLOAD_URL}?action=${action}`;
+    
+    // 创建请求体数据
+    const formData = new FormData();
+    formData.append('avatar', base64Data);
+    
+    // 创建超时控制器
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT);
+    
+    // 发起请求
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+    });
+    
+    // 清除超时定时器
+    clearTimeout(timeoutId);
+    
+    // 检查响应状态
+    if (!response.ok) {
+      throw new RequestError(
+        `HTTP Error: ${response.status} ${response.statusText}`,
+        response.status
+      );
+    }
+    
+    // 解析响应数据
+    const data = await response.json();
+    
+    // 检查业务逻辑错误
+    if (data.error || (data.code !== undefined && data.code !== 0) || data.success === false) {
+      throw new RequestError(
+        data.message || data.error || 'Upload failed',
+        response.status,
+        data.code
+      );
+    }
+    
+    return {
+      success: true,
+      data: data.data || data,
+      message: data.message,
+      code: data.code,
+    };
+    
+  } catch (error) {
+    // 处理不同类型的错误
+    if (error instanceof RequestError) {
+      throw error;
+    }
+    
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new RequestError('Request timeout', 408);
+      }
+      throw new RequestError(error.message, 0);
+    }
+    
+    throw new RequestError('Unknown error occurred', 0);
   }
 }

@@ -8,12 +8,15 @@ import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getUserInfo, updateUserInfo } from '../../../lib/auth';
+import { getUserInfo, updateUserInfo, uploadAvatar } from '../../../lib/auth';
+import { useAuth } from '../../../contexts/AuthContext';
+import { buildAvatarUrl } from '../../../lib/api';
 
 export default function PersonalizationPage() {
     const { t } = useLanguage();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { authInfo, isAuthenticated } = useAuth();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState({
@@ -31,37 +34,50 @@ export default function PersonalizationPage() {
         token: ''
     });
     const [isFromRegistration, setIsFromRegistration] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
-    // 从URL参数中获取用户信息
+    // 默认值
+    const DEFAULT_AVATAR = '/img/avatar.png';
+    const DEFAULT_NICKNAME = 'User';
+
+    // 初始化页面
     useEffect(() => {
-        const email = searchParams.get('email');
-        const userId = searchParams.get('userId');
-        const token = searchParams.get('token');
         const from = searchParams.get('from'); // 检查来源参数
         
         // 判断是否来自注册流程
-        setIsFromRegistration(from === 'register' || (!email && !userId && !token));
+        setIsFromRegistration(from === 'register');
         
-        if (email && userId && token) {
-            setUserParams({ email, userId, token });
-            // 获取用户信息
-            loadUserInfo(email, userId, token);
+        if (isAuthenticated && authInfo) {
+            // 如果有认证信息，设置用户参数但不立即获取用户信息
+            setUserParams({ 
+                email: authInfo.email, 
+                userId: authInfo.userId, 
+                token: authInfo.token 
+            });
+            
+            // 如果不是来自注册流程，才获取用户信息
+            if (from !== 'register') {
+                loadUserInfo(authInfo.email, authInfo.userId, authInfo.token);
+            } else {
+                // 来自注册流程，生成随机昵称
+                generateRandomNickname();
+            }
         } else {
-            // 如果没有参数，生成随机昵称
+            // 如果没有认证信息，生成随机昵称
             generateRandomNickname();
         }
-    }, [searchParams]);
+    }, [searchParams, isAuthenticated, authInfo]);
 
     // 获取用户信息
     const loadUserInfo = async (email: string, userId: string, token: string) => {
         setIsLoading(true);
         try {
-            const response = await getUserInfo(email, userId, token);
+            const response = await getUserInfo({ email, userId, token });
             if (response.success && response.data) {
                 setFormData(prev => ({
                     ...prev,
-                    nickname: response.data.nickname || '',
-                    avatarPreview: response.data.avatar || ''
+                    nickname: response.data!.nickname || '',
+                    avatarPreview: buildAvatarUrl(response.data!.avatar, '')
                 }));
             }
         } catch (error) {
@@ -120,25 +136,37 @@ export default function PersonalizationPage() {
         setSuccessMessage('');
 
         try {
-            // 如果没有设置昵称，生成随机昵称
-            let finalNickname = formData.nickname;
-            if (!finalNickname) {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let result = '';
-                for (let i = 0; i < 8; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                finalNickname = result;
-            }
+            // 如果没有设置昵称，使用默认昵称
+            let finalNickname = formData.nickname || DEFAULT_NICKNAME;
+            let finalAvatar = formData.avatarPreview || DEFAULT_AVATAR;
 
             // 如果有用户参数，调用更新用户信息API
             if (userParams.email && userParams.userId && userParams.token) {
+                // 如果用户上传了头像，先上传头像
+                if (formData.avatar) {
+                    setIsUploadingAvatar(true);
+                    try {
+                        const uploadResponse = await uploadAvatar(formData.avatar);
+                        if (uploadResponse.success && uploadResponse.data?.img) {
+                            finalAvatar = uploadResponse.data.img;
+                        } else {
+                            setErrorMessage(t('auth.avatarUploadError'));
+                            return;
+                        }
+                    } catch (uploadError) {
+                        setErrorMessage(t('auth.avatarUploadError'));
+                        return;
+                    } finally {
+                        setIsUploadingAvatar(false);
+                    }
+                }
+
                 const response = await updateUserInfo(
                     userParams.email,
                     userParams.userId,
                     userParams.token,
                     finalNickname,
-                    formData.avatarPreview,
+                    finalAvatar,
                     'en'
                 );
 
@@ -152,8 +180,8 @@ export default function PersonalizationPage() {
                     setErrorMessage(response.message || t('auth.updateUserInfoError'));
                 }
             } else {
-                // 如果没有用户参数，直接跳转（新用户注册流程）
-                // router.push('/personal-center');
+                // 如果没有用户参数，显示错误信息
+                setErrorMessage(t('auth.noAuthInfo'));
             }
         } catch (error) {
             setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError'));
@@ -163,8 +191,79 @@ export default function PersonalizationPage() {
     };
 
     // 处理跳过
-    const handleSkip = () => {
-        router.push('/personal-center');
+    const handleSkip = async () => {
+        if (!userParams.email || !userParams.userId || !userParams.token) {
+            setErrorMessage(t('auth.noAuthInfo'));
+            return;
+        }
+
+        setIsSubmitting(true);
+        setErrorMessage('');
+        setSuccessMessage('');
+
+        try {
+            // 上传默认头像
+            setIsUploadingAvatar(true);
+            let finalAvatar = DEFAULT_AVATAR;
+            
+            try {
+                // 获取默认头像文件
+                const defaultAvatarFile = await getDefaultAvatarFile();
+                if (defaultAvatarFile) {
+                    const uploadResponse = await uploadAvatar(defaultAvatarFile);
+                    if (uploadResponse.success && uploadResponse.data?.img) {
+                        finalAvatar = uploadResponse.data.img;
+                    }
+                }
+            } catch (uploadError) {
+                console.log('Failed to upload default avatar, using fallback:', uploadError);
+                // 如果上传失败，继续使用默认路径
+            } finally {
+                setIsUploadingAvatar(false);
+            }
+
+            // 使用默认头像和昵称更新用户信息
+            const response = await updateUserInfo(
+                userParams.email,
+                userParams.userId,
+                userParams.token,
+                DEFAULT_NICKNAME,
+                finalAvatar,
+                'en'
+            );
+
+            if (response.success) {
+                setSuccessMessage(t('auth.updateUserInfoSuccess'));
+                // 成功后跳转到个人中心页面
+                setTimeout(() => {
+                    router.push('/personal-center');
+                }, 2000);
+            } else {
+                setErrorMessage(response.message || t('auth.updateUserInfoError'));
+            }
+        } catch (error) {
+            setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError'));
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // 获取默认头像文件
+    const getDefaultAvatarFile = async (): Promise<File | null> => {
+        try {
+            // 从public目录获取默认头像
+            const response = await fetch('/img/avatar.png');
+            if (!response.ok) {
+                return null;
+            }
+            
+            const blob = await response.blob();
+            const file = new File([blob], 'avatar.png', { type: 'image/png' });
+            return file;
+        } catch (error) {
+            console.log('Failed to load default avatar file:', error);
+            return null;
+        }
     };
 
     // 处理返回
@@ -196,7 +295,7 @@ export default function PersonalizationPage() {
                     {/* 头像上传区域 */}
                     <div className="flex flex-col items-center space-y-4">
                         <div
-                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-dashed border-gray-300 hover:border-[#101729] transition-colors"
+                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-gray-300 hover:border-[#101729] transition-colors"
                             onClick={() => fileInputRef.current?.click()}
                         >
                             {formData.avatarPreview ? (
@@ -259,13 +358,15 @@ export default function PersonalizationPage() {
                         type="submit"
                         className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
                         size="lg"
-                        disabled={isSubmitting || !!successMessage}
+                        disabled={isSubmitting || isUploadingAvatar || !!successMessage}
                     >
-                        {isSubmitting 
-                            ? t('personalization.submitting') 
-                            : successMessage 
-                                ? t('auth.updateUserInfoSuccess')
-                                : t('personalization.submit')
+                        {isUploadingAvatar 
+                            ? t('auth.avatarUploading')
+                            : isSubmitting 
+                                ? t('personalization.submitting') 
+                                : successMessage 
+                                    ? t('auth.updateUserInfoSuccess')
+                                    : t('personalization.submit')
                         }
                     </Button>
 
@@ -275,9 +376,19 @@ export default function PersonalizationPage() {
                             <button
                                 type="button"
                                 onClick={handleSkip}
-                                className="flex items-center text-md text-gray-600 hover:text-gray-800 font-bold font-nunito"
+                                disabled={isSubmitting || isUploadingAvatar || !!successMessage}
+                                className={`flex items-center text-md font-bold font-nunito ${
+                                    isSubmitting || isUploadingAvatar || successMessage
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`}
                             >
-                                {t('personalization.skip')}
+                                {isUploadingAvatar 
+                                    ? t('auth.avatarUploading')
+                                    : isSubmitting 
+                                        ? t('auth.skipping') 
+                                        : t('personalization.skip')
+                                }
                                 <ChevronRight className="w-5 h-5 ml-1" />
                             </button>
                         </div>

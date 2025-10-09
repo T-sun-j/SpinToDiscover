@@ -6,7 +6,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { ChevronLeft, Play, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useApi } from "../../lib/hooks/useApi";
 import { getBrowsingList } from "../../lib/services";
 import { BrowsingHistoryItem } from "../../lib/api";
@@ -17,6 +17,7 @@ export default function HistoryPage() {
   const { t } = useLanguage();
   const router = useRouter();
   const [historyData, setHistoryData] = useState<BrowsingHistoryItem[]>([]);
+  const hasLoaded = useRef(false);
 
   // 使用API Hook获取浏览历史数据
   const { data, loading, error, execute, userParams } = useApi(
@@ -43,10 +44,11 @@ export default function HistoryPage() {
 
   // 组件挂载时获取数据
   useEffect(() => {
-    if (userParams) {
+    if (userParams && userParams.userId && userParams.token && !hasLoaded.current) {
+      hasLoaded.current = true;
       execute();
     }
-  }, [execute, userParams]);
+  }, [userParams?.userId, userParams?.token, execute]);
 
   // 更新历史数据
   useEffect(() => {

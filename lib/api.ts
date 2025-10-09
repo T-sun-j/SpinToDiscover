@@ -3,10 +3,37 @@
  * 全局API配置
  */
 
+// 服务器配置
+export const SERVER_CONFIG = {
+  // 服务器基础URL
+  BASE_URL: 'http://dis.diatal.com',
+  
+  // 静态资源URL
+  STATIC_URL: 'http://dis.diatal.com',
+}
+
+// 工具函数：构建头像URL
+export const buildAvatarUrl = (avatarPath?: string, fallback: string = '/img/avatar.png'): string => {
+  if (!avatarPath) {
+    return fallback;
+  }
+  
+  // 如果已经是完整URL，直接返回
+  if (avatarPath.startsWith('http')) {
+    return avatarPath;
+  }
+  
+  // 构建完整URL
+  return `${SERVER_CONFIG.STATIC_URL}${avatarPath}`;
+}
+
 // API基础配置
 export const API_CONFIG = {
   // 基础URL
-  BASE_URL: 'http://dis.diatal.com/homeapi.php',
+  BASE_URL: `${SERVER_CONFIG.BASE_URL}/homeapi.php`,
+  
+  // 上传服务URL
+  UPLOAD_URL: `${SERVER_CONFIG.BASE_URL}/upimg.php`,
   
   // 请求超时时间 (毫秒)
   TIMEOUT: 10000,
@@ -21,6 +48,7 @@ export const API_CONFIG = {
   ENDPOINTS: {
     REGISTER: 'register',
     LOGIN: 'login',
+    UPLOAD_IMG: 'uploadimg',
     // 可以在这里添加更多端点
   }
 } as const;
@@ -65,6 +93,14 @@ export interface RegisterRequest {
 
 // 注册响应类型
 export interface RegisterResponse {
+  userId: string;
+  token: string;
+  email: string;
+  message?: string;
+}
+
+// 登录响应类型
+export interface LoginResponse {
   userId: string;
   token: string;
   email: string;
@@ -301,5 +337,23 @@ export interface UserInfo {
 
 // 用户信息响应类型
 export interface UserInfoResponse {
-  user: UserInfo;
+  id: string;
+  email: string;
+  nickname: string;
+  avatar?: string;
+  language: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// 头像上传请求参数类型
+export interface UploadAvatarRequest {
+  avatar: File;
+}
+
+// 头像上传响应类型
+export interface UploadAvatarResponse {
+  img: string;
+  code: number;
 }
