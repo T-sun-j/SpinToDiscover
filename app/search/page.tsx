@@ -6,6 +6,7 @@ import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { Button } from '../../components/ui/button';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { AuthGuard } from '../../components/AuthGuard';
 import { ArrowLeft, Search, Trash2, ChevronDown } from 'lucide-react';
 
 export default function SearchPage() {
@@ -69,13 +70,14 @@ export default function SearchPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto bg-white min-h-screen relative">
-        {/* Header */}
-        <Header 
-          showLanguage={true} 
-          showUser={true} 
-          logoLink="/"
+    <AuthGuard>
+      <div className="min-h-screen bg-white">
+        <div className="max-w-md mx-auto bg-white min-h-screen relative">
+          {/* Header */}
+          <Header 
+            showLanguage={true} 
+            showUser={true} 
+            logoLink="/"
           className="border-b border-gray-200"
         />
 
@@ -175,8 +177,9 @@ export default function SearchPage() {
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0">
           <Footer />
+          </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }

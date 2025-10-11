@@ -6,14 +6,15 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { loginUser } from '../../../lib/auth';
 import { useAuth } from '../../../contexts/AuthContext';
 
 export default function LoginPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { setAuthInfo } = useAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
@@ -22,6 +23,44 @@ export default function LoginPage() {
 	});
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	// 获取重定向URL，并清理可能的循环重定向
+	const getCleanRedirectUrl = () => {
+		const rawRedirect = searchParams.get('redirect') || '/square';
+		console.log('Login page - raw redirect parameter:', rawRedirect);
+		
+		try {
+			// 解码URL参数
+			const decodedRedirect = decodeURIComponent(rawRedirect);
+			console.log('Login page - decoded redirect:', decodedRedirect);
+			
+			// 如果重定向URL包含登录页面或嵌套的重定向参数，则使用默认页面
+			if (decodedRedirect.includes('/login') || 
+			    decodedRedirect.includes('redirect=') ||
+			    decodedRedirect.includes('%2Flogin') ||
+			    decodedRedirect.includes('%252Flogin')) {
+				console.log('Login page - detected loop, using default redirect');
+				return '/square';
+			}
+			
+			// 确保重定向URL是有效的路径
+			if (decodedRedirect.startsWith('/') && 
+			    !decodedRedirect.includes('?') &&
+			    !decodedRedirect.includes('redirect=')) {
+				console.log('Login page - using clean redirect:', decodedRedirect);
+				return decodedRedirect;
+			}
+			
+			console.log('Login page - invalid redirect, using default');
+			return '/square';
+		} catch (error) {
+			console.warn('Login page - failed to parse redirect URL:', rawRedirect, error);
+			return '/square';
+		}
+	};
+	
+	const redirectUrl = getCleanRedirectUrl();
+	console.log('Login page - final redirect URL:', redirectUrl);
 
 	// 基本密码验证 - 登录时只需要检查密码不为空
 	const validatePassword = (password: string) => {
@@ -66,8 +105,8 @@ export default function LoginPage() {
 					});
 				}
 				
-				// 跳转到广场页
-				router.push('/square');
+				// 跳转到重定向URL或广场页
+				router.push(redirectUrl);
 			} else {
 				setErrorMessage(response.message || response.error || t('auth.loginError'));
 			}

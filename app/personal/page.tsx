@@ -11,10 +11,12 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useApi } from '../../lib/hooks/useApi';
 import { getMyPageList } from '../../lib/services';
-import { MyPageItem } from '../../lib/api';
+import { getUserInfo } from '../../lib/auth';
+import { MyPageItem, UserInfoResponse, buildAvatarUrl } from '../../lib/api';
 import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } from '../../lib/constants';
 import { classNames } from '../../lib/utils/classNames';
 import { useAuth } from '../../contexts/AuthContext';
+import { AuthGuard } from '../../components/AuthGuard';
 
 export default function PersonalPage() {
     const { t } = useLanguage();
@@ -22,7 +24,9 @@ export default function PersonalPage() {
     const { getEmail } = useAuth();
     const [isFollowing, setIsFollowing] = useState(false);
     const [postsData, setPostsData] = useState<MyPageItem[]>([]);
+    const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
     const hasLoaded = useRef(false);
+    const userInfoLoaded = useRef(false);
 
     // 使用API Hook获取个人作品数据
     const { data, loading, error, execute, userParams } = useApi(
@@ -47,6 +51,25 @@ export default function PersonalPage() {
         }
     );
 
+    // 使用API Hook获取用户信息
+    const { 
+        data: userInfoData, 
+        loading: userInfoLoading, 
+        error: userInfoError, 
+        execute: executeUserInfo 
+    } = useApi(
+        async (params) => {
+            const response = await getUserInfo({
+                email: getEmail() || '',
+                userId: params.userId,
+                token: params.token,
+            });
+            // 直接返回response，因为getUserInfo已经返回了ApiResponse<UserInfoResponse>
+            return response;
+        },
+        null
+    );
+
     // 组件挂载时获取数据
     useEffect(() => {
         if (userParams && userParams.userId && userParams.token && !hasLoaded.current) {
@@ -55,12 +78,27 @@ export default function PersonalPage() {
         }
     }, [userParams?.userId, userParams?.token, execute]);
 
+    // 获取用户信息
+    useEffect(() => {
+        if (userParams && userParams.userId && userParams.token && !userInfoLoaded.current) {
+            userInfoLoaded.current = true;
+            executeUserInfo();
+        }
+    }, [userParams?.userId, userParams?.token, executeUserInfo]);
+
     // 更新作品数据
     useEffect(() => {
         if (data?.posts) {
             setPostsData(data.posts);
         }
     }, [data]);
+
+    // 更新用户信息数据
+    useEffect(() => {
+        if (userInfoData && userInfoData.success && userInfoData.data) {
+            setUserInfo(userInfoData.data);
+        }
+    }, [userInfoData]);
 
     const handleBack = () => {
         router.back();
@@ -110,18 +148,14 @@ export default function PersonalPage() {
     };
 
     return (
-        <main className={classNames(
-            'flex',
-            HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
-            HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
-            'bg-white'
-        )}>
-            {/* Header */}
-            <Header
-                showLanguage
-                showSearch
-                showUser
-            />
+        <AuthGuard>
+            <main className="container-page flex min-h-dvh flex-col bg-white">
+                {/* Header */}
+                <Header
+                    showLanguage
+                    showSearch
+                    showUser
+                />
 
             {/* User and Brand Info */}
             <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
@@ -129,11 +163,11 @@ export default function PersonalPage() {
                     HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
                 )}>
                     <div className={classNames(
-                        'flex items-center',
+                        'flex items-center text-[#101729]',
                         UI_CONSTANTS.SPACING.GAP_4
                     )}>
                         <Image
-                            src="/img/avatar.png"
+                            src={buildAvatarUrl(userInfo?.avatar)}
                             alt="User Avatar"
                             width={16}
                             height={16}
@@ -144,15 +178,17 @@ export default function PersonalPage() {
                         />
                         <div>
                             <h2 className={classNames(
-                                'text-lg',
+                                'text-lg text-[#101729]',
                                 UI_CONSTANTS.COLORS.PRIMARY,
                                 UI_CONSTANTS.FONTS.POPPINS
-                            )}>Miaham</h2>
+                            )}>
+                                {userInfo?.nickname || 'Miaham'}
+                            </h2>
                         </div>
                     </div>
                     {/* Edit and Settings buttons */}
                     <div className={classNames(
-                        'flex items-center',
+                        'flex items-center text-[#101729]',
                         UI_CONSTANTS.SPACING.GAP_2
                     )}>
                         <Link href="/personal-center">
@@ -166,33 +202,50 @@ export default function PersonalPage() {
                     </div>
                 </div>
 
-                {/* 品牌信息 */}
+                {/* 用户信息 */}
                 <div className="flex flex-col gap-3 ml-14">
-                    {/* 品牌网站 */}
+                    {/* 品牌信息 */}
                     <div className="flex items-center gap-3">
-                        <span className="text-l text-gray-700 font-nunito">Brand:</span>
-                        <a href={`https://${post.brandWebsite}`} className="text-[#101729] hover:underline font-nunito">
-                            {post.brandWebsite}
-                        </a>
+                        <span className="text-l text-[#101729] font-nunito">Brand:</span>
+                        {userInfo?.brand ? (
+                            <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
+                        ) : (
+                            <Link href="/brand-edit" className="flex items-center gap-1 hover:opacity-80">
+                                <Edit className="h-4 w-4 text-[#101729]" />
+                            </Link>
+                        )}
                     </div>
 
-                    {/* 营业时间 */}
-                    <div className="flex items-start gap-3">
-                        <span className="text-l text-gray-700 font-nunito">Brief:</span>
-                        <div className="flex-1 flex ">
-                            <p className="text-[12px] text-gray-700 font-inter leading-relaxed">{post.operatingHours}</p>
-                            <img
-                                src="/img/band.png"
-                                alt="Loro Piana Logo"
-                                className="h-8 w-auto"
-                            />
+                    {/* 官方网站 */}
+                    {userInfo?.officialsite && (
+                        <div className="flex items-center gap-3">
+                            <span className="text-l text-[#101729] font-nunito">Website:</span>
+                            <a href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`} 
+                               className="text-[#101729] hover:underline font-nunito" 
+                               target="_blank" 
+                               rel="noopener noreferrer">
+                                {userInfo.officialsite}
+                            </a>
                         </div>
-                    </div>
-                    <div className="ml-8">
-                        <p className="text-[12px] text-gray-700 font-inter">{post.customerService}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">{post.workingHours}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">{post.email}</p>
-                    </div>
+                    )}
+
+                    {/* 简介 */}
+                    {userInfo?.brief && (
+                        <div className="flex items-start gap-3">
+                            <span className="text-l text-[#101729] font-nunito">Brief:</span>
+                            <div className="flex-1 flex">
+                                <p className="text-[12px] text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
+                                {userInfo?.logo && (
+                                    <img
+                                        src={userInfo.logo}
+                                        alt="Brand Logo"
+                                        className="h-8 w-auto ml-2"
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </div>
             <div className="mx-4" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
@@ -204,7 +257,7 @@ export default function PersonalPage() {
                     UI_CONSTANTS.SPACING.MB_4
                 )}>
                     <h2 className={classNames(
-                        'text-lg',
+                        'text-lg text-[#101729]',
                         UI_CONSTANTS.COLORS.PRIMARY,
                         UI_CONSTANTS.FONTS.POPPINS
                     )}>{t('personalPage.myPosts')}</h2>
@@ -236,7 +289,7 @@ export default function PersonalPage() {
                             UI_CONSTANTS.COLORS.PRIMARY
                         )} />
                         <span className={classNames(
-                            'ml-2',
+                            'ml-2 text-[#101729]',
                             UI_CONSTANTS.COLORS.PRIMARY,
                             UI_CONSTANTS.FONTS.NUNITO
                         )}>{t("personalPage.loading")}</span>
@@ -253,7 +306,7 @@ export default function PersonalPage() {
                             UI_CONSTANTS.COLORS.RED_500
                         )} />
                         <span className={classNames(
-                            'ml-2',
+                            'ml-2 text-[#101729]',
                             UI_CONSTANTS.COLORS.RED_500,
                             UI_CONSTANTS.FONTS.NUNITO
                         )}>{t("personalPage.error")}</span>
@@ -262,7 +315,7 @@ export default function PersonalPage() {
 
                 {!loading && !error && postsData.length === 0 && (
                     <div className={classNames(
-                        'flex flex-col items-center justify-center',
+                        'flex flex-col items-center justify-center text-[#101729]',
                         UI_CONSTANTS.SPACING.PY_12
                     )}>
                         <div className={classNames(
@@ -289,7 +342,7 @@ export default function PersonalPage() {
                         <p className={classNames(
                             UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
                             UI_CONSTANTS.FONTS.INTER,
-                            'text-center'
+                            'text-center text-[#101729]'
                         )}>
                             {t("personalPage.noPostsDescription")}
                         </p>
@@ -297,7 +350,7 @@ export default function PersonalPage() {
                 )}
 
                 {!loading && !error && postsData.length > 0 && (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4 text-[#101729]">
                         {postsData.map((post) => (
                             <div key={post.id} className="bg-white">
                                 <div className="py-4">
@@ -329,11 +382,11 @@ export default function PersonalPage() {
                                         ))}
                                     </div>
                                     <h3 className={classNames(
-                                        'text-gray-900 mb-2 text-sm',
+                                        'text-[#101729] mb-2 text-sm',
                                         UI_CONSTANTS.FONTS.NUNITO
                                     )}>{post.title}</h3>
                                     <p className={classNames(
-                                        'text-xs text-gray-600 mb-3 line-clamp-2 leading-relaxed',
+                                        'text-xs text-[#101729] mb-3 line-clamp-2 leading-relaxed',
                                         UI_CONSTANTS.FONTS.INTER
                                     )}>{post.description}</p>
                                     <div className={classNames(
@@ -343,7 +396,7 @@ export default function PersonalPage() {
                                             'flex items-center gap-3'
                                         )}>
                                             <button className={classNames(
-                                                'flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700'
+                                                'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
                                             )}>
                                                 <Trash2 className="h-4 w-4" />
                                                 <span className={classNames(
@@ -352,7 +405,7 @@ export default function PersonalPage() {
                                                 )}>{t('personalPage.delete')}</span>
                                             </button>
                                             <button className={classNames(
-                                                'flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700'
+                                                'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
                                             )}>
                                                 <EyeOff className="h-4 w-4" />
                                                 <span className={classNames(
@@ -395,8 +448,9 @@ export default function PersonalPage() {
                     </div>
                 </div>
             </div>
-            {/* Footer */}
-            <Footer />
-        </main>
+                {/* Footer */}
+                <Footer />
+            </main>
+        </AuthGuard>
     );
 }

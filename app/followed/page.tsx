@@ -5,6 +5,7 @@ import { ChevronLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
+import { AuthGuard } from '../../components/AuthGuard';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -28,13 +29,14 @@ export default function FollowedPage() {
   ];
 
   return (
-    <main className="flex min-h-dvh flex-col bg-white">
-      {/* Header */}
-      <Header
-        showLanguage
-        showSearch
-        showUser
-      />
+    <AuthGuard>
+      <main className="flex min-h-dvh flex-col bg-white">
+        {/* Header */}
+        <Header
+          showLanguage
+          showSearch
+          showUser
+        />
 
 
       {/* Tabs for Following/Follower */}
@@ -77,8 +79,9 @@ export default function FollowedPage() {
         ))}
       </div>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }

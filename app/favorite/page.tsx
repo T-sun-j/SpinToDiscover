@@ -3,6 +3,7 @@
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { AuthGuard } from "../../components/AuthGuard";
 import { ChevronLeft, Play, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -89,9 +90,10 @@ export default function FavoritePage() {
   );
 
   return (
-    <main className="flex min-h-dvh flex-col bg-white">
-      {/* Header */}
-      <Header showLanguage showSearch showUser />
+    <AuthGuard>
+      <main className="flex min-h-dvh flex-col bg-white">
+        {/* Header */}
+        <Header showLanguage showSearch showUser />
 
       {/* Page title & back */}
       <div className="flex items-center justify-between px-6 py-2">
@@ -125,8 +127,9 @@ export default function FavoritePage() {
         )}
       </section>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }

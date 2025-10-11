@@ -3,6 +3,7 @@
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { AuthGuard } from "../../components/AuthGuard";
 import { ChevronLeft, Play, Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -144,12 +145,13 @@ export default function HistoryPage() {
   );
 
   return (
-    <main className={classNames(
-      'flex',
-      HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
-      HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
-      'bg-white'
-    )}>
+    <AuthGuard>
+      <main className={classNames(
+        'flex',
+        HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
+        HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
+        'bg-white'
+      )}>
       {/* Header */}
       <Header showLanguage showSearch showUser />
 
@@ -292,8 +294,9 @@ export default function HistoryPage() {
         )}
       </section>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }

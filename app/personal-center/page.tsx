@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { ArrowLeft, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, AlertCircle, RefreshCw, LogOut } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
@@ -16,13 +16,20 @@ import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } f
 import { buildAvatarUrl } from '../../lib/api';
 import { classNames } from '../../lib/utils/classNames';
 import { useAuth } from '../../contexts/AuthContext';
+import { AuthGuard } from '../../components/AuthGuard';
 
 export default function PersonalCenterPage() {
     const { t } = useLanguage();
     const router = useRouter();
-    const { getEmail } = useAuth();
+    const { getEmail, clearAuthInfo } = useAuth();
     const [userData, setUserData] = useState<UserInfoResponse | null>(null);
     const hasLoaded = useRef(false);
+
+    // 退出登录处理函数
+    const handleLogout = () => {
+        clearAuthInfo();
+        router.push('/login');
+    };
 
     // 使用API Hook获取用户信息
     const { data, loading, error, execute, userParams } = useApi(
@@ -53,17 +60,18 @@ export default function PersonalCenterPage() {
     }, [data]);
 
     return (
-        <main className={classNames(
-            'flex',
-            HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
-            HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
-            'bg-white'
-        )}>
-            {/* Header with logo and language toggle */}
-            <Header
-                showLanguage
-                logoLink="/square"
-            />
+        <AuthGuard>
+            <main className={classNames(
+                'flex',
+                HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
+                HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
+                'bg-white'
+            )}>
+                {/* Header with logo and language toggle */}
+                <Header
+                    showLanguage
+                    logoLink="/square"
+                />
 
             {/* 页面标题和返回按钮 */}
             <div className={classNames(
@@ -181,6 +189,15 @@ export default function PersonalCenterPage() {
                                     <Settings className={UI_CONSTANTS.SIZES.ICON_LG} />
                                 </Button>
                             </Link>
+                            <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className={UI_CONSTANTS.COLORS.PRIMARY}
+                                onClick={handleLogout}
+                                title={t('personalCenter.logout') || '退出登录'}
+                            >
+                                <LogOut className={UI_CONSTANTS.SIZES.ICON_LG} />
+                            </Button>
                         </div>
                     </div>
                 )}
@@ -257,16 +274,16 @@ export default function PersonalCenterPage() {
                     <Link href="/release">
                         <Button
                             className={classNames(
-                                'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1',
+                                'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#101729]',
                                 UI_CONSTANTS.COLORS.PRIMARY,
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
                             size="lg"
                         >
-                            <CirclePlus className="h-48 w-48" />
+                            <CirclePlus className="h-48 w-48 ,'text-[#101729]'," />
                             <span className={classNames(
-                                'text-xs',
+                                'text-xs','text-[#101729]',
                                 UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
                             )}>{t('personalCenter.post.button')}</span>
                         </Button>
@@ -274,10 +291,11 @@ export default function PersonalCenterPage() {
                 </div>
             </div>
 
-            {/* Footer */}
-            <div className="mt-auto">
-                <Footer />
-            </div>
-        </main>
+                {/* Footer */}
+                <div className="mt-auto">
+                    <Footer />
+                </div>
+            </main>
+        </AuthGuard>
     );
 }

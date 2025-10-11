@@ -73,6 +73,7 @@ export default function SquarePage() {
 				userId: authInfo.userId,
 				token: authInfo.token,
 				location: currentLocation,
+				tab: activeTab,
 				page: 1,
 				limit: 20
 			});
@@ -88,7 +89,7 @@ export default function SquarePage() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [authInfo, userLocation]);
+	}, [authInfo, userLocation, activeTab]);
 
 	// 初始化页面：获取地理位置并加载内容
 	useEffect(() => {
@@ -127,9 +128,9 @@ export default function SquarePage() {
 				<div className="flex items-center justify-between px-4 pt-2 border-b">
 					<div className="flex space-x-3">
 						<button
-							onClick={() => setActiveTab('recommend')}
+							onClick={() => setActiveTab('Recommend')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'recommend' 
+								activeTab === 'Recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -137,9 +138,9 @@ export default function SquarePage() {
 							{t('square.recommend')}
 						</button>
 						<button
-							onClick={() => setActiveTab('following')}
+							onClick={() => setActiveTab('Following')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'following' 
+								activeTab === 'Following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -147,9 +148,9 @@ export default function SquarePage() {
 							{t('square.following')}
 						</button>
 						<button
-							onClick={() => setActiveTab('nearby')}
+							onClick={() => setActiveTab('Nearby')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'nearby' 
+								activeTab === 'Nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}

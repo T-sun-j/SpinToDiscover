@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/button';
 import { Mail, Lock, ChevronLeft, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
+import { AuthGuard } from '../../components/AuthGuard';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
@@ -94,8 +95,9 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<main className="container-page flex min-h-dvh flex-col bg-white">
-			<Header
+		<AuthGuard>
+			<main className="container-page flex min-h-dvh flex-col bg-white">
+				<Header
 				showLanguage
 			/>
 			{/* 页面标题 */}
@@ -177,7 +179,8 @@ export default function SettingsPage() {
 				>
 					{isSubmitting ? t('settings.submitting') || 'Updating...' : t('settings.submit')}
 				</Button>
-			</form>
-		</main>
+				</form>
+			</main>
+		</AuthGuard>
 	);
 }

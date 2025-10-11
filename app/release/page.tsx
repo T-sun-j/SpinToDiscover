@@ -6,6 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
+import { AuthGuard } from '../../components/AuthGuard';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -28,7 +29,72 @@ export default function ReleasePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [userLocation, setUserLocation] = useState<string>('');
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
+  // 获取用户地理位置
+  const getUserLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      setErrorMessage('您的浏览器不支持地理位置功能');
+      return;
+    }
+
+    setIsGettingLocation(true);
+    setErrorMessage('');
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          // 使用逆地理编码获取地址信息
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=zh`
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            const locationString = `${data.countryName || ''}，${data.city || data.locality || ''}`;
+            setUserLocation(locationString);
+          } else {
+            setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+          }
+        } catch (error) {
+          console.error('获取地址信息失败:', error);
+          setUserLocation('位置获取成功，但地址解析失败');
+        } finally {
+          setIsGettingLocation(false);
+        }
+      },
+      (error) => {
+        console.error('获取位置失败:', error);
+        let errorMessage = '获取位置失败';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = '用户拒绝了位置请求';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = '位置信息不可用';
+            break;
+          case error.TIMEOUT:
+            errorMessage = '获取位置超时';
+            break;
+        }
+        setErrorMessage(errorMessage);
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5分钟缓存
+      }
+    );
+  }, []);
+
+  // 组件加载时自动获取位置
+  useEffect(() => {
+    getUserLocation();
+  }, [getUserLocation]);
 
   // 验证表单数据
   const validateForm = useCallback(() => {
@@ -81,7 +147,7 @@ export default function ReleasePage() {
         token: authInfo!.token,
         title: title.trim(),
         description: content.trim(),
-        location: '中国，北京', // 可以从用户位置获取
+        location: userLocation || '位置获取中...',
         images: images.filter(img => img !== '/img/band.png').join(','), // 过滤掉占位图片
         intro: brandInfoChecked ? briefDescription : '',
         // 其他可选字段可以根据需要添加
@@ -107,13 +173,14 @@ export default function ReleasePage() {
   };
 
   return (
-    <main className="container-page flex min-h-dvh flex-col bg-white">
-      {/* Header */}
-      <Header
-        showLanguage
-        showSearch
-        showUser
-      />
+    <AuthGuard>
+      <main className="container-page flex min-h-dvh flex-col bg-white">
+        {/* Header */}
+        <Header
+          showLanguage
+          showSearch
+          showUser
+        />
 
       {/* Back button and title */}
       <div className="flex items-center justify-between px-6 py-4">
@@ -171,9 +238,20 @@ export default function ReleasePage() {
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-2 text-gray-500">
-          <MapPin className="h-4 w-4" />
-          <span>{t('releasePage.location')}: Istanbul</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-gray-500">
+            <MapPin className="h-4 w-4" />
+            <span>{t('releasePage.location')}: {userLocation || '获取位置中...'}</span>
+          </div>
+          {!userLocation && !isGettingLocation && (
+            <button
+              type="button"
+              onClick={getUserLocation}
+              className="text-sm text-blue-500 hover:text-blue-700"
+            >
+              重新获取位置
+            </button>
+          )}
         </div>
 
         {/* Advantage Info Section */}
@@ -263,9 +341,10 @@ export default function ReleasePage() {
         </Button>
       </form>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }
 
