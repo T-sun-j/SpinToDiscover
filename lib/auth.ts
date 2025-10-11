@@ -24,6 +24,8 @@ import {
   UserInfoResponse,
   UploadAvatarRequest,
   UploadAvatarResponse,
+  UpdateUserBrandRequest,
+  UpdateUserBrandResponse,
   API_CONFIG
 } from './api';
 
@@ -189,6 +191,37 @@ export async function updateUserInfo(
       throw new Error(`更新用户信息失败: ${error.message}`);
     }
     throw new Error('更新用户信息过程中发生未知错误');
+  }
+}
+
+/**
+ * 更新用户品牌信息API
+ * @param brandData 品牌信息数据
+ * @returns Promise<ApiResponse<UpdateUserBrandResponse>>
+ */
+export async function updateUserBrand(
+  brandData: UpdateUserBrandRequest
+): Promise<ApiResponse<UpdateUserBrandResponse>> {
+  try {
+    const response = await request<UpdateUserBrandResponse>('updateuserbrand', {
+      email: brandData.email,
+      userId: brandData.userId,
+      token: brandData.token,
+      brand: brandData.brand || '',
+      brief: brandData.brief || '',
+      logo: brandData.logo || '',
+      officialsite: brandData.officialsite || '',
+      tel: brandData.tel || '',
+      address: brandData.address || '',
+      location: brandData.location || '',
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`更新品牌信息失败: ${error.message}`);
+    }
+    throw new Error('更新品牌信息过程中发生未知错误');
   }
 }
 

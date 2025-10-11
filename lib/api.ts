@@ -345,6 +345,13 @@ export interface UserInfoResponse {
   status: number;
   createdAt: string;
   updatedAt: string;
+  address?: string | null;
+  brand?: string | null;
+  brief?: string | null;
+  location?: string;
+  logo?: string | null;
+  officialsite?: string | null;
+  tel?: string;
 }
 
 // 头像上传请求参数类型
@@ -356,4 +363,25 @@ export interface UploadAvatarRequest {
 export interface UploadAvatarResponse {
   img: string;
   code: number;
+}
+
+// 更新用户品牌信息请求参数类型
+export interface UpdateUserBrandRequest {
+  email: string;
+  userId: string;
+  token: string;
+  brand?: string;
+  brief?: string;
+  logo?: string;
+  officialsite?: string;
+  tel?: string;
+  address?: string;
+  location?: string;
+}
+
+// 更新用户品牌信息响应类型
+export interface UpdateUserBrandResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }

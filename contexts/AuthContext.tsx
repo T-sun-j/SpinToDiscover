@@ -103,20 +103,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // 初始化时从存储中获取认证信息
   useEffect(() => {
+    console.log('AuthContext: Initializing auth state...');
+    
     // 首先尝试从URL参数获取
     const userId = searchParams.get('userId');
     const token = searchParams.get('token');
     const email = searchParams.get('email');
     
     if (userId && token && email) {
+      console.log('AuthContext: Found auth info in URL parameters');
       const urlAuthInfo = { userId, token, email };
       setAuthInfoState(urlAuthInfo);
       storeAuthInfo(urlAuthInfo);
     } else {
       // 如果URL没有参数，从存储中获取
+      console.log('AuthContext: Checking local storage for auth info...');
       const storedAuthInfo = getStoredAuthInfo();
       if (storedAuthInfo) {
+        console.log('AuthContext: Found stored auth info:', { 
+          userId: storedAuthInfo.userId, 
+          hasToken: !!storedAuthInfo.token,
+          email: storedAuthInfo.email 
+        });
         setAuthInfoState(storedAuthInfo);
+      } else {
+        console.log('AuthContext: No stored auth info found');
       }
     }
   }, [searchParams]);

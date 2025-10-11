@@ -324,6 +324,22 @@ export interface Translations {
     viewedOn: string;
     location: string;
   };
+  brandEditPage: {
+    title: string;
+    brand: string;
+    brief: string;
+    logo: string;
+    officialSite: string;
+    telMobile: string;
+    address: string;
+    location: string;
+    submit: string;
+    submitting: string;
+    submitSuccess: string;
+    submitError: string;
+    loginRequired: string;
+    authInfoMissing: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -651,6 +667,22 @@ export const translations: Record<Language, Translations> = {
       viewedOn: 'Viewed on',
       location: 'Location',
     },
+    brandEditPage: {
+      title: 'My page',
+      brand: 'Brand',
+      brief: 'Brief',
+      logo: 'Logo',
+      officialSite: 'Official Site',
+      telMobile: 'Tel/Mobile',
+      address: 'Address',
+      location: 'Location',
+      submit: 'Submit',
+      submitting: 'Submitting...',
+      submitSuccess: 'Submitted successfully, redirecting...',
+      submitError: 'Submission failed',
+      loginRequired: 'Please login first',
+      authInfoMissing: 'User authentication information missing',
+    },
   },
   zh: {
     appName: {
@@ -975,6 +1007,22 @@ export const translations: Record<Language, Translations> = {
       noImage: '无图片',
       viewedOn: '浏览于',
       location: '位置',
+    },
+    brandEditPage: {
+      title: '我的页面',
+      brand: '品牌',
+      brief: '简介',
+      logo: '标志',
+      officialSite: '官方网站',
+      telMobile: '电话/手机',
+      address: '地址',
+      location: '位置',
+      submit: '提交',
+      submitting: '提交中...',
+      submitSuccess: '提交成功，正在跳转...',
+      submitError: '提交失败',
+      loginRequired: '请先登录',
+      authInfoMissing: '用户认证信息缺失',
     },
   },
 };

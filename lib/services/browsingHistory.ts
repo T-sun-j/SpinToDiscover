@@ -77,3 +77,4 @@ export async function getMyPageList(
     limit: params.limit || API_CONSTANTS.DEFAULT_LIMIT,
   });
 }
+
