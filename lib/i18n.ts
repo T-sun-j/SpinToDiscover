@@ -246,6 +246,32 @@ export interface Translations {
     errorMessage: string;
     allowingComments: string;
     releaseButton: string;
+    uploadMedia: string;
+    video: string;
+    uploadingImages: string;
+    uploadingVideo: string;
+    publishingContent: string;
+    publishSuccess: string;
+    publishError: string;
+    imageUploadError: string;
+    videoUploadError: string;
+    retryLocation: string;
+    locationError: string;
+    locationParseError: string;
+    locationFailed: string;
+    locationPermissionDenied: string;
+    locationUnavailable: string;
+    locationTimeout: string;
+    authInfoMissing: string;
+    getUserInfoFailed: string;
+    titleRequired: string;
+    contentRequired: string;
+    unknownError: string;
+    gettingLocation: string;
+    publishProcessError: string;
+    publishing: string;
+    addMedia: string;
+    mediaFiles: string;
   };
   followedPage: {
     title: string;
@@ -589,6 +615,32 @@ export const translations: Record<Language, Translations> = {
       errorMessage: 'Error Message',
       allowingComments: 'Allowing Comments',
       releaseButton: 'Release',
+      uploadMedia: 'Upload Image/Video',
+      video: 'Video',
+      uploadingImages: 'Uploading images...',
+      uploadingVideo: 'Uploading video...',
+      publishingContent: 'Publishing content...',
+      publishSuccess: 'Published successfully!',
+      publishError: 'Publishing failed, please try again',
+      imageUploadError: 'Image upload failed',
+      videoUploadError: 'Video upload failed',
+      retryLocation: 'Retry Location',
+      locationError: 'Your browser does not support geolocation',
+      locationParseError: 'Location obtained but address parsing failed',
+      locationFailed: 'Failed to get location',
+      locationPermissionDenied: 'User denied location request',
+      locationUnavailable: 'Location information unavailable',
+      locationTimeout: 'Location request timeout',
+      authInfoMissing: 'User authentication information missing',
+      getUserInfoFailed: 'Failed to get user information',
+      titleRequired: 'Title cannot be empty',
+      contentRequired: 'Content cannot be empty',
+      unknownError: 'Unknown error',
+      gettingLocation: 'Getting location...',
+      publishProcessError: 'Error occurred during publishing',
+      publishing: 'Publishing...',
+      addMedia: 'Add Media',
+      mediaFiles: 'media files',
     },
     followedPage: {
       title: 'Followed Page',
@@ -930,6 +982,32 @@ export const translations: Record<Language, Translations> = {
       errorMessage: '错误信息',
       allowingComments: '允许评论',
       releaseButton: '发布按钮',
+      uploadMedia: '上传图片/视频',
+      video: '视频',
+      uploadingImages: '正在上传图片...',
+      uploadingVideo: '正在上传视频...',
+      publishingContent: '正在发布内容...',
+      publishSuccess: '发布成功！',
+      publishError: '发布失败，请重试',
+      imageUploadError: '图片上传失败',
+      videoUploadError: '视频上传失败',
+      retryLocation: '重新获取位置',
+      locationError: '您的浏览器不支持地理位置功能',
+      locationParseError: '位置获取成功，但地址解析失败',
+      locationFailed: '获取位置失败',
+      locationPermissionDenied: '用户拒绝了位置请求',
+      locationUnavailable: '位置信息不可用',
+      locationTimeout: '获取位置超时',
+      authInfoMissing: '用户认证信息缺失',
+      getUserInfoFailed: '获取用户信息失败',
+      titleRequired: '标题不能为空',
+      contentRequired: '内容不能为空',
+      unknownError: '未知错误',
+      gettingLocation: '获取位置中...',
+      publishProcessError: '发布过程中发生错误',
+      publishing: '发布中...',
+      addMedia: '添加媒体',
+      mediaFiles: '个媒体文件',
     },
     followedPage: {
       title: '关注页面',

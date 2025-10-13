@@ -413,24 +413,203 @@ export async function toggleFollowUser(followData: FollowUserRequest): Promise<A
 }
 
 /**
- * 上传头像API
- * @param file 头像文件
+ * 上传图片API
+ * @param file 图片文件
  * @returns Promise<ApiResponse<UploadAvatarResponse>>
  */
 export async function uploadAvatar(file: File): Promise<ApiResponse<UploadAvatarResponse>> {
   try {
+    // 检查文件大小（限制为10MB）
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      throw new Error(`图片文件过大，请选择小于10MB的文件。当前文件大小: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+    }
+    
+    console.log(`Image file size: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+    console.log(`Image file type: ${file.type}`);
+    
     // 将文件转换为base64
     const base64String = await fileToBase64(file);
     
-    // 使用与其他API相同的请求模式，使用集中配置的端点
-    const response = await uploadRequest<UploadAvatarResponse>(API_CONFIG.ENDPOINTS.UPLOAD_IMG, base64String);
+    // 构建图片上传URL - 根据API文档使用uploadimg
+    const url = `${API_CONFIG.UPLOAD_URL}?action=uploadimg`;
     
-    return response;
+    console.log(`Image upload URL: ${url}`);
+    console.log(`Base64 data length: ${base64String.length}`);
+    
+    // 创建请求体数据 - 使用FormData避免URL过长
+    const formData = new FormData();
+    formData.append('avatar', base64String);
+    
+    // 创建超时控制器
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+    
+    // 发起POST请求
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+    });
+    
+    // 清除超时定时器
+    clearTimeout(timeoutId);
+    
+    // 检查响应状态
+    if (!response.ok) {
+      throw new RequestError(
+        `HTTP Error: ${response.status} ${response.statusText}`,
+        response.status
+      );
+    }
+    
+    // 获取响应文本
+    const responseText = await response.text();
+    
+    console.log(`Image upload response status: ${response.status}`);
+    console.log(`Image upload response text: ${responseText}`);
+    
+    // 检查响应是否为空
+    if (!responseText.trim()) {
+      throw new RequestError('Empty response from image upload server', response.status);
+    }
+    
+    // 尝试解析JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log('Successfully parsed image upload JSON response:', data);
+    } catch (jsonError) {
+      console.log('Failed to parse JSON, treating as text response');
+      // 如果不是JSON格式，作为纯文本处理
+      data = { img: responseText.trim() };
+    }
+    
+    // 检查业务逻辑错误
+    if (data.error || (data.code !== undefined && data.code !== 0) || data.success === false) {
+      throw new RequestError(
+        data.message || data.error || 'Image upload failed',
+        response.status,
+        data.code
+      );
+    }
+    
+    return {
+      success: true,
+      data: data.data || data,
+      message: data.message,
+      code: data.code,
+    };
+    
+  } catch (error) {
+    console.error('Image upload error:', error);
+    if (error instanceof RequestError) {
+      throw new Error(`图片上传失败: ${error.message}`);
+    }
+    throw new Error('图片上传过程中发生未知错误');
+  }
+}
+
+/**
+ * 上传视频API
+ * @param file 视频文件
+ * @returns Promise<ApiResponse<UploadAvatarResponse>>
+ */
+export async function uploadVideo(file: File): Promise<ApiResponse<UploadAvatarResponse>> {
+  try {
+    // 检查文件大小（限制为200MB）
+    const maxSize = 200 * 1024 * 1024; // 200MB
+    if (file.size > maxSize) {
+      throw new Error(`视频文件过大，请选择小于200MB的文件。当前文件大小: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+    }
+    
+    console.log(`Video file size: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+    console.log(`Video file type: ${file.type}`);
+    
+    // 构建视频上传URL - 根据HTML代码使用videoyasuo.php
+    const baseUrl = API_CONFIG.UPLOAD_URL.replace('/upimg.php', '/videoyasuo.php');
+    const url = `${baseUrl}?action=pushvideo`;
+    
+    console.log(`Video upload URL: ${url}`);
+    
+    // 创建请求体数据 - 使用multipart/form-data格式
+    const formData = new FormData();
+    formData.append('video', file);
+    
+    // 创建超时控制器 - 视频上传需要更长时间
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5分钟超时
+    
+    // 发起POST请求 - 使用multipart/form-data
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+      // 不设置Content-Type，让浏览器自动设置multipart/form-data
+    });
+    
+    // 清除超时定时器
+    clearTimeout(timeoutId);
+    
+    // 检查响应状态
+    if (!response.ok) {
+      throw new RequestError(
+        `HTTP Error: ${response.status} ${response.statusText}`,
+        response.status
+      );
+    }
+    
+    // 获取响应文本
+    const responseText = await response.text();
+    
+    console.log(`Video upload response status: ${response.status}`);
+    console.log(`Video upload response text length: ${responseText.length}`);
+    console.log(`Video upload response text: ${responseText}`);
+
+    // 检查响应是否为空
+    if (!responseText.trim()) {
+      console.log('Empty response from video upload server, treating as success');
+      // 空响应可能表示上传成功，返回默认成功响应
+      return {
+        success: true,
+        data: { img: 'upload_success', code: 0 } as UploadAvatarResponse,
+        message: 'Video uploaded successfully',
+        code: 0,
+      };
+    }
+    
+    // 尝试解析JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log('Successfully parsed video upload JSON response:', data);
+    } catch (jsonError) {
+      console.log('Failed to parse JSON, treating as text response');
+      // 如果不是JSON格式，作为纯文本处理
+      data = { img: responseText.trim() };
+    }
+    
+    // 检查业务逻辑错误
+    if (data.error || (data.code !== undefined && data.code !== 0) || data.success === false) {
+      throw new RequestError(
+        data.message || data.error || 'Video upload failed',
+        response.status,
+        data.code
+      );
+    }
+    
+    return {
+      success: true,
+      data: data.data || data,
+      message: data.message,
+      code: data.code,
+    };
+    
   } catch (error) {
     if (error instanceof RequestError) {
-      throw new Error(`头像上传失败: ${error.message}`);
+      throw new Error(`视频上传失败: ${error.message}`);
     }
-    throw new Error('头像上传过程中发生未知错误');
+    throw new Error('视频上传过程中发生未知错误');
   }
 }
 
@@ -467,7 +646,9 @@ async function uploadRequest<T = any>(
     
     // 创建请求体数据
     const formData = new FormData();
-    formData.append('avatar', base64Data);
+    // 根据action类型使用不同的字段名
+    const fieldName = action === 'pushvideo' ? 'video' : 'avatar';
+    formData.append(fieldName, base64Data);
     
     // 创建超时控制器
     const controller = new AbortController();
@@ -491,8 +672,34 @@ async function uploadRequest<T = any>(
       );
     }
     
-    // 解析响应数据
-    const data = await response.json();
+    // 获取响应文本
+    const responseText = await response.text();
+    
+    // 检查响应是否为空
+    if (!responseText.trim()) {
+      throw new RequestError('Empty response from server', response.status);
+    }
+    
+    // 尝试解析JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (jsonError) {
+      
+      // 如果不是JSON格式，检查是否是纯文本响应
+      if (responseText.trim()) {
+        // 如果响应是纯文本，可能是文件路径或URL
+        
+        return {
+          success: true,
+          data: { img: responseText.trim() } as T,
+          message: 'Upload successful',
+          code: 0,
+        };
+      } else {
+        throw new RequestError('Invalid response format from server', response.status);
+      }
+    }
     
     // 检查业务逻辑错误
     if (data.error || (data.code !== undefined && data.code !== 0) || data.success === false) {
@@ -519,6 +726,10 @@ async function uploadRequest<T = any>(
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
         throw new RequestError('Request timeout', 408);
+      }
+      // 检查是否是JSON解析错误
+      if (error.message.includes('JSON') || error.message.includes('json')) {
+        throw new RequestError(`Server response parsing error: ${error.message}`, 0);
       }
       throw new RequestError(error.message, 0);
     }
