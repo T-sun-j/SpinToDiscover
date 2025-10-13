@@ -39,24 +39,24 @@ export default function PersonalPage() {
             });
             return response.data;
         },
-        { 
-            posts: [], 
-            pagination: { 
-                currentPage: API_CONSTANTS.DEFAULT_PAGE, 
-                totalPages: 1, 
-                totalItems: 0, 
-                hasNext: false, 
-                hasPrev: false 
-            } 
+        {
+            posts: [],
+            pagination: {
+                currentPage: API_CONSTANTS.DEFAULT_PAGE,
+                totalPages: 1,
+                totalItems: 0,
+                hasNext: false,
+                hasPrev: false
+            }
         }
     );
 
     // 使用API Hook获取用户信息
-    const { 
-        data: userInfoData, 
-        loading: userInfoLoading, 
-        error: userInfoError, 
-        execute: executeUserInfo 
+    const {
+        data: userInfoData,
+        loading: userInfoLoading,
+        error: userInfoError,
+        execute: executeUserInfo
     } = useApi(
         async (params) => {
             const response = await getUserInfo({
@@ -108,346 +108,288 @@ export default function PersonalPage() {
         setIsFollowing(!isFollowing);
     };
 
-    // 模拟数据
-    const post = {
-        id: 1,
-        title: t('square.titleContent'),
-        location: t('square.location'),
-        publisher: t('square.publisher'),
-        description: t('square.description'),
-        likes: 23,
-        totalLikes: 505,
-        shares: 1232,
-        collects: 1232,
-        images: [
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&h=300&fit=crop'
-        ],
-        video: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-        brandWebsite: t('square.brandWebsite'),
-        brandLogo: t('square.brandLogo'),
-        operatingHours: t('square.operatingHours'),
-        customerService: t('square.customerService'),
-        workingHours: t('square.workingHours'),
-        email: t('square.email'),
-        comments: [
-            {
-                id: 1,
-                author: t('square.publisher'),
-                content: 'We warmly welcome all friends who are interested in such brands to explore better product experiences together.',
-                replies: 1
-            },
-            {
-                id: 2,
-                author: t('square.publisher'),
-                content: 'Please click on our website to get in touch with us.',
-                replies: 0
-            }
-        ]
-    };
-
     return (
         <AuthGuard>
-            <main className="container-page flex min-h-dvh flex-col bg-white">
+            <main className=" flex min-h-dvh flex-col bg-white">
                 {/* Header */}
                 <Header
                     showLanguage
-                    showSearch
-                    showUser
                 />
 
-            {/* User and Brand Info */}
-            <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
-                <div className={classNames(
-                    HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
-                )}>
+                {/* User and Brand Info */}
+                <div className={"p-4"}>
                     <div className={classNames(
-                        'flex items-center text-[#101729]',
-                        UI_CONSTANTS.SPACING.GAP_4
-                    )}>
-                        <Image
-                            src={buildAvatarUrl(userInfo?.avatar)}
-                            alt="User Avatar"
-                            width={16}
-                            height={16}
-                            className={classNames(
-                                UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                'w-10 h-10 object-cover'
-                            )}
-                        />
-                        <div>
-                            <h2 className={classNames(
-                                'text-lg text-[#101729]',
-                                UI_CONSTANTS.COLORS.PRIMARY,
-                                UI_CONSTANTS.FONTS.POPPINS
-                            )}>
-                                {userInfo?.nickname || 'Miaham'}
-                            </h2>
-                        </div>
-                    </div>
-                    {/* Edit and Settings buttons */}
-                    <div className={classNames(
-                        'flex items-center text-[#101729]',
-                        UI_CONSTANTS.SPACING.GAP_2
-                    )}>
-                        <Link href="/personal-center">
-                            <Button variant="ghost" size="icon">
-                                <ChevronLeft className={classNames(
-                                    UI_CONSTANTS.SIZES.ICON_LG,
-                                    UI_CONSTANTS.COLORS.PRIMARY
-                                )} />
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-
-                {/* 用户信息 */}
-                <div className="flex flex-col gap-3 ml-14">
-                    {/* 品牌信息 */}
-                    <div className="flex items-center gap-3">
-                        <span className="text-l text-[#101729] font-nunito">Brand:</span>
-                        {userInfo?.brand ? (
-                            <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
-                        ) : (
-                            <Link href="/brand-edit" className="flex items-center gap-1 hover:opacity-80">
-                                <Edit className="h-4 w-4 text-[#101729]" />
-                            </Link>
-                        )}
-                    </div>
-
-                    {/* 官方网站 */}
-                    {userInfo?.officialsite && (
-                        <div className="flex items-center gap-3">
-                            <span className="text-l text-[#101729] font-nunito">Website:</span>
-                            <a href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`} 
-                               className="text-[#101729] hover:underline font-nunito" 
-                               target="_blank" 
-                               rel="noopener noreferrer">
-                                {userInfo.officialsite}
-                            </a>
-                        </div>
-                    )}
-
-                    {/* 简介 */}
-                    {userInfo?.brief && (
-                        <div className="flex items-start gap-3">
-                            <span className="text-l text-[#101729] font-nunito">Brief:</span>
-                            <div className="flex-1 flex">
-                                <p className="text-[12px] text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
-                                {userInfo?.logo && (
-                                    <img
-                                        src={userInfo.logo}
-                                        alt="Brand Logo"
-                                        className="h-8 w-auto ml-2"
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                </div>
-            </div>
-            <div className="mx-4" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
-
-            {/* My Posts section */}
-            <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
-                <div className={classNames(
-                    HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
-                    UI_CONSTANTS.SPACING.MB_4
-                )}>
-                    <h2 className={classNames(
-                        'text-lg text-[#101729]',
-                        UI_CONSTANTS.COLORS.PRIMARY,
-                        UI_CONSTANTS.FONTS.POPPINS
-                    )}>{t('personalPage.myPosts')}</h2>
-                    <button
-                        aria-label={t("personalPage.refresh")}
-                        onClick={() => execute()}
-                        disabled={loading}
-                        className={classNames(
-                            UI_CONSTANTS.COLORS.PRIMARY,
-                            'hover:text-[#101729]/80',
-                            'disabled:opacity-50'
-                        )}
-                    >
-                        <RefreshCw className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_MD,
-                            loading && ANIMATION_CONSTANTS.SPIN
-                        )} />
-                    </button>
-                </div>
-
-                {loading && (
-                    <div className={classNames(
-                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                        UI_CONSTANTS.SPACING.PY_8
-                    )}>
-                        <Loader2 className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_MD,
-                            ANIMATION_CONSTANTS.SPIN,
-                            UI_CONSTANTS.COLORS.PRIMARY
-                        )} />
-                        <span className={classNames(
-                            'ml-2 text-[#101729]',
-                            UI_CONSTANTS.COLORS.PRIMARY,
-                            UI_CONSTANTS.FONTS.NUNITO
-                        )}>{t("personalPage.loading")}</span>
-                    </div>
-                )}
-
-                {error && (
-                    <div className={classNames(
-                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                        UI_CONSTANTS.SPACING.PY_8
-                    )}>
-                        <AlertCircle className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_MD,
-                            UI_CONSTANTS.COLORS.RED_500
-                        )} />
-                        <span className={classNames(
-                            'ml-2 text-[#101729]',
-                            UI_CONSTANTS.COLORS.RED_500,
-                            UI_CONSTANTS.FONTS.NUNITO
-                        )}>{t("personalPage.error")}</span>
-                    </div>
-                )}
-
-                {!loading && !error && postsData.length === 0 && (
-                    <div className={classNames(
-                        'flex flex-col items-center justify-center text-[#101729]',
-                        UI_CONSTANTS.SPACING.PY_12
+                        HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
                     )}>
                         <div className={classNames(
-                            'w-16 h-16',
-                            UI_CONSTANTS.COLORS.GRAY_100,
-                            UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
+                            'flex items-center text-[#101729]',
+                            UI_CONSTANTS.SPACING.GAP_4
+                        )}>
+                            <Image
+                                src={buildAvatarUrl(userInfo?.avatar)}
+                                alt="User Avatar"
+                                width={16}
+                                height={16}
+                                className={classNames(
+                                    UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
+                                    'w-10 h-10 object-cover'
+                                )}
+                            />
+                            <div>
+                                <h2 className={classNames(
+                                    'text-lg text-[#101729]',
+                                    UI_CONSTANTS.COLORS.PRIMARY,
+                                    UI_CONSTANTS.FONTS.POPPINS
+                                )}>
+                                    {userInfo?.nickname || 'Miaham'}
+                                </h2>
+                            </div>
+                        </div>
+                        {/* Edit and Settings buttons */}
+                        <div className={classNames(
+                            'flex items-center text-[#101729]',
+                            UI_CONSTANTS.SPACING.GAP_2
+                        )}>
+                            <Link href="/personal-center">
+                                <Button variant="ghost" size="icon">
+                                    <ChevronLeft className={classNames(
+                                        UI_CONSTANTS.SIZES.ICON_LG,
+                                        UI_CONSTANTS.COLORS.PRIMARY
+                                    )} />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* 用户信息 */}
+                    <div className="relative flex flex-col gap-3 ml-14">
+                        {/* 品牌信息 */}
+                        <div className="flex items-center gap-3">
+                            <span className="text-l text-[#101729] font-nunito">Brand:</span>
+                            {userInfo?.brand ? (
+                                userInfo?.officialsite ? (
+                                    <a
+                                        href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
+                                        className="text-[#101729] font-nunito underline hover:opacity-80"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {userInfo.brand}
+                                    </a>
+                                ) : (
+                                    <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
+                                )
+                            ) : (
+                                <span className="text-[#777] font-nunito">--</span>
+                            )}
+                        </div>
+
+                        {/* 简介 */}
+                        {userInfo?.brief && (
+                            <div className="flex items-start gap-3">
+                                <span className="text-l text-[#101729] font-nunito ml-2">Brief:</span>
+                                <div className="flex-1 flex">
+                                    <p className="text-[12px] pt-1 text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
+                                    {userInfo?.logo && (
+                                        <img
+                                            src={buildAvatarUrl(userInfo.logo)}
+                                            alt="Brand Logo"
+                                            className="h-8 w-auto ml-2"
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                        {userInfo?.tel && userInfo?.address && userInfo?.email && ( <div className="ml-14">
+                        <p className="text-[12px] text-gray-700 font-inter">Customer Service Hotline:{userInfo.tel}</p>
+                        <p className="text-[12px] text-gray-700 font-inter">Working hours:{userInfo.address}</p>
+                        <p className="text-[12px] text-gray-700 font-inter">E-mail:{userInfo.email}</p>
+                    </div>)}
+
+                        {/* Edit按钮布局到底部右下角 */}
+                        <Link
+                            href="/brand-edit"
+                            className="absolute right-0 bottom-0 flex items-center gap-1 hover:opacity-80"
+                            style={{ zIndex: 10 }}
+                        >
+                            <Edit className="h-4 w-4 text-[#101729]" />
+                        </Link>
+                    </div>
+
+                </div>
+                <div className="mx-4" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
+
+                {/* My Posts section */}
+                <div className={classNames(UI_CONSTANTS.SPACING.PX_6)}>
+
+                    {loading && (
+                        <div className={classNames(
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                            UI_CONSTANTS.SPACING.MB_4
+                            UI_CONSTANTS.SPACING.PY_8
+                        )}>
+                            <Loader2 className={classNames(
+                                UI_CONSTANTS.SIZES.ICON_MD,
+                                ANIMATION_CONSTANTS.SPIN,
+                                UI_CONSTANTS.COLORS.PRIMARY
+                            )} />
+                            <span className={classNames(
+                                'ml-2 text-[#101729]',
+                                UI_CONSTANTS.COLORS.PRIMARY,
+                                UI_CONSTANTS.FONTS.NUNITO
+                            )}>{t("personalPage.loading")}</span>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className={classNames(
+                            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                            UI_CONSTANTS.SPACING.PY_8
                         )}>
                             <AlertCircle className={classNames(
-                                UI_CONSTANTS.SIZES.ICON_XL,
-                                UI_CONSTANTS.COLORS.GRAY_400
+                                UI_CONSTANTS.SIZES.ICON_MD,
+                                UI_CONSTANTS.COLORS.RED_500
                             )} />
+                            <span className={classNames(
+                                'ml-2 text-[#101729]',
+                                UI_CONSTANTS.COLORS.RED_500,
+                                UI_CONSTANTS.FONTS.NUNITO
+                            )}>{t("personalPage.error")}</span>
                         </div>
-                        <h3 className={classNames(
-                            HISTORY_CONSTANTS.TEXT_SIZES.SUBTITLE,
-                            UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
-                            UI_CONSTANTS.COLORS.PRIMARY,
-                            UI_CONSTANTS.FONTS.NUNITO,
-                            UI_CONSTANTS.SPACING.MB_2
-                        )}>
-                            {t("personalPage.noPosts")}
-                        </h3>
-                        <p className={classNames(
-                            UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
-                            UI_CONSTANTS.FONTS.INTER,
-                            'text-center text-[#101729]'
-                        )}>
-                            {t("personalPage.noPostsDescription")}
-                        </p>
-                    </div>
-                )}
+                    )}
 
-                {!loading && !error && postsData.length > 0 && (
-                    <div className="grid grid-cols-1 gap-4 text-[#101729]">
-                        {postsData.map((post) => (
-                            <div key={post.id} className="bg-white">
-                                <div className="py-4">
-                                    <div className={classNames(
-                                        'flex items-center gap-2',
-                                        UI_CONSTANTS.SPACING.MB_4
-                                    )}>
-                                        <MapPin className={classNames(
-                                            'h-3 w-3',
-                                            UI_CONSTANTS.COLORS.GRAY_400
-                                        )} />
-                                        <span className={classNames(
-                                            'text-xs',
-                                            UI_CONSTANTS.COLORS.GRAY_400
-                                        )}>{post.location}</span>
-                                    </div>
-                                    <div className={classNames(
-                                        'flex gap-2 mb-3 overflow-x-auto'
-                                    )}>
-                                        {post.images.slice(0, 3).map((image, imageIndex) => (
-                                            <Image
-                                                key={imageIndex}
-                                                src={image || HISTORY_CONSTANTS.IMAGES.DEFAULT_IMAGE}
-                                                alt={`Post ${post.id} image ${imageIndex + 1}`}
-                                                width={136}
-                                                height={96}
-                                                className="w-34 h-24 object-cover rounded flex-shrink-0"
-                                            />
-                                        ))}
-                                    </div>
-                                    <h3 className={classNames(
-                                        'text-[#101729] mb-2 text-sm',
-                                        UI_CONSTANTS.FONTS.NUNITO
-                                    )}>{post.title}</h3>
-                                    <p className={classNames(
-                                        'text-xs text-[#101729] mb-3 line-clamp-2 leading-relaxed',
-                                        UI_CONSTANTS.FONTS.INTER
-                                    )}>{post.description}</p>
-                                    <div className={classNames(
-                                        HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
-                                    )}>
+                    {!loading && !error && postsData.length === 0 && (
+                        <div className={classNames(
+                            'flex flex-col items-center justify-center text-[#101729]',
+                            UI_CONSTANTS.SPACING.PY_12
+                        )}>
+                            <div className={classNames(
+                                'w-16 h-16',
+                                UI_CONSTANTS.COLORS.GRAY_100,
+                                UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
+                                HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                                UI_CONSTANTS.SPACING.MB_4
+                            )}>
+                                <AlertCircle className={classNames(
+                                    UI_CONSTANTS.SIZES.ICON_XL,
+                                    UI_CONSTANTS.COLORS.GRAY_400
+                                )} />
+                            </div>
+                            <h3 className={classNames(
+                                HISTORY_CONSTANTS.TEXT_SIZES.SUBTITLE,
+                                UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
+                                UI_CONSTANTS.COLORS.PRIMARY,
+                                UI_CONSTANTS.FONTS.NUNITO,
+                                UI_CONSTANTS.SPACING.MB_2
+                            )}>
+                                {t("personalPage.noPosts")}
+                            </h3>
+                            <p className={classNames(
+                                UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
+                                UI_CONSTANTS.FONTS.INTER,
+                                'text-center text-[#101729]'
+                            )}>
+                                {t("personalPage.noPostsDescription")}
+                            </p>
+                        </div>
+                    )}
+
+                    {!loading && !error && postsData.length > 0 && (
+                        <div className="grid grid-cols-1 gap-4 text-[#101729]">
+                            {postsData.map((post) => (
+                                <div key={post.id} className="bg-white">
+                                    <div className="py-4">
                                         <div className={classNames(
-                                            'flex items-center gap-3'
+                                            'flex items-center gap-2',
+                                            UI_CONSTANTS.SPACING.MB_4
                                         )}>
-                                            <button className={classNames(
-                                                'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
+                                            <MapPin className={classNames(
+                                                'h-3 w-3','text-[#101729]'
+                                            )} />
+                                            <span className={classNames(
+                                                'text-xs', 'text-[#101729]'
+                                            )}>{post.location}</span>
+                                        </div>
+                                        <div className={classNames(
+                                            'flex gap-2 mb-3 overflow-x-auto'
+                                        )}>
+                                            {post.images.slice(0, 3).map((image, imageIndex) => (
+                                                <Image
+                                                    key={imageIndex}
+                                                    src={buildAvatarUrl(image)}
+                                                    alt={`Post ${post.id} image ${imageIndex + 1}`}
+                                                    width={136}
+                                                    height={96}
+                                                    className="w-34 h-24 object-cover rounded flex-shrink-0"
+                                                />
+                                            ))}
+                                        </div>
+                                        <h3 className={classNames(
+                                            'text-[#101729] mb-2 text-sm',
+                                            UI_CONSTANTS.FONTS.NUNITO
+                                        )}>{post.title}</h3>
+                                        <p className={classNames(
+                                            'text-xs text-[#101729] mb-3 line-clamp-2 leading-relaxed',
+                                            UI_CONSTANTS.FONTS.INTER
+                                        )}>{post.description}</p>
+                                        <div className={classNames(
+                                            HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
+                                        )}>
+                                            <div className={classNames(
+                                                'flex items-center gap-3'
                                             )}>
-                                                <Trash2 className="h-4 w-4" />
-                                                <span className={classNames(
-                                                    'text-xs',
-                                                    UI_CONSTANTS.FONTS.NUNITO
-                                                )}>{t('personalPage.delete')}</span>
-                                            </button>
-                                            <button className={classNames(
-                                                'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
-                                            )}>
-                                                <EyeOff className="h-4 w-4" />
-                                                <span className={classNames(
-                                                    'text-xs',
-                                                    UI_CONSTANTS.FONTS.NUNITO
-                                                )}>{t('personalPage.hide')}</span>
-                                            </button>
+                                                <button className={classNames(
+                                                    'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
+                                                )}>
+                                                    <Trash2 className="h-4 w-4" />
+                                                    <span className={classNames(
+                                                        'text-xs',
+                                                        UI_CONSTANTS.FONTS.NUNITO
+                                                    )}>{t('personalPage.delete')}</span>
+                                                </button>
+                                                <button className={classNames(
+                                                    'flex flex-col items-center gap-0.5 text-[#101729] hover:text-[#101729]'
+                                                )}>
+                                                    <EyeOff className="h-4 w-4" />
+                                                    <span className={classNames(
+                                                        'text-xs',
+                                                        UI_CONSTANTS.FONTS.NUNITO
+                                                    )}>{t('personalPage.hide')}</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                        <div style={{ borderBottom: '1px solid #e5e7eb' }}></div>
-                    </div>
-                )}
+                            ))}
+                            <div style={{ borderBottom: '1px solid #e5e7eb' }}></div>
+                        </div>
+                    )}
 
-                <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4 mt-8')}>
-                    <div className={classNames(
-                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                        UI_CONSTANTS.SPACING.GAP_4
-                    )}>
-                        {/* Post button */}
-                        <Link href="/release">
-                            <Button
-                                className={classNames(
-                                    'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1',
-                                    UI_CONSTANTS.COLORS.PRIMARY,
-                                    UI_CONSTANTS.FONTS.NUNITO,
-                                    'text-lg font-bold'
-                                )}
-                                size="lg"
-                            >
-                                <CirclePlus className="h-48 w-48" />
-                                <span className={classNames(
-                                    'text-xs',
-                                    UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
-                                )}>{t('personalCenter.post.button')}</span>
-                            </Button>
-                        </Link>
+                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4 mt-8')}>
+                        <div className={classNames(
+                            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                            UI_CONSTANTS.SPACING.GAP_4
+                        )}>
+                            {/* Post button */}
+                            <Link href="/release">
+                                <Button
+                                    className={classNames(
+                                        'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1',
+                                        UI_CONSTANTS.COLORS.PRIMARY,
+                                        UI_CONSTANTS.FONTS.NUNITO,
+                                        'text-lg font-bold'
+                                    )}
+                                    size="lg"
+                                >
+                                    <CirclePlus className="h-48 w-48" />
+                                    <span className={classNames(
+                                        'text-xs',
+                                        UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
+                                    )}>{t('personalCenter.post.button')}</span>
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
                 {/* Footer */}
                 <Footer />
             </main>

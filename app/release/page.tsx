@@ -401,7 +401,7 @@ export default function ReleasePage() {
         {/* Advantage Info Section */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-[#101729] font-poppins">{t('releasePage.advantageInfo')}</h2>
+            <h2 className="text-lg text-[#101729] font-poppins">{t('releasePage.advantageInfo')}</h2>
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"

@@ -15,11 +15,11 @@ export function LanguageToggle() {
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center gap-2 text-foreground hover:opacity-80 transition-opacity mt-4"
+      className="flex items-center text-foreground hover:opacity-80 transition-opacity mt-2"
       aria-label={`Switch to ${language === 'en' ? 'Chinese' : 'English'}`}
     >
       <Image src="/img/earth.svg" alt="earth" width={16} height={16} priority className="h-6 w-6" />
-      <span className="text-md font-medium text-[#101729]">{displayLang}</span>
+      <span className="text-sm font-medium text-[#101729] ml-1">{displayLang}</span>
     </button>
   );
 }

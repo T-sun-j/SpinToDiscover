@@ -14,17 +14,28 @@ export const SERVER_CONFIG = {
 
 // 工具函数：构建头像URL
 export const buildAvatarUrl = (avatarPath?: string, fallback: string = '/img/avatar.png'): string => {
-  if (!avatarPath) {
+  if (!avatarPath || avatarPath.trim() === '') {
     return fallback;
   }
   
-  // 如果已经是完整URL，直接返回
+  // 如果已经是完整URL，验证并返回
   if (avatarPath.startsWith('http')) {
-    return avatarPath;
+    try {
+      new URL(avatarPath);
+      return avatarPath;
+    } catch {
+      return fallback;
+    }
   }
   
   // 构建完整URL
-  return `${SERVER_CONFIG.STATIC_URL}${avatarPath}`;
+  const fullUrl = `${SERVER_CONFIG.STATIC_URL}${avatarPath}`;
+  try {
+    new URL(fullUrl);
+    return fullUrl;
+  } catch {
+    return fallback;
+  }
 }
 
 // API基础配置
@@ -352,6 +363,8 @@ export interface UserInfoResponse {
   logo?: string | null;
   officialsite?: string | null;
   tel?: string;
+  customerService?: string | null;
+  workingHours?: string | null;
 }
 
 // 头像上传请求参数类型

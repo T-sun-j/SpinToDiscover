@@ -365,6 +365,21 @@ export interface Translations {
     submitError: string;
     loginRequired: string;
     authInfoMissing: string;
+    invalidImageType: string;
+    imageTooLarge: string;
+    logoUploadFailed: string;
+    uploading: string;
+    logoUploaded: string;
+    getUserInfoFailed: string;
+    loading: string;
+    getCurrentLocation: string;
+    gettingLocation: string;
+    locationError: string;
+    locationFailed: string;
+    locationPermissionDenied: string;
+    locationUnavailable: string;
+    locationTimeout: string;
+    locationParseError: string;
   };
 }
 
@@ -726,7 +741,7 @@ export const translations: Record<Language, Translations> = {
       logo: 'Logo',
       officialSite: 'Official Site',
       telMobile: 'Tel/Mobile',
-      address: 'Address',
+      address: 'Work Hours',
       location: 'Location',
       submit: 'Submit',
       submitting: 'Submitting...',
@@ -734,6 +749,21 @@ export const translations: Record<Language, Translations> = {
       submitError: 'Submission failed',
       loginRequired: 'Please login first',
       authInfoMissing: 'User authentication information missing',
+      invalidImageType: 'Please select a valid image file',
+      imageTooLarge: 'Image file is too large (max 10MB)',
+      logoUploadFailed: 'Logo upload failed',
+      uploading: 'Uploading...',
+      logoUploaded: 'Logo uploaded successfully',
+      getUserInfoFailed: 'Failed to get user information',
+      loading: 'Loading...',
+      getCurrentLocation: 'Get Current Location',
+      gettingLocation: 'Getting location...',
+      locationError: 'Your browser does not support geolocation',
+      locationFailed: 'Failed to get location',
+      locationPermissionDenied: 'User denied location request',
+      locationUnavailable: 'Location information unavailable',
+      locationTimeout: 'Location request timeout',
+      locationParseError: 'Location obtained but address parsing failed',
     },
   },
   zh: {
@@ -1093,7 +1123,7 @@ export const translations: Record<Language, Translations> = {
       logo: '标志',
       officialSite: '官方网站',
       telMobile: '电话/手机',
-      address: '地址',
+      address: '工作时间',
       location: '位置',
       submit: '提交',
       submitting: '提交中...',
@@ -1101,6 +1131,21 @@ export const translations: Record<Language, Translations> = {
       submitError: '提交失败',
       loginRequired: '请先登录',
       authInfoMissing: '用户认证信息缺失',
+      invalidImageType: '请选择有效的图片文件',
+      imageTooLarge: '图片文件过大（最大10MB）',
+      logoUploadFailed: 'Logo上传失败',
+      uploading: '上传中...',
+      logoUploaded: 'Logo上传成功',
+      getUserInfoFailed: '获取用户信息失败',
+      loading: '加载中...',
+      getCurrentLocation: '获取当前位置',
+      gettingLocation: '获取位置中...',
+      locationError: '您的浏览器不支持地理位置功能',
+      locationFailed: '获取位置失败',
+      locationPermissionDenied: '用户拒绝了位置请求',
+      locationUnavailable: '位置信息不可用',
+      locationTimeout: '获取位置超时',
+      locationParseError: '位置获取成功，但地址解析失败',
     },
   },
 };

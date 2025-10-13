@@ -7,12 +7,14 @@ import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth, useUserParams } from '../../contexts/AuthContext';
 import { AuthGuard } from '../../components/AuthGuard';
-import { updateUserBrand } from '../../lib/auth';
+import { updateUserBrand, uploadAvatar, getUserInfo } from '../../lib/auth';
 import { classNames } from '../../lib/utils/classNames';
 import { UI_CONSTANTS } from '../../lib/constants';
+import { getCurrentLocationString } from '../../lib/utils/geolocation';
+import { buildAvatarUrl } from '../../lib/api';
 
 export default function BrandEditPage() {
     const { t } = useLanguage();
@@ -28,13 +30,115 @@ export default function BrandEditPage() {
         officialsite: '',
         tel: '',
         address: '',
-        location: 'Istanbul'
+        location: ''
     });
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [logoPreview, setLogoPreview] = useState<string>('');
+    const [uploadingLogo, setUploadingLogo] = useState(false);
+    const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(true);
+    const [isGettingLocation, setIsGettingLocation] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const hasLoadedUserInfo = useRef(false);
+
+    // 获取用户信息并预填充表单
+    useEffect(() => {
+        const fetchUserInfoAndPrefill = async () => {
+            // 防止重复调用
+            if (hasLoadedUserInfo.current) {
+                return;
+            }
+
+            const email = getEmail();
+            if (!email || !userParams) {
+                setIsLoadingUserInfo(false);
+                return;
+            }
+
+            hasLoadedUserInfo.current = true;
+
+            try {
+                const response = await getUserInfo({
+                    email: email,
+                    userId: userParams.userId,
+                    token: userParams.token,
+                });
+
+                if (response.success && response.data) {
+                    const userInfo = response.data;
+                    // 预填充表单数据
+                    setFormData({
+                        brand: userInfo.brand || '',
+                        brief: userInfo.brief || '',
+                        logo: userInfo.logo || '',
+                        officialsite: userInfo.officialsite || '',
+                        tel: userInfo.tel || '',
+                        address: userInfo.address || '',
+                        location: userInfo.location || 'Istanbul'
+                    });
+
+                    // 如果有logo，设置预览
+                    if (userInfo.logo) {
+                        setLogoPreview(buildAvatarUrl(userInfo.logo));
+                    }
+                }
+            } catch (error) {
+                console.error('获取用户信息失败:', error);
+                setError(t('brandEditPage.getUserInfoFailed'));
+            } finally {
+                setIsLoadingUserInfo(false);
+            }
+        };
+
+        fetchUserInfoAndPrefill();
+    }, [userParams?.userId, userParams?.token]); // 只依赖必要的值
+
+    // 获取用户地理位置
+    const getUserLocation = useCallback(async () => {
+        setIsGettingLocation(true);
+        setError(null);
+
+        try {
+            const locationString = await getCurrentLocationString({
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000 // 5分钟缓存
+            });
+            
+            setFormData(prev => ({
+                ...prev,
+                location: locationString
+            }));
+        } catch (error) {
+            console.error('获取位置失败:', error);
+            let errorMessage = t('brandEditPage.locationFailed');
+            
+            // 根据错误类型设置不同的错误消息
+            if (error && typeof error === 'object' && 'code' in error) {
+                switch (error.code) {
+                    case 1: // PERMISSION_DENIED
+                        errorMessage = t('brandEditPage.locationPermissionDenied');
+                        break;
+                    case 2: // POSITION_UNAVAILABLE
+                        errorMessage = t('brandEditPage.locationUnavailable');
+                        break;
+                    case 3: // TIMEOUT
+                        errorMessage = t('brandEditPage.locationTimeout');
+                        break;
+                    case -1: // 浏览器不支持
+                        errorMessage = t('brandEditPage.locationError');
+                        break;
+                }
+            }
+            
+            setError(errorMessage);
+        } finally {
+            setIsGettingLocation(false);
+        }
+    }, [t]);
 
     // 处理输入变化
     const handleInputChange = (field: string, value: string) => {
@@ -45,15 +149,61 @@ export default function BrandEditPage() {
     };
 
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
-        if (file) {
-            // 这里可以处理文件上传逻辑
-            // 暂时使用文件名作为占位符
-            setFormData(prev => ({
-                ...prev,
-                logo: file.name
-            }));
+        if (!file) return;
+
+        // 检查文件类型
+        if (!file.type.startsWith('image/')) {
+            setError(t('brandEditPage.invalidImageType'));
+            return;
+        }
+
+        // 检查文件大小 (10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            setError(t('brandEditPage.imageTooLarge'));
+            return;
+        }
+
+        setLogoFile(file);
+        setUploadingLogo(true);
+        setError(null);
+
+        try {
+            // 创建预览
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setLogoPreview(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+
+            // 上传图片
+            const uploadResponse = await uploadAvatar(file);
+            
+            if (uploadResponse.success && uploadResponse.data) {
+                const logoUrl = typeof uploadResponse.data === 'string' 
+                    ? uploadResponse.data 
+                    : uploadResponse.data.img;
+                
+                if (logoUrl) {
+                    setFormData(prev => ({
+                        ...prev,
+                        logo: logoUrl
+                    }));
+                    // 更新预览为完整URL
+                    setLogoPreview(buildAvatarUrl(logoUrl));
+                }
+            } else {
+                throw new Error(uploadResponse.message || t('brandEditPage.logoUploadFailed'));
+            }
+        } catch (error) {
+            console.error('Logo upload failed:', error);
+            setError(error instanceof Error ? error.message : t('brandEditPage.logoUploadFailed'));
+            setLogoFile(null);
+            setLogoPreview('');
+        } finally {
+            setUploadingLogo(false);
         }
     };
 
@@ -103,12 +253,10 @@ export default function BrandEditPage() {
 
     return (
         <AuthGuard>
-            <main className="container-page flex min-h-dvh flex-col bg-white">
+            <main className="flex min-h-dvh flex-col bg-white">
                 {/* Header */}
                 <Header
                     showLanguage
-                    showSearch
-                    showUser
                 />
 
                 {/* Back button and title */}
@@ -122,6 +270,14 @@ export default function BrandEditPage() {
                     </button>
                 </div>
 
+                {isLoadingUserInfo ? (
+                    <div className="flex-1 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#101729] mx-auto mb-4"></div>
+                            <p className="text-gray-500">{t('brandEditPage.loading')}</p>
+                        </div>
+                    </div>
+                ) : (
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="flex-1 px-6 py-4 space-y-6">
                         {/* Brand Name */}
                         <div>
@@ -147,20 +303,47 @@ export default function BrandEditPage() {
 
                         {/* Logo Upload */}
                         <div className="flex flex-col items-start">
-                            <label className="w-20 h-20 flex flex-col items-center justify-center rounded-xl bg-gray-200 cursor-pointer relative">
+                            <label className={`w-20 h-20 flex flex-col items-center justify-center rounded-xl bg-gray-200 cursor-pointer relative overflow-hidden ${
+                                uploadingLogo ? 'opacity-50 pointer-events-none' : ''
+                            }`}>
                                 <input
                                     ref={fileInputRef}
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
                                     className="hidden"
+                                    disabled={uploadingLogo}
                                 />
-                                <div className="flex flex-col items-start">
-                                    {/* Camera icon in outline, plus at top right */}
-                                    <Camera className="h-8 w-8 text-gray-400 mt-2" />
-                                    <span className="block mt-2 text-gray-500 text-sm font-normal">{t('brandEditPage.logo')}</span>
-                                </div>
+                                
+                                {logoPreview ? (
+                                    <div className="w-full h-full relative">
+                                        <img 
+                                            src={logoPreview} 
+                                            alt="Logo preview" 
+                                            className="w-full h-full object-cover rounded-xl"
+                                        />
+                                        {uploadingLogo && (
+                                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                                <div className="text-white text-xs">上传中...</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center">
+                                        <Camera className="h-8 w-8 text-gray-400 mt-2" />
+                                        <span className="block mt-2 text-gray-500 text-sm font-normal">
+                                            {uploadingLogo ? t('brandEditPage.uploading') : t('brandEditPage.logo')}
+                                        </span>
+                                    </div>
+                                )}
                             </label>
+                            
+                            {/* Logo upload status */}
+                            {logoFile && !uploadingLogo && formData.logo && (
+                                <div className="mt-2 text-xs text-green-600">
+                                    {t('brandEditPage.logoUploaded')}
+                                </div>
+                            )}
                         </div>
 
                         {/* Official Site */}
@@ -197,9 +380,27 @@ export default function BrandEditPage() {
                         </div>
 
                         {/* Location */}
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <MapPin className="h-4 w-4" />
-                            <span>{t('brandEditPage.location')}: {formData.location}</span>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-gray-500">
+                                <MapPin className="h-4 w-4" />
+                                <span>{t('brandEditPage.location')}: {formData.location || t('brandEditPage.gettingLocation')}</span>
+                            </div>
+                            {!isGettingLocation && !formData.location && (
+                                <button
+                                    type="button"
+                                    onClick={getUserLocation}
+                                    className="text-sm text-blue-500 hover:text-blue-700 flex items-center gap-1"
+                                >
+                                    <MapPin className="h-3 w-3" />
+                                    {t('brandEditPage.getCurrentLocation')}
+                                </button>
+                            )}
+                            {isGettingLocation && (
+                                <div className="flex items-center gap-1 text-sm text-blue-500">
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-500"></div>
+                                    {t('brandEditPage.gettingLocation')}
+                                </div>
+                            )}
                         </div>
 
                         {/* Error Message */}
@@ -233,6 +434,7 @@ export default function BrandEditPage() {
                             }
                         </Button>
                 </form>
+                )}
 
                 <div className="mt-auto">
                     <Footer />
