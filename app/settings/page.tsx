@@ -96,7 +96,7 @@ export default function SettingsPage() {
 
 	return (
 		<AuthGuard>
-			<main className="container-page flex min-h-dvh flex-col bg-white">
+			<main className="flex min-h-dvh flex-col bg-white">
 				<Header
 				showLanguage
 			/>

@@ -292,6 +292,36 @@ export interface BrowsingListResponse {
   pagination: Pagination;
 }
 
+// 获取收藏列表请求参数类型
+export interface GetCollectListRequest {
+  userId: string;
+  token: string;
+  page?: number;
+  limit?: number;
+}
+
+// 收藏项目类型
+export interface CollectItem {
+  id: string;
+  title: string;
+  description: string;
+  images: string[];
+  video?: string;
+  location: string;
+  collectedAt: string;
+  author: {
+    userId: string;
+    nickname: string;
+    avatar: string;
+  };
+}
+
+// 收藏列表响应类型
+export interface CollectListResponse {
+  dataList: CollectItem[];
+  pagination: Pagination;
+}
+
 // 获取个人作品列表请求参数类型
 export interface GetMyPageListRequest {
   userId: string;
@@ -397,4 +427,30 @@ export interface UpdateUserBrandResponse {
   success: boolean;
   message: string;
   data?: any;
+}
+
+// 获取关注列表请求参数类型
+export interface GetFollowedListRequest {
+  userId: string;
+  token: string;
+}
+
+// 获取粉丝列表请求参数类型
+export interface GetFollowersListRequest {
+  userId: string;
+  token: string;
+}
+
+// 用户信息类型（用于关注/粉丝列表）
+export interface FollowUser {
+  userId: string;
+  avatar: string;
+  nickname: string;
+}
+
+// 关注/粉丝列表响应类型
+export interface FollowListResponse {
+  dataList: FollowUser[];
+  success: boolean;
+  message: string;
 }

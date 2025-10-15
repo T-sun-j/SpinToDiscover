@@ -26,6 +26,13 @@ import {
   UploadAvatarResponse,
   UpdateUserBrandRequest,
   UpdateUserBrandResponse,
+  GetFollowedListRequest,
+  GetFollowersListRequest,
+  FollowListResponse,
+  GetBrowsingListRequest,
+  BrowsingListResponse,
+  GetCollectListRequest,
+  CollectListResponse,
   API_CONFIG
 } from './api';
 
@@ -735,5 +742,93 @@ async function uploadRequest<T = any>(
     }
     
     throw new RequestError('Unknown error occurred', 0);
+  }
+}
+
+/**
+ * 获取我关注的用户列表API
+ * @param params 关注列表查询参数
+ * @returns Promise<ApiResponse<FollowListResponse>>
+ */
+export async function getFollowedList(params: GetFollowedListRequest): Promise<ApiResponse<FollowListResponse>> {
+  try {
+    const response = await request<FollowListResponse>('collectuserlist', {
+      userId: params.userId,
+      token: params.token,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`获取关注列表失败: ${error.message}`);
+    }
+    throw new Error('获取关注列表过程中发生未知错误');
+  }
+}
+
+/**
+ * 获取我的粉丝列表API
+ * @param params 粉丝列表查询参数
+ * @returns Promise<ApiResponse<FollowListResponse>>
+ */
+export async function getFollowersList(params: GetFollowersListRequest): Promise<ApiResponse<FollowListResponse>> {
+  try {
+    const response = await request<FollowListResponse>('collectmylist', {
+      userId: params.userId,
+      token: params.token,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`获取粉丝列表失败: ${error.message}`);
+    }
+    throw new Error('获取粉丝列表过程中发生未知错误');
+  }
+}
+
+/**
+ * 获取浏览记录列表API
+ * @param params 浏览记录查询参数
+ * @returns Promise<ApiResponse<BrowsingListResponse>>
+ */
+export async function getBrowsingList(params: GetBrowsingListRequest): Promise<ApiResponse<BrowsingListResponse>> {
+  try {
+    const response = await request<BrowsingListResponse>('getbrowsinglist', {
+      userId: params.userId,
+      token: params.token,
+      page: params.page || 1,
+      limit: params.limit || 10,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`获取浏览记录失败: ${error.message}`);
+    }
+    throw new Error('获取浏览记录过程中发生未知错误');
+  }
+}
+
+/**
+ * 获取收藏列表API
+ * @param params 收藏列表查询参数
+ * @returns Promise<ApiResponse<CollectListResponse>>
+ */
+export async function getCollectList(params: GetCollectListRequest): Promise<ApiResponse<CollectListResponse>> {
+  try {
+    const response = await request<CollectListResponse>('getcollectlist', {
+      userId: params.userId,
+      token: params.token,
+      page: params.page || 1,
+      limit: params.limit || 10,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`获取收藏列表失败: ${error.message}`);
+    }
+    throw new Error('获取收藏列表过程中发生未知错误');
   }
 }

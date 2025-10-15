@@ -273,12 +273,6 @@ export interface Translations {
     addMedia: string;
     mediaFiles: string;
   };
-  followedPage: {
-    title: string;
-    following: string;
-    follower: string;
-    username: string;
-  };
   favoritePage: {
     title: string;
     favoriting: string;
@@ -290,6 +284,10 @@ export interface Translations {
     publisher: string;
     emptyTitle: string;
     emptyDescription: string;
+    loading: string;
+    error: string;
+    noImage: string;
+    collectedOn: string;
   };
   about: {
     title: string;
@@ -380,6 +378,19 @@ export interface Translations {
     locationUnavailable: string;
     locationTimeout: string;
     locationParseError: string;
+  };
+
+  // 关注页面
+  followedPage: {
+    following: string;
+    follower: string;
+    loading: string;
+    error: string;
+    refresh: string;
+    noFollowing: string;
+    noFollowers: string;
+    noFollowingDescription: string;
+    noFollowersDescription: string;
   };
 }
 
@@ -657,12 +668,6 @@ export const translations: Record<Language, Translations> = {
       addMedia: 'Add Media',
       mediaFiles: 'media files',
     },
-    followedPage: {
-      title: 'Followed Page',
-      following: 'Following',
-      follower: 'Follower',
-      username: 'Username',
-    },
     favoritePage: {
       title: 'Favorite',
       favoriting: 'Following',
@@ -674,6 +679,10 @@ export const translations: Record<Language, Translations> = {
       publisher: 'Publisher',
       emptyTitle: 'No favorites yet',
       emptyDescription: 'Start exploring and save your favorite places and content to see them here.',
+      loading: 'Loading...',
+      error: 'Failed to load favorites',
+      noImage: 'No image',
+      collectedOn: 'Collected on',
     },
     about: {
       title: 'About Us',
@@ -764,6 +773,17 @@ export const translations: Record<Language, Translations> = {
       locationUnavailable: 'Location information unavailable',
       locationTimeout: 'Location request timeout',
       locationParseError: 'Location obtained but address parsing failed',
+    },
+    followedPage: {
+      following: 'Following',
+      follower: 'Followers',
+      loading: 'Loading...',
+      error: 'Failed to load data',
+      refresh: 'Refresh',
+      noFollowing: 'No Following',
+      noFollowers: 'No Followers',
+      noFollowingDescription: 'You haven\'t followed anyone yet. Start following users to see them here.',
+      noFollowersDescription: 'No one is following you yet. Share great content to attract followers.',
     },
   },
   zh: {
@@ -1039,12 +1059,6 @@ export const translations: Record<Language, Translations> = {
       addMedia: '添加媒体',
       mediaFiles: '个媒体文件',
     },
-    followedPage: {
-      title: '关注页面',
-      following: '关注',
-      follower: '粉丝',
-      username: '用户名',
-    },
     favoritePage: {
       title: '我的收藏',
       favoriting: '关注',
@@ -1056,6 +1070,10 @@ export const translations: Record<Language, Translations> = {
       publisher: '发布者',
       emptyTitle: '暂无收藏',
       emptyDescription: '开始探索并保存您喜欢的地点和内容，它们将显示在这里。',
+      loading: '加载中...',
+      error: '加载收藏失败',
+      noImage: '无图片',
+      collectedOn: '收藏于',
     },
     about: {
       title: '关于我们',
@@ -1146,6 +1164,17 @@ export const translations: Record<Language, Translations> = {
       locationUnavailable: '位置信息不可用',
       locationTimeout: '获取位置超时',
       locationParseError: '位置获取成功，但地址解析失败',
+    },
+    followedPage: {
+      following: '关注',
+      follower: '粉丝',
+      loading: '加载中...',
+      error: '加载数据失败',
+      refresh: '刷新',
+      noFollowing: '暂无关注',
+      noFollowers: '暂无粉丝',
+      noFollowingDescription: '您还没有关注任何人。开始关注用户以在这里看到他们。',
+      noFollowersDescription: '还没有人关注您。分享精彩内容来吸引粉丝吧。',
     },
   },
 };

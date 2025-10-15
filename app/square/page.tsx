@@ -19,7 +19,7 @@ export default function SquarePage() {
 	const { t } = useLanguage();
 	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
-	const [activeTab, setActiveTab] = useState('recommend');
+	const [activeTab, setActiveTab] = useState('Recommend');
 	const [posts, setPosts] = useState<SquareContent[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');

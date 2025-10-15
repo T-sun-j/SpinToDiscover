@@ -313,7 +313,6 @@ export default function ReleasePage() {
 
         {/* 媒体上传区域 */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">{t('releasePage.uploadMedia')}</h3>
           
           {/* 媒体文件网格布局 - 一行4个 */}
           <div className="grid grid-cols-4 gap-3">

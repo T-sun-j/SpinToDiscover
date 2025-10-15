@@ -4,15 +4,14 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AuthGuard } from "../../components/AuthGuard";
-import { ChevronLeft, Play, Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { ChevronLeft, Play, Loader2, AlertCircle, History } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useApi } from "../../lib/hooks/useApi";
-import { getBrowsingList } from "../../lib/services";
-import { BrowsingHistoryItem } from "../../lib/api";
-import { API_CONSTANTS, UI_CONSTANTS, HISTORY_CONSTANTS, ANIMATION_CONSTANTS } from "../../lib/constants";
-import { classNames } from "../../lib/utils/classNames";
+import { getBrowsingList } from "../../lib/auth";
+import { BrowsingHistoryItem, buildAvatarUrl } from "../../lib/api";
+import { API_CONSTANTS } from "../../lib/constants";
 
 export default function HistoryPage() {
   const { t } = useLanguage();
@@ -29,18 +28,9 @@ export default function HistoryPage() {
         page: API_CONSTANTS.DEFAULT_PAGE,
         limit: API_CONSTANTS.DEFAULT_LIMIT,
       });
-      return response.data;
+      return response;
     },
-    { 
-      history: [], 
-      pagination: { 
-        currentPage: API_CONSTANTS.DEFAULT_PAGE, 
-        totalPages: 1, 
-        totalItems: 0, 
-        hasNext: false, 
-        hasPrev: false 
-      } 
-    }
+    null
   );
 
   // 组件挂载时获取数据
@@ -53,91 +43,61 @@ export default function HistoryPage() {
 
   // 更新历史数据
   useEffect(() => {
-    if (data?.history) {
-      setHistoryData(data.history);
+    if (data && data.success) {
+      // 如果API返回成功，但data为空或history为空数组，则设置为空数组
+      if (data.data?.history) {
+        setHistoryData(data.data.history);
+      } else {
+        setHistoryData([]);
+      }
+    } else if (data && !data.success) {
+      // 如果API返回失败（如"用户不存在"），也设置为空数组
+      setHistoryData([]);
     }
   }, [data]);
 
   const HistoryItem = ({ item }: { item: BrowsingHistoryItem }) => (
-    <div className={UI_CONSTANTS.SPACING.MB_6}>
+    <div className="mb-6">
       {/* Thumbnails */}
-      <div className={classNames(
-        'grid',
-        HISTORY_CONSTANTS.LAYOUT.GRID_COLS_3,
-        UI_CONSTANTS.SPACING.GAP_4,
-        UI_CONSTANTS.SPACING.MB_4
-      )}>
-        {item.images.slice(0, HISTORY_CONSTANTS.IMAGES.MAX_THUMBNAILS).map((image, index) => (
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        {item.images.slice(0, 3).map((image, index) => (
           <div key={index} className="relative">
             <Image
-              src={image || HISTORY_CONSTANTS.IMAGES.DEFAULT_IMAGE}
+              src={buildAvatarUrl(image) || '/img/default-image.png'}
               alt={`history-${index + 1}`}
-              width={HISTORY_CONSTANTS.IMAGES.THUMBNAIL_SIZE.width}
-              height={HISTORY_CONSTANTS.IMAGES.THUMBNAIL_SIZE.height}
-              className={HISTORY_CONSTANTS.IMAGES.THUMBNAIL_CLASS}
+              width={112}
+              height={112}
+              className="w-full h-28 object-cover rounded-md"
               priority={index === 0}
             />
             {/* play icon overlay for first image if video exists */}
             {index === 0 && item.video && (
-              <div className={classNames(
-                'absolute bottom-2 right-2',
-                UI_CONSTANTS.SIZES.ICON_MD,
-                UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                'bg-[#101729]/80',
-                HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER
-              )}>
-                <Play className={classNames(
-                  UI_CONSTANTS.SIZES.ICON_SM,
-                  UI_CONSTANTS.COLORS.WHITE
-                )} />
+              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#101729]/80 flex items-center justify-center">
+                <Play className="w-3 h-3 text-white" />
               </div>
             )}
           </div>
         ))}
         {/* Fill remaining slots if less than 3 images */}
-        {item.images.length < HISTORY_CONSTANTS.IMAGES.MAX_THUMBNAILS && Array.from({ length: HISTORY_CONSTANTS.IMAGES.MAX_THUMBNAILS - item.images.length }).map((_, index) => (
-          <div key={`placeholder-${index}`} className={classNames(
-            'w-full h-28',
-            UI_CONSTANTS.COLORS.GRAY_100,
-            UI_CONSTANTS.BORDER_RADIUS.ROUNDED_MD,
-            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER
-          )}>
-            <span className={classNames(
-              UI_CONSTANTS.COLORS.GRAY_400,
-              HISTORY_CONSTANTS.TEXT_SIZES.XS
-            )}>{t("history.noImage")}</span>
+        {item.images.length < 3 && Array.from({ length: 3 - item.images.length }).map((_, index) => (
+          <div key={`placeholder-${index}`} className="w-full h-28 bg-gray-100 rounded-md flex items-center justify-center">
+            <span className="text-gray-400 text-xs">{t("history.noImage")}</span>
           </div>
         ))}
       </div>
 
       {/* Title & description */}
-      <h3 className={classNames(
-        'text-[18px]',
-        UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
-        UI_CONSTANTS.COLORS.PRIMARY,
-        UI_CONSTANTS.FONTS.POPPINS,
-        UI_CONSTANTS.SPACING.MB_2
-      )}>
+      <h3 className="text-[18px] font-semibold text-[#101729] font-poppins mb-2">
         {item.title}
       </h3>
-      <p className={classNames(
-        HISTORY_CONSTANTS.TEXT_SIZES.BODY,
-        'leading-6',
-        UI_CONSTANTS.COLORS.PRIMARY_OPACITY_80,
-        UI_CONSTANTS.FONTS.NUNITO,
-        UI_CONSTANTS.SPACING.MB_2
-      )}>
+      <p className="text-sm leading-6 text-[#101729]/80 font-nunito mb-2">
         {item.description}
       </p>
       
       {/* Location and viewed time */}
-      <div className={classNames(
-        HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
-        HISTORY_CONSTANTS.TEXT_SIZES.SMALL,
-        UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60
-      )}>
-        <span className={UI_CONSTANTS.FONTS.NUNITO}>{item.location}</span>
-        <span className={UI_CONSTANTS.FONTS.NUNITO}>
+      <div className="flex justify-between text-xs text-[#101729]/60">
+        <span className="font-nunito">{item.location}</span>
+        <span className="font-nunito">
           {t("history.viewedOn")} {new Date(item.viewedAt).toLocaleDateString()}
         </span>
       </div>
@@ -146,132 +106,49 @@ export default function HistoryPage() {
 
   return (
     <AuthGuard>
-      <main className={classNames(
-        'flex',
-        HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
-        HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
-        'bg-white'
-      )}>
+      <main className="flex min-h-dvh flex-col bg-white">
       {/* Header */}
       <Header showLanguage showSearch showUser />
 
       {/* Page title & back */}
-      <div className={classNames(
-        HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
-        UI_CONSTANTS.SPACING.PX_6,
-        UI_CONSTANTS.SPACING.PY_2
-      )}>
-        <h1 className={classNames(
-          HISTORY_CONSTANTS.TEXT_SIZES.TITLE,
-          UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
-          UI_CONSTANTS.COLORS.PRIMARY,
-          UI_CONSTANTS.FONTS.POPPINS
-        )}>
+      <div className="flex justify-between items-center px-6 py-2">
+        <h1 className="text-xl text-[#101729] font-poppins">
           {t("personalCenter.menu.history")}
         </h1>
-        <div className={classNames(
-          HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-          UI_CONSTANTS.SPACING.GAP_2
-        )}>
-          <button
-            aria-label={t("history.refresh")}
-            onClick={() => execute()}
-            disabled={loading}
-            className={classNames(
-              UI_CONSTANTS.COLORS.PRIMARY,
-              'hover:text-[#101729]/80',
-              'disabled:opacity-50'
-            )}
-          >
-            <RefreshCw className={classNames(
-              UI_CONSTANTS.SIZES.ICON_MD,
-              loading && ANIMATION_CONSTANTS.SPIN
-            )} />
-          </button>
-          <button
-            aria-label={t("history.back")}
-            onClick={() => router.back()}
-            className={classNames(
-              UI_CONSTANTS.COLORS.PRIMARY,
-              'hover:text-[#101729]'
-            )}
-          >
-            <ChevronLeft className={UI_CONSTANTS.SIZES.ICON_LG} />
-          </button>
-        </div>
+        <button
+          aria-label={t("history.back")}
+          onClick={() => router.back()}
+          className="text-[#101729] hover:text-[#101729]"
+        >
+          <ChevronLeft className="w-7 h-7" />
+        </button>
       </div>
 
       {/* Content */}
-      <section className={classNames(
-        UI_CONSTANTS.SPACING.PX_6,
-        UI_CONSTANTS.SPACING.PB_6
-      )}>
+      <section className="px-6 pb-6">
         {loading && (
-          <div className={classNames(
-            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-            UI_CONSTANTS.SPACING.PY_8
-          )}>
-            <Loader2 className={classNames(
-              UI_CONSTANTS.SIZES.ICON_MD,
-              ANIMATION_CONSTANTS.SPIN,
-              UI_CONSTANTS.COLORS.PRIMARY
-            )} />
-            <span className={classNames(
-              'ml-2',
-              UI_CONSTANTS.COLORS.PRIMARY,
-              UI_CONSTANTS.FONTS.NUNITO
-            )}>{t("history.loading")}</span>
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-5 h-5 animate-spin text-[#101729]" />
+            <span className="ml-2 text-[#101729] font-nunito">{t("history.loading")}</span>
           </div>
         )}
 
-        {error && (
-          <div className={classNames(
-            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-            UI_CONSTANTS.SPACING.PY_8
-          )}>
-            <AlertCircle className={classNames(
-              UI_CONSTANTS.SIZES.ICON_MD,
-              UI_CONSTANTS.COLORS.RED_500
-            )} />
-            <span className={classNames(
-              'ml-2',
-              UI_CONSTANTS.COLORS.RED_500,
-              UI_CONSTANTS.FONTS.NUNITO
-            )}>{t("history.error")}</span>
+        {error && historyData.length > 0 && (
+          <div className="flex items-center justify-center py-8">
+            <AlertCircle className="w-5 h-5 text-red-500" />
+            <span className="ml-2 text-red-500 font-nunito">{t("history.error")}</span>
           </div>
         )}
 
-        {!loading && !error && historyData.length === 0 && (
-          <div className={classNames(
-            'flex flex-col items-center justify-center',
-            UI_CONSTANTS.SPACING.PY_12
-          )}>
-            <div className={classNames(
-              'w-16 h-16',
-              UI_CONSTANTS.COLORS.GRAY_100,
-              UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-              HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-              UI_CONSTANTS.SPACING.MB_4
-            )}>
-              <AlertCircle className={classNames(
-                UI_CONSTANTS.SIZES.ICON_XL,
-                UI_CONSTANTS.COLORS.GRAY_400
-              )} />
+        {!loading && historyData.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <History className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className={classNames(
-              HISTORY_CONSTANTS.TEXT_SIZES.SUBTITLE,
-              UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
-              UI_CONSTANTS.COLORS.PRIMARY,
-              UI_CONSTANTS.FONTS.NUNITO,
-              UI_CONSTANTS.SPACING.MB_2
-            )}>
+            <h3 className="text-lg font-semibold text-[#101729] font-nunito mb-2">
               {t("history.noHistory")}
             </h3>
-            <p className={classNames(
-              UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
-              UI_CONSTANTS.FONTS.INTER,
-              'text-center'
-            )}>
+            <p className="text-[#101729]/60 font-inter text-center">
               {t("history.noHistoryDescription")}
             </p>
           </div>
@@ -283,10 +160,7 @@ export default function HistoryPage() {
               <div key={item.id}>
                 <HistoryItem item={item} />
                 {index < historyData.length - 1 && (
-                  <div className={classNames(
-                    'border-t border-gray-200',
-                    UI_CONSTANTS.SPACING.MY_4
-                  )} />
+                  <div className="border-t border-gray-200 my-4" />
                 )}
               </div>
             ))}

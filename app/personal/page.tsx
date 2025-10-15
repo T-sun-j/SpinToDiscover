@@ -325,7 +325,8 @@ export default function PersonalPage() {
                                         </div>
                                         <h3 className={classNames(
                                             'text-[#101729] mb-2 text-sm',
-                                            UI_CONSTANTS.FONTS.NUNITO
+                                            UI_CONSTANTS.FONTS.NUNITO,
+                                            UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
                                         )}>{post.title}</h3>
                                         <p className={classNames(
                                             'text-xs text-[#101729] mb-3 line-clamp-2 leading-relaxed',
@@ -373,14 +374,13 @@ export default function PersonalPage() {
                             <Link href="/release">
                                 <Button
                                     className={classNames(
-                                        'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1',
-                                        UI_CONSTANTS.COLORS.PRIMARY,
+                                        'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#101729]',
                                         UI_CONSTANTS.FONTS.NUNITO,
                                         'text-lg font-bold'
                                     )}
                                     size="lg"
                                 >
-                                    <CirclePlus className="h-48 w-48" />
+                                    <CirclePlus className="h-48 w-48 text-[#101729]" />
                                     <span className={classNames(
                                         'text-xs',
                                         UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
