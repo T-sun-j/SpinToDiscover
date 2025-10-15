@@ -5,29 +5,12 @@
 
 import { request } from '../request';
 import { 
-  GetBrowsingListRequest, 
-  BrowsingListResponse, 
   GetMyPageListRequest,
   MyPageListResponse,
   ApiResponse 
 } from '../api';
 import { API_CONSTANTS } from '../constants';
 
-/**
- * 获取用户浏览历史列表
- * @param params 请求参数
- * @returns 浏览历史列表
- */
-export async function getBrowsingList(
-  params: GetBrowsingListRequest
-): Promise<ApiResponse<BrowsingListResponse>> {
-  return request<BrowsingListResponse>('getbrowsinglist', {
-    userId: params.userId,
-    token: params.token,
-    page: params.page || API_CONSTANTS.DEFAULT_PAGE,
-    limit: params.limit || API_CONSTANTS.DEFAULT_LIMIT,
-  });
-}
 
 /**
  * 清除浏览历史
