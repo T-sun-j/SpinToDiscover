@@ -5,12 +5,14 @@ import { Lock, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { resetPassword } from '../../../lib/auth';
 
 export default function ChangePasswordPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [formData, setFormData] = useState({
@@ -18,7 +20,27 @@ export default function ChangePasswordPage() {
 		confirmPassword: ''
 	});
 	const [errorMessage, setErrorMessage] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [resetParams, setResetParams] = useState({
+		email: '',
+		userId: '',
+		token: ''
+	});
+
+	// 从URL参数中获取重置密码所需的参数
+	useEffect(() => {
+		const email = searchParams.get('email');
+		const userId = searchParams.get('userId');
+		const token = searchParams.get('token');
+		
+		if (email && userId && token) {
+			setResetParams({ email, userId, token });
+		} else {
+			// 如果没有必要的参数，显示错误或跳转
+			setErrorMessage(t('auth.invalidResetLink'));
+		}
+	}, [searchParams]);
 
 	// 密码验证
 	const validatePassword = (password: string) => {
@@ -34,6 +56,14 @@ export default function ChangePasswordPage() {
 		e.preventDefault();
 		setIsSubmitting(true);
 		setErrorMessage('');
+		setSuccessMessage('');
+
+		// 验证重置参数
+		if (!resetParams.email || !resetParams.userId || !resetParams.token) {
+			setErrorMessage(t('auth.invalidResetLink'));
+			setIsSubmitting(false);
+			return;
+		}
 
 		// 验证新密码
 		if (!formData.newPassword || !validatePassword(formData.newPassword)) {
@@ -50,13 +80,25 @@ export default function ChangePasswordPage() {
 		}
 
 		try {
-			// 模拟API调用
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			// 调用重置密码API
+			const response = await resetPassword(
+				resetParams.email,
+				formData.newPassword,
+				resetParams.userId,
+				resetParams.token
+			);
 			
-			// 成功后跳转到登录页面
-			router.push('/login');
+			if (response.success) {
+				setSuccessMessage(t('auth.resetPasswordSuccessMessage'));
+				// 成功后跳转到登录页面
+				setTimeout(() => {
+					router.push('/login');
+				}, 2000);
+			} else {
+				setErrorMessage(response.message || t('auth.resetPasswordError'));
+			}
 		} catch (error) {
-			setErrorMessage(t('auth.errorMessage') || 'Failed to change password');
+			setErrorMessage(error instanceof Error ? error.message : t('auth.resetPasswordError'));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -78,7 +120,7 @@ export default function ChangePasswordPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.changePasswordTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.resetPasswordTitle')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#101729] hover:text-[#101729]"
@@ -90,10 +132,10 @@ export default function ChangePasswordPage() {
 				</div>
 
 				{/* 修改密码表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6 font-inter">
 					{/* 新密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showNewPassword ? "text" : "password"}
@@ -115,7 +157,7 @@ export default function ChangePasswordPage() {
 
 					{/* 确认密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showConfirmPassword ? "text" : "password"}
@@ -137,7 +179,7 @@ export default function ChangePasswordPage() {
 
 					{/* 错误信息显示 */}
 					{errorMessage && (
-						<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
 							<RefreshCw className="h-4 w-4" />
 							<span>{errorMessage}</span>
 						</div>
@@ -146,11 +188,16 @@ export default function ChangePasswordPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
-						disabled={isSubmitting}
+						disabled={isSubmitting || !!successMessage}
 					>
-						{isSubmitting ? t('auth.submitting') || 'Submitting...' : t('auth.submit')}
+						{isSubmitting 
+							? t('auth.resetPasswordSubmitting') 
+							: successMessage 
+								? t('auth.resetPasswordSuccess')
+								: t('auth.submit')
+						}
 					</Button>
 				</form>
 

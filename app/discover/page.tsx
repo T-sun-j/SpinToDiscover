@@ -4,16 +4,18 @@ import { Button } from '../../components/ui/button';
 import { MapPin, Filter, Star } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
+import { AuthGuard } from '../../components/AuthGuard';
 
 export default function DiscoverPage() {
 	const { t } = useLanguage();
 
 	return (
-		<main className="container-page flex min-h-dvh flex-col">
-			{/* 使用公共头部组件，启用搜索功能 */}
-			<Header 
-				
-			/>
+		<AuthGuard>
+			<main className="container-page flex min-h-dvh flex-col">
+				{/* 使用公共头部组件，启用搜索功能 */}
+				<Header 
+					
+				/>
 
 			{/* 地图区域 */}
 			<section className="flex-1 mb-4">
@@ -43,10 +45,11 @@ export default function DiscoverPage() {
 				</div>
 			</section>
 
-			{/* 页脚 */}
-			<footer className="mt-auto text-center text-xs text-muted-foreground pb-3">
-				{t('discover.footer')}
-			</footer>
-		</main>
+				{/* 页脚 */}
+				<footer className="mt-auto text-center text-xs text-muted-foreground pb-3">
+					{t('discover.footer')}
+				</footer>
+			</main>
+		</AuthGuard>
 	);
 }

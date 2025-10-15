@@ -6,12 +6,16 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { loginUser } from '../../../lib/auth';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function LoginPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const { setAuthInfo } = useAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
 		email: '',
@@ -20,14 +24,47 @@ export default function LoginPage() {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	// 密码验证
-	const validatePassword = (password: string) => {
-		const hasUpperCase = /[A-Z]/.test(password);
-		const hasLowerCase = /[a-z]/.test(password);
-		const hasNumbers = /\d/.test(password);
-		const hasMinLength = password.length >= 8;
+	// 获取重定向URL，并清理可能的循环重定向
+	const getCleanRedirectUrl = () => {
+		const rawRedirect = searchParams.get('redirect') || '/square';
+		console.log('Login page - raw redirect parameter:', rawRedirect);
 		
-		return hasUpperCase && hasLowerCase && hasNumbers && hasMinLength;
+		try {
+			// 解码URL参数
+			const decodedRedirect = decodeURIComponent(rawRedirect);
+			console.log('Login page - decoded redirect:', decodedRedirect);
+			
+			// 如果重定向URL包含登录页面或嵌套的重定向参数，则使用默认页面
+			if (decodedRedirect.includes('/login') || 
+			    decodedRedirect.includes('redirect=') ||
+			    decodedRedirect.includes('%2Flogin') ||
+			    decodedRedirect.includes('%252Flogin')) {
+				console.log('Login page - detected loop, using default redirect');
+				return '/square';
+			}
+			
+			// 确保重定向URL是有效的路径
+			if (decodedRedirect.startsWith('/') && 
+			    !decodedRedirect.includes('?') &&
+			    !decodedRedirect.includes('redirect=')) {
+				console.log('Login page - using clean redirect:', decodedRedirect);
+				return decodedRedirect;
+			}
+			
+			console.log('Login page - invalid redirect, using default');
+			return '/square';
+		} catch (error) {
+			console.warn('Login page - failed to parse redirect URL:', rawRedirect, error);
+			return '/square';
+		}
+	};
+	
+	const redirectUrl = getCleanRedirectUrl();
+	console.log('Login page - final redirect URL:', redirectUrl);
+
+	// 基本密码验证 - 登录时只需要检查密码不为空
+	const validatePassword = (password: string) => {
+		return password && password.length > 0;
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +74,7 @@ export default function LoginPage() {
 
 		// 验证邮箱格式
 		if (!formData.email || !formData.email.includes('@')) {
-			setErrorMessage(t('auth.errorMessage') || 'Invalid email format');
+			setErrorMessage(t('auth.loginErrorMessage'));
 			setIsSubmitting(false);
 			return;
 		}
@@ -50,13 +87,32 @@ export default function LoginPage() {
 		}
 
 		try {
-			// 模拟API调用
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			// 调用登录API
+			const response = await loginUser(
+				formData.email,
+				formData.password,
+				'en' // 可以根据用户选择设置语言
+			);
 			
-			// 登录成功后跳转到广场页（首页）
-			router.push('/');
+			if (response.success) {
+				// 登录成功，存储认证信息
+				if (response as any) {
+					console.log('Login response:', response);
+					setAuthInfo({
+						userId: (response as any).data.userId || '',
+						token: (response as any).token,
+						email: (response as any).data.email || formData.email,
+					});
+				}
+				
+				// 跳转到重定向URL或广场页
+				router.push(redirectUrl);
+			} else {
+				setErrorMessage(response.message || response.error || t('auth.loginError'));
+			}
 		} catch (error) {
-			setErrorMessage(t('auth.errorMessage') || 'Login failed');
+			console.error('Login error:', error);
+			setErrorMessage(error instanceof Error ? error.message : t('auth.loginError'));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -77,7 +133,7 @@ export default function LoginPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.loginTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.loginTitle')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#101729] hover:text-[#101729]"
@@ -87,7 +143,7 @@ export default function LoginPage() {
 				</div>
 
 				{/* 登录表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6 font-inter">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
 						<div className="relative">
@@ -105,7 +161,7 @@ export default function LoginPage() {
 
 					{/* 密码输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type={showPassword ? "text" : "password"}
@@ -127,7 +183,7 @@ export default function LoginPage() {
 
 					{/* 错误信息显示 */}
 					{errorMessage && (
-						<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
 							<RefreshCw className="h-4 w-4" />
 							<span>{errorMessage}</span>
 						</div>
@@ -136,23 +192,23 @@ export default function LoginPage() {
 					{/* 登录按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
 						disabled={isSubmitting}
 					>
-						{isSubmitting ? t('auth.submitting') || 'Logging in...' : t('auth.login')}
+						{isSubmitting ? t('auth.loginSubmitting') : t('auth.login')}
 					</Button>
 
 					{/* 忘记密码链接 */}
 					<div className="text-center">
-						<Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 font-bold">
+						<Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
 							{t('auth.forgetPassword')}
 						</Link>
 					</div>
 
 					{/* 创建新账户链接 */}
 					<div className="text-center">
-						<Link href="/register" className="text-sm text-gray-600 hover:text-gray-800 font-bold">
+						<Link href="/register" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
 							{t('auth.createAccount')}
 						</Link>
 					</div>

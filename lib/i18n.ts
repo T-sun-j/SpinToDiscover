@@ -41,6 +41,39 @@ export interface Translations {
     changePasswordTitle: string;
     newPassword: string;
     confirmNewPassword: string;
+    resetPasswordTitle: string;
+    resetPasswordSuccess: string;
+    resetPasswordError: string;
+    invalidResetLink: string;
+    resetPasswordSubmitting: string;
+    resetPasswordSuccessMessage: string;
+    resetPasswordRedirecting: string;
+    forgotPasswordSuccessMessage: string;
+    forgotPasswordErrorMessage: string;
+    forgotPasswordSubmitting: string;
+    forgotPasswordSuccess: string;
+    loginErrorMessage: string;
+    loginError: string;
+    loginSubmitting: string;
+    registerErrorMessage: string;
+    registerError: string;
+    registerSubmitting: string;
+    registerSuccess: string;
+    passwordMismatch: string;
+    termsAnd: string;
+    locationPermissionDenied: string;
+    locationError: string;
+    gettingLocation: string;
+    defaultLocation: string;
+    getUserInfoError: string;
+    updateUserInfoError: string;
+    updateUserInfoSuccess: string;
+    noAuthInfo: string;
+    avatarUploadError: string;
+    avatarUploading: string;
+    skipping: string;
+    fileSizeError: string;
+    fileTypeError: string;
   };
   personalization: {
     title: string;
@@ -176,19 +209,31 @@ export interface Translations {
       notifications: string;
     };
   };
-  personalPage: {
-    title: string;
-    brief: string;
-    customerServiceHotline: string;
-    workingHours: string;
-    email: string;
-    myPosts: string;
-    follow: string;
-    followed: string;
-    editInfo: string;
-    delete: string;
-    hide: string;
-  };
+    personalPage: {
+      title: string;
+      brief: string;
+      customerServiceHotline: string;
+      workingHours: string;
+      email: string;
+      myPosts: string;
+      follow: string;
+      followed: string;
+      editInfo: string;
+      delete: string;
+      hide: string;
+      loading: string;
+      error: string;
+      noPosts: string;
+      noPostsDescription: string;
+      refresh: string;
+    };
+    userInfo: {
+      loading: string;
+      error: string;
+      followers: string;
+      following: string;
+      posts: string;
+    };
   releasePage: {
     title: string;
     fieldTitle: string;
@@ -201,12 +246,32 @@ export interface Translations {
     errorMessage: string;
     allowingComments: string;
     releaseButton: string;
-  };
-  followedPage: {
-    title: string;
-    following: string;
-    follower: string;
-    username: string;
+    uploadMedia: string;
+    video: string;
+    uploadingImages: string;
+    uploadingVideo: string;
+    publishingContent: string;
+    publishSuccess: string;
+    publishError: string;
+    imageUploadError: string;
+    videoUploadError: string;
+    retryLocation: string;
+    locationError: string;
+    locationParseError: string;
+    locationFailed: string;
+    locationPermissionDenied: string;
+    locationUnavailable: string;
+    locationTimeout: string;
+    authInfoMissing: string;
+    getUserInfoFailed: string;
+    titleRequired: string;
+    contentRequired: string;
+    unknownError: string;
+    gettingLocation: string;
+    publishProcessError: string;
+    publishing: string;
+    addMedia: string;
+    mediaFiles: string;
   };
   favoritePage: {
     title: string;
@@ -219,6 +284,10 @@ export interface Translations {
     publisher: string;
     emptyTitle: string;
     emptyDescription: string;
+    loading: string;
+    error: string;
+    noImage: string;
+    collectedOn: string;
   };
   about: {
     title: string;
@@ -267,6 +336,62 @@ export interface Translations {
     transparencyTitle: string;
     transparency: string;
   };
+  history: {
+    title: string;
+    back: string;
+    refresh: string;
+    loading: string;
+    error: string;
+    noHistory: string;
+    noHistoryDescription: string;
+    noImage: string;
+    viewedOn: string;
+    location: string;
+  };
+  brandEditPage: {
+    title: string;
+    brand: string;
+    brief: string;
+    logo: string;
+    officialSite: string;
+    telMobile: string;
+    address: string;
+    location: string;
+    submit: string;
+    submitting: string;
+    submitSuccess: string;
+    submitError: string;
+    loginRequired: string;
+    authInfoMissing: string;
+    invalidImageType: string;
+    imageTooLarge: string;
+    logoUploadFailed: string;
+    uploading: string;
+    logoUploaded: string;
+    getUserInfoFailed: string;
+    loading: string;
+    getCurrentLocation: string;
+    gettingLocation: string;
+    locationError: string;
+    locationFailed: string;
+    locationPermissionDenied: string;
+    locationUnavailable: string;
+    locationTimeout: string;
+    locationParseError: string;
+  };
+
+  // 关注页面
+  followedPage: {
+    following: string;
+    follower: string;
+    loading: string;
+    error: string;
+    refresh: string;
+    noFollowing: string;
+    noFollowers: string;
+    noFollowingDescription: string;
+    noFollowersDescription: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -311,6 +436,39 @@ export const translations: Record<Language, Translations> = {
       changePasswordTitle: 'Change passwords',
       newPassword: 'New Passwords',
       confirmNewPassword: 'Confirm passwords',
+      resetPasswordTitle: 'Reset Password',
+      resetPasswordSuccess: 'Password reset successfully!',
+      resetPasswordError: 'Failed to reset password, please try again',
+      invalidResetLink: 'Reset password link is invalid or expired',
+      resetPasswordSubmitting: 'Resetting...',
+      resetPasswordSuccessMessage: 'Password reset successfully! Redirecting to login page...',
+      resetPasswordRedirecting: 'Redirecting...',
+      forgotPasswordSuccessMessage: 'Reset email sent, please check your inbox',
+      forgotPasswordErrorMessage: 'Failed to send reset email, please try again',
+      forgotPasswordSubmitting: 'Sending...',
+      forgotPasswordSuccess: 'Email sent',
+      loginErrorMessage: 'Invalid email format',
+      loginError: 'Login failed, please try again',
+      loginSubmitting: 'Logging in...',
+      registerErrorMessage: 'Registration failed, please try again',
+      registerError: 'An error occurred during registration',
+      registerSubmitting: 'Registering...',
+      registerSuccess: 'Registration successful! Redirecting...',
+      passwordMismatch: 'Passwords do not match',
+      termsAnd: 'and',
+      locationPermissionDenied: 'Location permission denied, using default location',
+      locationError: 'Failed to get location, using default location',
+      gettingLocation: 'Getting location...',
+      defaultLocation: 'Default Location',
+      getUserInfoError: 'Failed to get user information',
+      updateUserInfoError: 'Failed to update user information',
+      updateUserInfoSuccess: 'User information updated successfully',
+      noAuthInfo: 'No authentication information found. Please try registering again.',
+      avatarUploadError: 'Avatar upload failed',
+      avatarUploading: 'Uploading avatar...',
+      skipping: 'Skipping...',
+      fileSizeError: 'File size too large (max 5MB)',
+      fileTypeError: 'Invalid file type (only images allowed)',
     },
     personalization: {
       title: 'Personalization',
@@ -458,6 +616,18 @@ export const translations: Record<Language, Translations> = {
       editInfo: 'Edit Info',
       delete: 'Delete',
       hide: 'Hide',
+      loading: 'Loading posts...',
+      error: 'Failed to load posts',
+      noPosts: 'No Posts Found',
+      noPostsDescription: 'Start creating content to see your posts here.',
+      refresh: 'Refresh',
+    },
+    userInfo: {
+      loading: 'Loading user info...',
+      error: 'Failed to load user info',
+      followers: 'followers',
+      following: 'following',
+      posts: 'posts',
     },
     releasePage: {
       title: 'Release',
@@ -471,12 +641,32 @@ export const translations: Record<Language, Translations> = {
       errorMessage: 'Error Message',
       allowingComments: 'Allowing Comments',
       releaseButton: 'Release',
-    },
-    followedPage: {
-      title: 'Followed Page',
-      following: 'Following',
-      follower: 'Follower',
-      username: 'Username',
+      uploadMedia: 'Upload Image/Video',
+      video: 'Video',
+      uploadingImages: 'Uploading images...',
+      uploadingVideo: 'Uploading video...',
+      publishingContent: 'Publishing content...',
+      publishSuccess: 'Published successfully!',
+      publishError: 'Publishing failed, please try again',
+      imageUploadError: 'Image upload failed',
+      videoUploadError: 'Video upload failed',
+      retryLocation: 'Retry Location',
+      locationError: 'Your browser does not support geolocation',
+      locationParseError: 'Location obtained but address parsing failed',
+      locationFailed: 'Failed to get location',
+      locationPermissionDenied: 'User denied location request',
+      locationUnavailable: 'Location information unavailable',
+      locationTimeout: 'Location request timeout',
+      authInfoMissing: 'User authentication information missing',
+      getUserInfoFailed: 'Failed to get user information',
+      titleRequired: 'Title cannot be empty',
+      contentRequired: 'Content cannot be empty',
+      unknownError: 'Unknown error',
+      gettingLocation: 'Getting location...',
+      publishProcessError: 'Error occurred during publishing',
+      publishing: 'Publishing...',
+      addMedia: 'Add Media',
+      mediaFiles: 'media files',
     },
     favoritePage: {
       title: 'Favorite',
@@ -489,6 +679,10 @@ export const translations: Record<Language, Translations> = {
       publisher: 'Publisher',
       emptyTitle: 'No favorites yet',
       emptyDescription: 'Start exploring and save your favorite places and content to see them here.',
+      loading: 'Loading...',
+      error: 'Failed to load favorites',
+      noImage: 'No image',
+      collectedOn: 'Collected on',
     },
     about: {
       title: 'About Us',
@@ -537,6 +731,60 @@ export const translations: Record<Language, Translations> = {
       transparencyTitle: 'Transparency Commitment',
       transparency: 'We provide detailed reports on how every donation is used, ensuring complete transparency in our charitable activities.',
     },
+    history: {
+      title: 'Browsing History',
+      back: 'Back',
+      refresh: 'Refresh',
+      loading: 'Loading history...',
+      error: 'Failed to load history',
+      noHistory: 'No History Found',
+      noHistoryDescription: 'Your browsing history will appear here once you start exploring content.',
+      noImage: 'No Image',
+      viewedOn: 'Viewed on',
+      location: 'Location',
+    },
+    brandEditPage: {
+      title: 'My page',
+      brand: 'Brand',
+      brief: 'Brief',
+      logo: 'Logo',
+      officialSite: 'Official Site',
+      telMobile: 'Tel/Mobile',
+      address: 'Work Hours',
+      location: 'Location',
+      submit: 'Submit',
+      submitting: 'Submitting...',
+      submitSuccess: 'Submitted successfully, redirecting...',
+      submitError: 'Submission failed',
+      loginRequired: 'Please login first',
+      authInfoMissing: 'User authentication information missing',
+      invalidImageType: 'Please select a valid image file',
+      imageTooLarge: 'Image file is too large (max 10MB)',
+      logoUploadFailed: 'Logo upload failed',
+      uploading: 'Uploading...',
+      logoUploaded: 'Logo uploaded successfully',
+      getUserInfoFailed: 'Failed to get user information',
+      loading: 'Loading...',
+      getCurrentLocation: 'Get Current Location',
+      gettingLocation: 'Getting location...',
+      locationError: 'Your browser does not support geolocation',
+      locationFailed: 'Failed to get location',
+      locationPermissionDenied: 'User denied location request',
+      locationUnavailable: 'Location information unavailable',
+      locationTimeout: 'Location request timeout',
+      locationParseError: 'Location obtained but address parsing failed',
+    },
+    followedPage: {
+      following: 'Following',
+      follower: 'Followers',
+      loading: 'Loading...',
+      error: 'Failed to load data',
+      refresh: 'Refresh',
+      noFollowing: 'No Following',
+      noFollowers: 'No Followers',
+      noFollowingDescription: 'You haven\'t followed anyone yet. Start following users to see them here.',
+      noFollowersDescription: 'No one is following you yet. Share great content to attract followers.',
+    },
   },
   zh: {
     appName: {
@@ -579,6 +827,39 @@ export const translations: Record<Language, Translations> = {
       changePasswordTitle: '修改密码',
       newPassword: '新密码',
       confirmNewPassword: '确认密码',
+      resetPasswordTitle: '重置密码',
+      resetPasswordSuccess: '密码重置成功！',
+      resetPasswordError: '重置密码失败，请重试',
+      invalidResetLink: '重置密码链接无效或已过期',
+      resetPasswordSubmitting: '重置中...',
+      resetPasswordSuccessMessage: '密码重置成功！正在跳转到登录页面...',
+      resetPasswordRedirecting: '跳转中...',
+      forgotPasswordSuccessMessage: '重置邮件已发送，请检查您的邮箱',
+      forgotPasswordErrorMessage: '发送重置邮件失败，请重试',
+      forgotPasswordSubmitting: '发送中...',
+      forgotPasswordSuccess: '邮件已发送',
+      loginErrorMessage: '邮箱格式无效',
+      loginError: '登录失败，请重试',
+      loginSubmitting: '登录中...',
+      registerErrorMessage: '注册失败，请重试',
+      registerError: '注册过程中发生错误',
+      registerSubmitting: '注册中...',
+      registerSuccess: '注册成功！正在跳转...',
+      passwordMismatch: '密码不匹配',
+      termsAnd: '和',
+      locationPermissionDenied: '位置权限被拒绝，使用默认位置',
+      locationError: '获取位置失败，使用默认位置',
+      gettingLocation: '获取位置中...',
+      defaultLocation: '默认位置',
+      getUserInfoError: '获取用户信息失败',
+      updateUserInfoError: '更新用户信息失败',
+      updateUserInfoSuccess: '用户信息更新成功',
+      noAuthInfo: '未找到认证信息，请重新注册。',
+      avatarUploadError: '头像上传失败',
+      avatarUploading: '正在上传头像...',
+      skipping: '正在跳过...',
+      fileSizeError: '文件大小过大（最大5MB）',
+      fileTypeError: '无效的文件类型（仅支持图片）',
     },
     personalization: {
       title: '个人化',
@@ -726,6 +1007,18 @@ export const translations: Record<Language, Translations> = {
       editInfo: '编辑信息',
       delete: '删除',
       hide: '隐藏',
+      loading: '加载帖子中...',
+      error: '加载帖子失败',
+      noPosts: '暂无帖子',
+      noPostsDescription: '开始创建内容，您的帖子将显示在这里。',
+      refresh: '刷新',
+    },
+    userInfo: {
+      loading: '加载用户信息中...',
+      error: '加载用户信息失败',
+      followers: '关注者',
+      following: '关注中',
+      posts: '帖子',
     },
     releasePage: {
       title: '发布页面',
@@ -739,12 +1032,32 @@ export const translations: Record<Language, Translations> = {
       errorMessage: '错误信息',
       allowingComments: '允许评论',
       releaseButton: '发布按钮',
-    },
-    followedPage: {
-      title: '关注页面',
-      following: '关注',
-      follower: '粉丝',
-      username: '用户名',
+      uploadMedia: '上传图片/视频',
+      video: '视频',
+      uploadingImages: '正在上传图片...',
+      uploadingVideo: '正在上传视频...',
+      publishingContent: '正在发布内容...',
+      publishSuccess: '发布成功！',
+      publishError: '发布失败，请重试',
+      imageUploadError: '图片上传失败',
+      videoUploadError: '视频上传失败',
+      retryLocation: '重新获取位置',
+      locationError: '您的浏览器不支持地理位置功能',
+      locationParseError: '位置获取成功，但地址解析失败',
+      locationFailed: '获取位置失败',
+      locationPermissionDenied: '用户拒绝了位置请求',
+      locationUnavailable: '位置信息不可用',
+      locationTimeout: '获取位置超时',
+      authInfoMissing: '用户认证信息缺失',
+      getUserInfoFailed: '获取用户信息失败',
+      titleRequired: '标题不能为空',
+      contentRequired: '内容不能为空',
+      unknownError: '未知错误',
+      gettingLocation: '获取位置中...',
+      publishProcessError: '发布过程中发生错误',
+      publishing: '发布中...',
+      addMedia: '添加媒体',
+      mediaFiles: '个媒体文件',
     },
     favoritePage: {
       title: '我的收藏',
@@ -757,6 +1070,10 @@ export const translations: Record<Language, Translations> = {
       publisher: '发布者',
       emptyTitle: '暂无收藏',
       emptyDescription: '开始探索并保存您喜欢的地点和内容，它们将显示在这里。',
+      loading: '加载中...',
+      error: '加载收藏失败',
+      noImage: '无图片',
+      collectedOn: '收藏于',
     },
     about: {
       title: '关于我们',
@@ -804,6 +1121,60 @@ export const translations: Record<Language, Translations> = {
       donateLink: '如何捐款？',
       transparencyTitle: '透明度承诺',
       transparency: '我们提供每笔捐款使用情况的详细报告，确保我们慈善活动的完全透明度。',
+    },
+    history: {
+      title: '浏览记录',
+      back: '返回',
+      refresh: '刷新',
+      loading: '加载历史记录中...',
+      error: '加载历史记录失败',
+      noHistory: '暂无浏览记录',
+      noHistoryDescription: '当您开始探索内容时，您的浏览记录将显示在这里。',
+      noImage: '无图片',
+      viewedOn: '浏览于',
+      location: '位置',
+    },
+    brandEditPage: {
+      title: '我的页面',
+      brand: '品牌',
+      brief: '简介',
+      logo: '标志',
+      officialSite: '官方网站',
+      telMobile: '电话/手机',
+      address: '工作时间',
+      location: '位置',
+      submit: '提交',
+      submitting: '提交中...',
+      submitSuccess: '提交成功，正在跳转...',
+      submitError: '提交失败',
+      loginRequired: '请先登录',
+      authInfoMissing: '用户认证信息缺失',
+      invalidImageType: '请选择有效的图片文件',
+      imageTooLarge: '图片文件过大（最大10MB）',
+      logoUploadFailed: 'Logo上传失败',
+      uploading: '上传中...',
+      logoUploaded: 'Logo上传成功',
+      getUserInfoFailed: '获取用户信息失败',
+      loading: '加载中...',
+      getCurrentLocation: '获取当前位置',
+      gettingLocation: '获取位置中...',
+      locationError: '您的浏览器不支持地理位置功能',
+      locationFailed: '获取位置失败',
+      locationPermissionDenied: '用户拒绝了位置请求',
+      locationUnavailable: '位置信息不可用',
+      locationTimeout: '获取位置超时',
+      locationParseError: '位置获取成功，但地址解析失败',
+    },
+    followedPage: {
+      following: '关注',
+      follower: '粉丝',
+      loading: '加载中...',
+      error: '加载数据失败',
+      refresh: '刷新',
+      noFollowing: '暂无关注',
+      noFollowers: '暂无粉丝',
+      noFollowingDescription: '您还没有关注任何人。开始关注用户以在这里看到他们。',
+      noFollowersDescription: '还没有人关注您。分享精彩内容来吸引粉丝吧。',
     },
   },
 };

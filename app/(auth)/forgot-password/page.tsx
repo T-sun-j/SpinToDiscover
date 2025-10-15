@@ -7,12 +7,14 @@ import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { forgotPassword } from '../../../lib/auth';
 
 export default function ForgotPasswordPage() {
 	const { t } = useLanguage();
 	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// 邮箱格式验证
@@ -25,6 +27,7 @@ export default function ForgotPasswordPage() {
 		e.preventDefault();
 		setIsSubmitting(true);
 		setErrorMessage('');
+		setSuccessMessage('');
 
 		// 邮箱格式验证
 		if (!email || !validateEmail(email)) {
@@ -34,13 +37,18 @@ export default function ForgotPasswordPage() {
 		}
 
 		try {
-			// 模拟API调用
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			// 调用忘记密码API
+			const response = await forgotPassword(email);
 			
-			// 成功后跳转到修改密码页面
-			router.push('/change-password');
+			if (response.success) {
+				setSuccessMessage(t('auth.forgotPasswordSuccessMessage'));
+				// 可以选择跳转到登录页面或显示成功信息
+				// router.push('/login');
+			} else {
+				setErrorMessage(response.message || t('auth.forgotPasswordErrorMessage'));
+			}
 		} catch (error) {
-			setErrorMessage(t('auth.errorMessage') || 'Failed to send reset email');
+			setErrorMessage(error instanceof Error ? error.message : t('auth.forgotPasswordErrorMessage'));
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -61,7 +69,7 @@ export default function ForgotPasswordPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-semibold text-[#101729]">{t('auth.forgotPasswordTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.forgotPasswordTitle')}</h1>
 					<button 
 						onClick={handleBack}
 						className="text-[#101729] hover:text-[#101729]"
@@ -73,10 +81,10 @@ export default function ForgotPasswordPage() {
 				</div>
 
 				{/* 忘记密码表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6 font-inter">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
-						<div className="relative">
+						<div className="relative font-inter">
 							<Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 							<input
 								type="email"
@@ -91,20 +99,33 @@ export default function ForgotPasswordPage() {
 
 					{/* 错误信息显示 */}
 					{errorMessage && (
-						<div className="flex items-center gap-2 text-red-500 text-sm">
+						<div className="flex items-center gap-2 text-red-500 text-sm font-inter">
 							<RefreshCw className="h-4 w-4" />
 							<span>{errorMessage}</span>
+						</div>
+					)}
+
+					{/* 成功信息显示 */}
+					{successMessage && (
+						<div className="flex items-center gap-2 text-green-500 text-sm font-inter">
+							<Mail className="h-4 w-4" />
+							<span>{successMessage}</span>
 						</div>
 					)}
 
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
-						disabled={isSubmitting}
+						disabled={isSubmitting || !!successMessage}
 					>
-						{isSubmitting ? t('auth.submitting') || 'Submitting...' : t('auth.submit')}
+						{isSubmitting 
+							? t('auth.forgotPasswordSubmitting')
+							: successMessage 
+								? t('auth.forgotPasswordSuccess')
+								: t('auth.submit')
+						}
 					</Button>
 				</form>
 

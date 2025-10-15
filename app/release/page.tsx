@@ -3,23 +3,143 @@
 import { Button } from '../../components/ui/button';
 import { ChevronLeft, Camera, MapPin, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
+import { AuthGuard } from '../../components/AuthGuard';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { postSquareContent, getUserInfo, uploadAvatar, uploadVideo } from '../../lib/auth';
+import { PostSquareRequest } from '../../lib/api';
+import { LoadingSpinner } from '../../components/ui/LoadingStates';
 
 export default function ReleasePage() {
   const { t } = useLanguage();
+  const { authInfo, isAuthenticated } = useAuth();
   const router = useRouter();
   const [brandInfoChecked, setBrandInfoChecked] = useState(false);
-  const [images, setImages] = useState<string[]>(['/img/band.png']); // Placeholder image
+  const [images, setImages] = useState<string[]>([]); // Placeholder image
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // 存储图片文件
+  const [videoFile, setVideoFile] = useState<File | null>(null); // 存储视频文件
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [brandName, setBrandName] = useState('');
   const [briefDescription, setBriefDescription] = useState('');
   const [allowingComments, setAllowingComments] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [userLocation, setUserLocation] = useState<string>('');
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+
+  // 获取用户地理位置
+  const getUserLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      setErrorMessage(t('releasePage.locationError'));
+      return;
+    }
+
+    setIsGettingLocation(true);
+    setErrorMessage('');
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          // 使用逆地理编码获取地址信息
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=zh`
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            const locationString = `${data.countryName || ''}，${data.city || data.locality || ''}`;
+            setUserLocation(locationString);
+          } else {
+            setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+          }
+        } catch (error) {
+          console.error('获取地址信息失败:', error);
+          setUserLocation(t('releasePage.locationParseError'));
+        } finally {
+          setIsGettingLocation(false);
+        }
+      },
+      (error) => {
+        console.error('获取位置失败:', error);
+        let errorMessage = t('releasePage.locationFailed');
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = t('releasePage.locationPermissionDenied');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = t('releasePage.locationUnavailable');
+            break;
+          case error.TIMEOUT:
+            errorMessage = t('releasePage.locationTimeout');
+            break;
+        }
+        setErrorMessage(errorMessage);
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5分钟缓存
+      }
+    );
+  }, []);
+
+  // 组件加载时自动获取位置
+  useEffect(() => {
+    getUserLocation();
+  }, [getUserLocation]);
+
+  // 获取用户信息并填充品牌字段
+  const fetchUserInfo = useCallback(async () => {
+    if (!authInfo) {
+      setErrorMessage(t('releasePage.authInfoMissing'));
+      return;
+    }
+
+    try {
+      const response = await getUserInfo({
+        email: authInfo.email,
+        userId: authInfo.userId,
+        token: authInfo.token,
+      });
+
+      if (response.success && response.data) {
+        const userInfo = response.data;
+        // 填充品牌名称和描述
+        if (userInfo.brand) {
+          setBrandName(userInfo.brand);
+        }
+        if (userInfo.brief) {
+          setBriefDescription(userInfo.brief);
+        }
+      }
+    } catch (error) {
+      console.error('获取用户信息失败:', error);
+      setErrorMessage(t('releasePage.getUserInfoFailed'));
+    }
+  }, [authInfo]);
+
+  // 验证表单数据
+  const validateForm = useCallback(() => {
+    if (!title.trim()) {
+      setErrorMessage(t('releasePage.titleRequired'));
+      return false;
+    }
+    if (!content.trim()) {
+      setErrorMessage(t('releasePage.contentRequired'));
+      return false;
+    }
+    return true;
+  }, [title, content, t]);
 
   const handleBack = () => {
     router.back();
@@ -28,6 +148,7 @@ export default function ReleasePage() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
+      setImageFiles([...imageFiles, file]);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImages([...images, reader.result as string]);
@@ -36,33 +157,126 @@ export default function ReleasePage() {
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
+  const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setVideoFile(file);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleRemoveImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+    setImageFiles(imageFiles.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveVideo = () => {
+    setVideoFile(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      title,
-      content,
-      images,
-      brandInfoChecked,
-      brandName,
-      briefDescription,
-      allowingComments,
-    });
-    router.push('/personal'); // Navigate to personal page after release
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      // 验证必填字段
+      if (!validateForm()) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      let uploadedImages: string[] = [];
+      let uploadedVideo: string = '';
+
+      // 先上传图片
+      if (imageFiles.length > 0) {
+        setSuccessMessage(t('releasePage.uploadingImages'));
+        for (const imageFile of imageFiles) {
+          try {
+            const uploadResponse = await uploadAvatar(imageFile);
+            if (uploadResponse.success && uploadResponse.data) {
+              const imageUrl = typeof uploadResponse.data === 'string' 
+                ? uploadResponse.data 
+                : uploadResponse.data.img;
+              if (imageUrl) {
+                uploadedImages.push(imageUrl);
+              }
+            }
+          } catch (error) {
+            console.error('图片上传失败:', error);
+            setErrorMessage(`${t('releasePage.imageUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
+            setSuccessMessage(''); // 清除成功消息
+            setIsSubmitting(false);
+            return;
+          }
+        }
+      }
+
+      // 再上传视频
+      if (videoFile) {
+        setSuccessMessage(t('releasePage.uploadingVideo'));
+        try {
+          const videoUploadResponse = await uploadVideo(videoFile);
+          if (videoUploadResponse.success && videoUploadResponse.data) {
+            uploadedVideo = typeof videoUploadResponse.data === 'string' 
+              ? videoUploadResponse.data 
+              : videoUploadResponse.data.img;
+          }
+        } catch (error) {
+          console.error('视频上传失败:', error);
+          setErrorMessage(`${t('releasePage.videoUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
+          setSuccessMessage(''); // 清除成功消息
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // 准备发布数据
+      const postData: PostSquareRequest = {
+        userId: authInfo!.userId,
+        token: authInfo!.token,
+        title: title.trim(),
+        description: content.trim(),
+        location: userLocation || t('releasePage.gettingLocation'),
+        images: uploadedImages.join(','), 
+        video: uploadedVideo,
+        intro: brandInfoChecked ? briefDescription : '',
+        // 其他可选字段可以根据需要添加
+      };
+
+      setSuccessMessage(t('releasePage.publishingContent'));
+
+      // 调用发布API
+      const response = await postSquareContent(postData);
+
+      if (response.success) {
+        setSuccessMessage(t('releasePage.publishSuccess'));
+        // 成功后跳转到广场页面
+        setTimeout(() => {
+          router.push('/personal');
+        }, 2000);
+      } else {
+        setErrorMessage(response.message || t('releasePage.publishError'));
+        setSuccessMessage(''); // 清除成功消息
+      }
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : t('releasePage.publishProcessError'));
+      setSuccessMessage(''); // 清除成功消息
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <main className="container-page flex min-h-dvh flex-col bg-white">
-      {/* Header */}
-      <Header
-        showLanguage
-        showSearch
-        showUser
-      />
+    <AuthGuard>
+      <main className="container-page flex min-h-dvh flex-col bg-white">
+        {/* Header */}
+        <Header
+          showLanguage
+          showSearch
+          showUser
+        />
 
       {/* Back button and title */}
       <div className="flex items-center justify-between px-6 py-4">
@@ -72,7 +286,7 @@ export default function ReleasePage() {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex-1 px-6 py-4 space-y-6">
+      <form onSubmit={handleSubmit} className="flex-1 px-6 space-y-6">
         {/* Title Input */}
         <div>
           <input
@@ -97,43 +311,113 @@ export default function ReleasePage() {
           />
         </div>
 
-        {/* Image Upload */}
-        <div className="flex items-center gap-3">
-          {images.map((image, index) => (
-            <div key={index} className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-300">
-              <Image src={image} alt="Uploaded" layout="fill" objectFit="cover" />
-              {index !== 0 && ( // Only show 'X' button for uploaded images, not the placeholder
+        {/* 媒体上传区域 */}
+        <div>
+          
+          {/* 媒体文件网格布局 - 一行4个 */}
+          <div className="grid grid-cols-4 gap-3">
+            {/* 显示已上传图片 */}
+            {images.map((image, index) => (
+              <div key={`image-${index}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-300">
+                <Image src={image} alt="Uploaded" layout="fill" objectFit="cover" />
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-0.5"
+                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 hover:bg-opacity-70"
                 >
                   <X className="h-3 w-3" />
                 </button>
-              )}
-            </div>
-          ))}
-          <label className="w-20 h-20 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 cursor-pointer bg-gray-100">
-            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-            <Camera className="h-8 w-8 text-gray-500" />
-          </label>
+              </div>
+            ))}
+
+            {/* 显示已上传视频 */}
+            {videoFile && (
+              <div className="relative aspect-square rounded-lg overflow-hidden border border-gray-300 bg-gray-100 flex items-center justify-center">
+                <div className="text-center p-2">
+                  <div className="text-xs text-gray-600 mb-1 font-medium">{t('releasePage.video')}</div>
+                  <div className="text-xs text-gray-500 truncate">{videoFile.name}</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveVideo}
+                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full p-1 hover:bg-opacity-70"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+
+            {/* 上传按钮 - 只在还有空间时显示 */}
+            {(images.length + (videoFile ? 1 : 0)) < 8 && (
+              <label className="aspect-square flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (file.type.startsWith('image/')) {
+                      handleImageUpload(e);
+                    } else if (file.type.startsWith('video/')) {
+                      handleVideoUpload(e);
+                    }
+                    // 重置input，否则无法重复选同一文件
+                    e.target.value = "";
+                  }}
+                />
+                <div className="flex flex-col items-center">
+                  <Camera className="h-6 w-6 text-gray-400 mb-1" />
+                  <span className="text-xs text-gray-500 text-center">{t('releasePage.addMedia')}</span>
+                </div>
+              </label>
+            )}
+          </div>
+          
+          {/* 媒体文件数量提示 */}
+          <div className="mt-2 text-xs text-gray-500">
+            {images.length + (videoFile ? 1 : 0)}/8 {t('releasePage.mediaFiles')}
+          </div>
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-2 text-gray-500">
-          <MapPin className="h-4 w-4" />
-          <span>{t('releasePage.location')}: Istanbul</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-gray-500">
+            <MapPin className="h-4 w-4" />
+            <span>{t('releasePage.location')}: {userLocation || t('releasePage.gettingLocation')}</span>
+          </div>
+          {!userLocation && !isGettingLocation && (
+            <button
+              type="button"
+              onClick={getUserLocation}
+              className="text-sm text-blue-500 hover:text-blue-700"
+            >
+              {t('releasePage.retryLocation')}
+            </button>
+          )}
         </div>
 
         {/* Advantage Info Section */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-[#101729] font-poppins">{t('releasePage.advantageInfo')}</h2>
+            <h2 className="text-lg text-[#101729] font-poppins">{t('releasePage.advantageInfo')}</h2>
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={brandInfoChecked}
-                onChange={(e) => setBrandInfoChecked(e.target.checked)}
+                onChange={async (e) => {
+                  const isChecked = e.target.checked;
+                  setBrandInfoChecked(isChecked);
+                  
+                  // 如果勾选了品牌信息，则获取用户信息并填充
+                  if (isChecked) {
+                    await fetchUserInfo();
+                  } else {
+                    // 如果取消勾选，清空品牌信息
+                    setBrandName('');
+                    setBriefDescription('');
+                  }
+                }}
                 className="form-checkbox h-4 w-4 rounded-sm border-gray-400 text-[#101729] focus:ring-[#101729]"
               />
               <span className="text-sm text-gray-600">{t('releasePage.fillBrandInfo')}</span>
@@ -169,11 +453,19 @@ export default function ReleasePage() {
           {/* )} */}
         </div>
 
-        {/* Error Message (placeholder) */}
-        {false && (
+        {/* Error Message */}
+        {errorMessage && (
           <div className="flex items-center gap-2 text-red-500 text-sm">
             <div className="h-2 w-2 rounded-full bg-red-500"></div>
-            <span>{t('releasePage.errorMessage')}</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="flex items-center gap-2 text-green-500 text-sm">
+            <div className="h-2 w-2 rounded-full bg-green-500"></div>
+            <span>{successMessage}</span>
           </div>
         )}
 
@@ -193,14 +485,21 @@ export default function ReleasePage() {
           type="submit"
           className="w-full bg-[#101729] text-white shadow-md rounded-lg"
           size="lg"
+          disabled={isSubmitting || (!!successMessage && !errorMessage)}
         >
-          {t('releasePage.releaseButton')}
+          {isSubmitting 
+            ? t('releasePage.publishing') 
+            : (successMessage && !errorMessage)
+              ? t('releasePage.publishSuccess') 
+              : t('releasePage.releaseButton')
+          }
         </Button>
       </form>
 
-      {/* Footer */}
-      <Footer />
-    </main>
+        {/* Footer */}
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }
 

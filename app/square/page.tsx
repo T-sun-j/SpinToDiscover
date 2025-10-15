@@ -1,110 +1,116 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { Search, MapPin, Bookmark, Heart, Share2, Filter } from 'lucide-react';
+import { Search, MapPin, Bookmark, Heart, Share2, Filter, FileX } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { getSquareContentList } from '../../lib/auth';
+import { SquareContent, Publisher, Pagination } from '../../lib/api';
+import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
+import { OptimizedImage } from '../../components/ui/OptimizedImage';
+import { getCurrentLocationString, checkGeolocationPermission } from '../../lib/utils/geolocation';
 
 export default function SquarePage() {
 	const { t } = useLanguage();
+	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
-	const [activeTab, setActiveTab] = useState('recommend');
+	const [activeTab, setActiveTab] = useState('Recommend');
+	const [posts, setPosts] = useState<SquareContent[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState('');
+	const [userLocation, setUserLocation] = useState<string>('');
+	const [isGettingLocation, setIsGettingLocation] = useState(false);
+	const [pagination, setPagination] = useState<Pagination | null>(null);
 
-	// 模拟数据
-	const posts = [
-		{
-			id: 1,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 562,
-			shares: 1210,
-			images: [
-				'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=300&h=200&fit=crop'
-			]
-		},
-		{
-			id: 2,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 423,
-			shares: 890,
-			images: [
-				'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop'
-			]
-		},
-		{
-			id: 3,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 789,
-			shares: 1567,
-			images: [
-				'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300&h=200&fit=crop'
-			]
-		},
-		{
-			id: 4,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 234,
-			shares: 456,
-			images: [
-				'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop'
-			]
-		},
-		{
-			id: 5,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 901,
-			shares: 2345,
-			images: [
-				'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300&h=200&fit=crop'
-			]
-		},
-		{
-			id: 6,
-			location: t('square.location'),
-			title: t('square.titleContent'),
-			description: t('square.description'),
-			publisher: t('square.publisher'),
-			likes: 345,
-			shares: 678,
-			images: [
-				'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=200&fit=crop',
-				'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=300&h=200&fit=crop'
-			]
+
+	// 获取用户地理位置
+	const getUserLocation = useCallback(async () => {
+		setIsGettingLocation(true);
+		try {
+			// 检查地理位置权限
+			const permission = await checkGeolocationPermission();
+			
+			if (permission === 'denied') {
+				console.warn('用户拒绝了地理位置权限');
+				setUserLocation('中国，北京'); // 使用默认位置
+				return '中国，北京';
+			}
+
+			// 获取当前位置
+			const location = await getCurrentLocationString();
+			setUserLocation(location);
+			return location;
+		} catch (error) {
+			console.warn('获取地理位置失败:', error);
+			setUserLocation('中国，北京'); // 使用默认位置
+			return '中国，北京';
+		} finally {
+			setIsGettingLocation(false);
 		}
-	];
+	}, []);
 
-	const handlePostClick = (postId: number) => {
-		router.push(`/square/${postId}`);
+	// 加载广场内容
+	const loadSquareContent = useCallback(async (location?: string) => {
+		if (!authInfo?.userId || !authInfo?.token) {
+			setPosts([]);
+			setPagination(null);
+			return;
+		}
+
+		setIsLoading(true);
+		setError('');
+		
+		try {
+			// 如果没有提供位置，使用当前用户位置或默认位置
+			const currentLocation = location || userLocation || '中国，北京';
+			
+			const response = await getSquareContentList({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				location: currentLocation,
+				tab: activeTab,
+				page: 1,
+				limit: 20
+			});
+
+			if (response.success && response.data) {
+				setPosts(response.data.posts || []);
+				setPagination(response.data.pagination || null);
+			} else {
+				setError('加载内容失败');
+			}
+		} catch (error) {
+			setError('加载内容时发生错误');
+		} finally {
+			setIsLoading(false);
+		}
+	}, [authInfo, userLocation, activeTab]);
+
+	// 初始化页面：获取地理位置并加载内容
+	useEffect(() => {
+		const initializePage = async () => {
+			// 首先获取用户地理位置
+			const location = await getUserLocation();
+			
+			// 加载内容（如果已认证）
+			loadSquareContent(location);
+		};
+
+		initializePage();
+	}, [loadSquareContent, getUserLocation]);
+
+	const handlePostClick = (postId: string) => {
+		// 如果有认证信息，传递到详情页面
+		if (authInfo?.userId && authInfo?.token) {
+			router.push(`/square/${postId}?userId=${authInfo.userId}&token=${authInfo.token}`);
+		} else {
+			router.push(`/square/${postId}`);
+		}
 	};
 
 	return (
@@ -119,12 +125,12 @@ export default function SquarePage() {
 				/>
 
 				{/* 排序标签 */}
-				<div className="flex items-center justify-between px-4 pt-4 border-b">
+				<div className="flex items-center justify-between px-4 pt-2 border-b">
 					<div className="flex space-x-3">
 						<button
-							onClick={() => setActiveTab('recommend')}
+							onClick={() => setActiveTab('Recommend')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'recommend' 
+								activeTab === 'Recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -132,9 +138,9 @@ export default function SquarePage() {
 							{t('square.recommend')}
 						</button>
 						<button
-							onClick={() => setActiveTab('following')}
+							onClick={() => setActiveTab('Following')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'following' 
+								activeTab === 'Following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -142,9 +148,9 @@ export default function SquarePage() {
 							{t('square.following')}
 						</button>
 						<button
-							onClick={() => setActiveTab('nearby')}
+							onClick={() => setActiveTab('Nearby')}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'nearby' 
+								activeTab === 'Nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -157,10 +163,45 @@ export default function SquarePage() {
 					</Button>
 				</div>
 
+				{/* 加载状态 */}
+				{(isLoading || isGettingLocation) && (
+					<div className="flex-1 flex items-center justify-center">
+						<LoadingSpinner 
+							size="lg" 
+							text={isGettingLocation ? "正在获取位置信息..." : "加载中..."} 
+						/>
+					</div>
+				)}
+
+				{/* 错误信息 */}
+				{error && !isLoading && !isGettingLocation && (
+					<div className="flex-1 flex items-center justify-center">
+						<ErrorState 
+							error={error}
+							onRetry={() => isAuthenticated && loadSquareContent(userLocation)}
+						/>
+					</div>
+				)}
+
+				{/* 无数据状态 */}
+				{!isLoading && !error && !isGettingLocation && posts.length === 0 && (
+					<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+						<FileX className="h-16 w-16 text-gray-300 mb-4" />
+						<h3 className="text-lg font-medium text-gray-900 mb-2">暂无内容</h3>
+						<p className="text-sm text-gray-500 text-center max-w-sm">
+							{isAuthenticated 
+								? '当前位置暂无发现内容，换个地方试试吧！' 
+								: '请先登录以查看个性化内容推荐'
+							}
+						</p>
+					</div>
+				)}
+
 				{/* 瀑布流内容 */}
-				<div className="flex-1 px-2 py-2">
-					<div className="space-y-0">
-						{posts.map((post, index) => (
+				{!isLoading && !error && !isGettingLocation && posts.length > 0 && (
+					<div className="flex-1 px-2 py-2">
+						<div className="space-y-0">
+							{posts.map((post, index) => (
 							<div key={post.id}>
 								<div 
 									className="bg-white p-4 cursor-pointer hover:shadow-sm transition-shadow"
@@ -175,7 +216,7 @@ export default function SquarePage() {
 									{/* 图片列表 */}
 									<div className="flex gap-2 mb-3 overflow-x-auto">
 										{post.images.map((image, imageIndex) => (
-											<img
+											<OptimizedImage
 												key={imageIndex}
 												src={image}
 												alt={`Post ${post.id} image ${imageIndex + 1}`}
@@ -195,26 +236,26 @@ export default function SquarePage() {
 										{/* 发布者信息 */}
 										<div className="flex items-center gap-2">
 											<img
-												src={post.images[0]}
-												alt="avatar"
+												src={post.publisher.avatar}
+												alt={post.publisher.nickname}
 												className="w-8 h-8 object-cover rounded-full"
 											/>
-											<span className="text-sm text-gray-600 font-nunito">{post.publisher}</span>
+											<span className="text-sm text-gray-600 font-nunito">{post.publisher.nickname}</span>
 										</div>
 
 										{/* 互动按钮 */}
 										<div className="flex items-center gap-3">
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Bookmark className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.likes}</span>
+												<span className="text-xs font-nunito">{post.collects}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-500">
 												<Heart className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.shares}</span>
+												<span className="text-xs font-nunito">{post.likes}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Share2 className="h-4 w-4" />
-												<span className="text-xs font-nunito">{t('square.share')}</span>
+												<span className="text-xs font-nunito">{post.shares}</span>
 											</button>
 										</div>
 									</div>
@@ -228,8 +269,16 @@ export default function SquarePage() {
 								)}
 							</div>
 						))}
+						</div>
+						
+						{/* 分页信息 */}
+						{pagination && (
+							<div className="px-4 py-3 text-center text-xs text-gray-500">
+								第 {pagination.currentPage} 页，共 {pagination.totalPages} 页，总计 {pagination.totalItems} 条内容
+							</div>
+						)}
 					</div>
-				</div>
+				)}
 
 				{/* 使用公共页脚组件 */}
 				<Footer />

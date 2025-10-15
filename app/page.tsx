@@ -25,7 +25,7 @@ export default function HomePage() {
 
 			{/* 顶部导航 */}
 			<div className="relative z-10">
-				<Header transparent showUser/>
+				<Header transparent showUser showLanguage/>
 			</div>
 
 			{/* 主要内容区域 - 使用flex布局自适应屏幕 */}

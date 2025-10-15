@@ -36,10 +36,10 @@ export function Header({
           <Image
             src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
             alt="logo"
-            width={84}
-            height={48}
+            width={42}
+            height={14}
             priority
-            className="h-14 w-36"
+            className="h-14 w-42"
           />
         </Link>  
         {showLanguage ? <LanguageToggle /> : null}
