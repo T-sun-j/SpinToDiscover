@@ -6,10 +6,10 @@
 // 服务器配置
 export const SERVER_CONFIG = {
   // 服务器基础URL
-  BASE_URL: 'http://dis.diatal.com',
+  BASE_URL: 'https://dis.diatal.com',
   
   // 静态资源URL
-  STATIC_URL: 'http://dis.diatal.com',
+  STATIC_URL: 'https://dis.diatal.com',
 }
 
 // 工具函数：构建头像URL
