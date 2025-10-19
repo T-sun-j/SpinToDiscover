@@ -94,11 +94,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             if (response.success && response.data) {
                 setData(response.data);
             } else {
-                setError('加载作品数据失败');
+                setError(t('personalPage.loadPostsFailed'));
             }
         } catch (error) {
             console.error('加载作品数据失败:', error);
-            setError('加载作品数据时发生错误');
+            setError(t('personalPage.loadPostsError'));
         } finally {
             setLoading(false);
         }
@@ -126,11 +126,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             if (response.success && response.data) {
                 setUserInfoData(response);
             } else {
-                setUserInfoError('加载用户信息失败');
+                setUserInfoError(t('personalPage.loadUserInfoFailed'));
             }
         } catch (error) {
             console.error('加载用户信息失败:', error);
-            setUserInfoError('加载用户信息时发生错误');
+            setUserInfoError(t('personalPage.loadUserInfoError'));
         } finally {
             setUserInfoLoading(false);
         }
@@ -193,7 +193,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     // 确认删除作品
     const handleDeleteArticle = async () => {
         if (!authInfo || !articleToDelete) {
-            setErrorMessage('用户认证信息缺失');
+            setErrorMessage(t('personalPage.authInfoMissing'));
             return;
         }
 
@@ -210,17 +210,17 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             });
 
             if (response.success) {
-                setSuccessMessage('作品删除成功');
+                setSuccessMessage(t('personalPage.deleteSuccess'));
                 // 从列表中移除已删除的作品
                 setPostsData(prev => prev.filter(post => post.id !== articleToDelete));
                 // 3秒后清除成功消息
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                setErrorMessage(response.message || '删除作品失败');
+                setErrorMessage(response.message || t('personalPage.deleteError'));
             }
         } catch (error) {
             console.error('删除作品失败:', error);
-            setErrorMessage(error instanceof Error ? error.message : '删除作品时发生未知错误');
+            setErrorMessage(error instanceof Error ? error.message : t('personalPage.deleteProcessError'));
         } finally {
             setIsDeleting(null);
             setArticleToDelete(null);
@@ -230,12 +230,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     // 隐藏/显示作品
     const handleHideArticle = async (articleId: string, currentStatus: number = 0) => {
         if (!authInfo) {
-            setErrorMessage('用户认证信息缺失');
+            setErrorMessage(t('personalPage.authInfoMissing'));
             return;
         }
 
         const newStatus = currentStatus === 1 ? 0 : 1; // 切换状态
-        const actionText = newStatus === 1 ? '隐藏' : '显示';
+        const actionText = newStatus === 1 ? t('personalPage.hide') : t('personalPage.show');
         
         setIsHiding(articleId);
         setErrorMessage('');
@@ -250,7 +250,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             });
 
             if (response.success) {
-                setSuccessMessage(`作品${actionText}成功`);
+                setSuccessMessage(newStatus === 1 ? t('personalPage.hideSuccess') : t('personalPage.showSuccess'));
                 // 更新本地作品状态
                 setPostsData(prev => prev.map(post => 
                     post.id === articleId 
@@ -260,11 +260,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 // 3秒后清除成功消息
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                setErrorMessage(response.message || `${actionText}作品失败`);
+                setErrorMessage(response.message || (newStatus === 1 ? t('personalPage.hideError') : t('personalPage.showError')));
             }
         } catch (error) {
             console.error(`${actionText}作品失败:`, error);
-            setErrorMessage(error instanceof Error ? error.message : `${actionText}作品时发生未知错误`);
+            setErrorMessage(error instanceof Error ? error.message : (newStatus === 1 ? t('personalPage.hideProcessError') : t('personalPage.showProcessError')));
         } finally {
             setIsHiding(null);
         }
@@ -330,7 +330,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     <div className="relative flex flex-col gap-3 ml-14">
                         {/* 品牌信息 */}
                         <div className="flex items-center gap-3">
-                            <span className="text-l text-[#101729] font-nunito">Brand:</span>
+                            <span className="text-l text-[#101729] font-nunito">{t('personalPage.brand')}:</span>
                             {userInfo?.brand ? (
                                 userInfo?.officialsite ? (
                                     <a
@@ -352,7 +352,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         {/* 简介 */}
                         {userInfo?.brief && (
                             <div className="flex items-start gap-3">
-                                <span className="text-l text-[#101729] font-nunito ml-2">Brief:</span>
+                                <span className="text-l text-[#101729] font-nunito ml-2">{t('personalPage.brief')}:</span>
                                 <div className="flex-1 flex">
                                     <p className="text-[12px] pt-1 text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
                                     {userInfo?.logo && (
@@ -366,9 +366,9 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             </div>
                         )}
                         {userInfo?.tel && userInfo?.address && userInfo?.email && ( <div className="ml-14">
-                        <p className="text-[12px] text-gray-700 font-inter">Customer Service Hotline:{userInfo.tel}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">Working hours:{userInfo.address}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">E-mail:{userInfo.email}</p>
+                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{userInfo.tel}</p>
+                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.workingHours')}:{userInfo.address}</p>
+                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.email')}:{userInfo.email}</p>
                     </div>)}
 
                         {/* Edit按钮布局到底部右下角 - 只有查看自己的页面时才显示 */}
@@ -587,7 +587,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             'text-xs',
                                                             UI_CONSTANTS.FONTS.NUNITO
                                                         )}>
-                                                            {isDeleting === post.id ? '删除中...' : t('personalPage.delete')}
+                                                            {isDeleting === post.id ? t('personalPage.deleting') : t('personalPage.delete')}
                                                         </span>
                                                     </button>
                                                     <button 
@@ -612,10 +612,10 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             UI_CONSTANTS.FONTS.NUNITO
                                                         )}>
                                                             {isHiding === post.id 
-                                                                ? '处理中...' 
+                                                                ? t('personalPage.processing') 
                                                                 : post.status === 1 
-                                                                    ? '显示' 
-                                                                    : '隐藏'
+                                                                    ? t('personalPage.show') 
+                                                                    : t('personalPage.hide')
                                                             }
                                                         </span>
                                                     </button>
@@ -663,22 +663,22 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     <AlertDialogContent className="max-w-sm p-6 bg-white border border-gray-200 shadow-xl">
                         <AlertDialogHeader className="text-center">
                             <AlertDialogTitle className="text-lg font-semibold text-gray-900 mb-2">
-                                确认删除
+                                {t('personalPage.confirmDelete')}
                             </AlertDialogTitle>
                             <AlertDialogDescription className="text-sm text-gray-600 leading-relaxed">
-                                确定要删除这个作品吗？<br />
-                                此操作不可撤销，删除后将无法恢复。
+                                {t('personalPage.confirmDeleteMessage')}<br />
+                                {t('personalPage.confirmDeleteDescription')}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="flex-row gap-3  justify-center">
                             <AlertDialogCancel className="h-10 px-6 text-sm rounded-lg border-gray-300 text-gray-700 hover:bg-gray-50">
-                                取消
+                                {t('personalPage.cancel')}
                             </AlertDialogCancel>
                             <AlertDialogAction 
                                 onClick={handleDeleteArticle}
                                 className="h-10 px-6 text-sm mt-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium"
                             >
-                                确认删除
+                                {t('personalPage.confirm')}
                             </AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>

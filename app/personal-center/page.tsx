@@ -194,7 +194,7 @@ export default function PersonalCenterPage() {
                                 size="icon" 
                                 className={UI_CONSTANTS.COLORS.PRIMARY}
                                 onClick={handleLogout}
-                                title={t('personalCenter.logout') || '退出登录'}
+                                title={t('personalCenter.logout')}
                             >
                                 <LogOut className={UI_CONSTANTS.SIZES.ICON_LG} />
                             </Button>

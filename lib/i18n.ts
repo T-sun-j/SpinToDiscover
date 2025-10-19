@@ -93,57 +93,63 @@ export interface Translations {
     popularPlaces: string;
     footer: string;
   };
-  square: {
-    title: string;
-    searchPlaceholder: string;
-    nearbyPlaces: string;
-    recommend: string;
-    following: string;
-    nearby: string;
-    filter: string;
-    location: string;
-    titleContent: string;
-    description: string;
-    publisher: string;
-    collect: string;
-    like: string;
-    share: string;
-    comments: string;
-    inputComments: string;
-    send: string;
-    reply: string;
-    showAll: string;
-    collapse: string;
-    expand: string;
-    brandWebsite: string;
-    brandLogo: string;
-    brandIntro: string;
-    operatingHours: string;
-    customerService: string;
-    workingHours: string;
-    email: string;
-    gettingLocation: string;
-    loading: string;
-    noContent: string;
-    noRecommendContent: string;
-    noNearbyContent: string;
-    loginRequired: string;
-    pagination: string;
-    loadDetailFailed: string;
-    loadDetailError: string;
-    commentSubmitFailed: string;
-    commentSubmitError: string;
-    operationFailed: string;
-    likeFailed: string;
-    collectFailed: string;
-    linkCopied: string;
-    followFailed: string;
-    contentNotExist: string;
-    contentDeleted: string;
-    loginRequiredForDetail: string;
-    followed: string;
-    follow: string;
-  };
+    square: {
+      title: string;
+      searchPlaceholder: string;
+      nearbyPlaces: string;
+      recommend: string;
+      following: string;
+      nearby: string;
+      filter: string;
+      location: string;
+      titleContent: string;
+      description: string;
+      publisher: string;
+      collect: string;
+      like: string;
+      share: string;
+      comments: string;
+      inputComments: string;
+      send: string;
+      reply: string;
+      showAll: string;
+      collapse: string;
+      expand: string;
+      brandWebsite: string;
+      brandLogo: string;
+      brandIntro: string;
+      operatingHours: string;
+      customerService: string;
+      workingHours: string;
+      email: string;
+      gettingLocation: string;
+      loading: string;
+      noContent: string;
+      noRecommendContent: string;
+      noNearbyContent: string;
+      loginRequired: string;
+      pagination: string;
+      loadDetailFailed: string;
+      loadDetailError: string;
+      commentSubmitFailed: string;
+      commentSubmitError: string;
+      operationFailed: string;
+      likeFailed: string;
+      collectFailed: string;
+      linkCopied: string;
+      followFailed: string;
+      contentNotExist: string;
+      contentDeleted: string;
+      loginRequiredForDetail: string;
+      followed: string;
+      follow: string;
+      pleaseLoginFirst: string;
+      videoPlayError: string;
+      loadContentFailed: string;
+      loadContentError: string;
+      locationPermissionDenied: string;
+      locationError: string;
+    };
   community: {
     onlineUsers: string;
     recentPosts: string;
@@ -241,6 +247,7 @@ export interface Translations {
       button: string;
       notifications: string;
     };
+    logout: string;
   };
     personalPage: {
       title: string;
@@ -254,11 +261,34 @@ export interface Translations {
       editInfo: string;
       delete: string;
       hide: string;
+      show: string;
       loading: string;
       error: string;
       noPosts: string;
       noPostsDescription: string;
       refresh: string;
+      deleting: string;
+      processing: string;
+      deleteSuccess: string;
+      deleteError: string;
+      deleteProcessError: string;
+      hideSuccess: string;
+      showSuccess: string;
+      hideError: string;
+      showError: string;
+      hideProcessError: string;
+      showProcessError: string;
+      authInfoMissing: string;
+      loadPostsFailed: string;
+      loadPostsError: string;
+      loadUserInfoFailed: string;
+      loadUserInfoError: string;
+      videoPlayError: string;
+      confirmDelete: string;
+      confirmDeleteMessage: string;
+      confirmDeleteDescription: string;
+      cancel: string;
+      confirm: string;
     };
     userInfo: {
       loading: string;
@@ -573,6 +603,12 @@ export const translations: Record<Language, Translations> = {
       loginRequiredForDetail: 'Please login to view content details',
       followed: 'Followed',
       follow: 'Follow',
+      pleaseLoginFirst: 'Please login first',
+      videoPlayError: 'Video playback failed',
+      loadContentFailed: 'Failed to load content',
+      loadContentError: 'Error occurred while loading content',
+      locationPermissionDenied: 'Location permission denied',
+      locationError: 'Failed to get location',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -671,6 +707,7 @@ export const translations: Record<Language, Translations> = {
         button: 'POST',
         notifications: 'Notifications',
       },
+      logout: 'Logout',
     },
     personalPage: {
       title: 'Personal Page',
@@ -684,11 +721,34 @@ export const translations: Record<Language, Translations> = {
       editInfo: 'Edit Info',
       delete: 'Delete',
       hide: 'Hide',
+      show: 'Show',
       loading: 'Loading posts...',
       error: 'Failed to load posts',
       noPosts: 'No Posts Found',
       noPostsDescription: 'Start creating content to see your posts here.',
       refresh: 'Refresh',
+      deleting: 'Deleting...',
+      processing: 'Processing...',
+      deleteSuccess: 'Post deleted successfully',
+      deleteError: 'Failed to delete post',
+      deleteProcessError: 'Unknown error occurred while deleting post',
+      hideSuccess: 'Post hidden successfully',
+      showSuccess: 'Post shown successfully',
+      hideError: 'Failed to hide post',
+      showError: 'Failed to show post',
+      hideProcessError: 'Unknown error occurred while hiding post',
+      showProcessError: 'Unknown error occurred while showing post',
+      authInfoMissing: 'User authentication information missing',
+      loadPostsFailed: 'Failed to load posts data',
+      loadPostsError: 'Error occurred while loading posts data',
+      loadUserInfoFailed: 'Failed to load user information',
+      loadUserInfoError: 'Error occurred while loading user information',
+      videoPlayError: 'Video playback failed',
+      confirmDelete: 'Confirm Delete',
+      confirmDeleteMessage: 'Are you sure you want to delete this post?',
+      confirmDeleteDescription: 'This action cannot be undone and the post will be permanently removed.',
+      cancel: 'Cancel',
+      confirm: 'Confirm Delete',
     },
     userInfo: {
       loading: 'Loading user info...',
@@ -999,6 +1059,12 @@ export const translations: Record<Language, Translations> = {
       loginRequiredForDetail: '请先登录以查看内容详情',
       followed: '已关注',
       follow: '关注',
+      pleaseLoginFirst: '请先登录',
+      videoPlayError: '视频播放失败',
+      loadContentFailed: '加载内容失败',
+      loadContentError: '加载内容时发生错误',
+      locationPermissionDenied: '用户拒绝了地理位置权限',
+      locationError: '获取地理位置失败',
     },
     community: {
       onlineUsers: '在线用户',
@@ -1097,6 +1163,7 @@ export const translations: Record<Language, Translations> = {
         button: '发布',
         notifications: '通知',
       },
+      logout: '退出登录',
     },
     personalPage: {
       title: '个人页面',
@@ -1110,11 +1177,34 @@ export const translations: Record<Language, Translations> = {
       editInfo: '编辑信息',
       delete: '删除',
       hide: '隐藏',
+      show: '显示',
       loading: '加载帖子中...',
       error: '加载帖子失败',
       noPosts: '暂无帖子',
       noPostsDescription: '开始创建内容，您的帖子将显示在这里。',
       refresh: '刷新',
+      deleting: '删除中...',
+      processing: '处理中...',
+      deleteSuccess: '作品删除成功',
+      deleteError: '删除作品失败',
+      deleteProcessError: '删除作品时发生未知错误',
+      hideSuccess: '作品隐藏成功',
+      showSuccess: '作品显示成功',
+      hideError: '隐藏作品失败',
+      showError: '显示作品失败',
+      hideProcessError: '隐藏作品时发生未知错误',
+      showProcessError: '显示作品时发生未知错误',
+      authInfoMissing: '用户认证信息缺失',
+      loadPostsFailed: '加载作品数据失败',
+      loadPostsError: '加载作品数据时发生错误',
+      loadUserInfoFailed: '加载用户信息失败',
+      loadUserInfoError: '加载用户信息时发生错误',
+      videoPlayError: '视频播放失败',
+      confirmDelete: '确认删除',
+      confirmDeleteMessage: '确定要删除这个作品吗？',
+      confirmDeleteDescription: '此操作不可撤销，删除后将无法恢复。',
+      cancel: '取消',
+      confirm: '确认删除',
     },
     userInfo: {
       loading: '加载用户信息中...',
