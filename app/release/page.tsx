@@ -21,8 +21,9 @@ export default function ReleasePage() {
   const router = useRouter();
   const [brandInfoChecked, setBrandInfoChecked] = useState(false);
   const [images, setImages] = useState<string[]>([]); // Placeholder image
-  const [imageFiles, setImageFiles] = useState<File[]>([]); // 存储图片文件
-  const [videoFile, setVideoFile] = useState<File | null>(null); // 存储视频文件
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // Store image files
+  const [videoFile, setVideoFile] = useState<File | null>(null); // Store video file
+  const [videoUrl, setVideoUrl] = useState<string | null>(null); // Store video URL for display
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [brandName, setBrandName] = useState('');
@@ -34,7 +35,7 @@ export default function ReleasePage() {
   const [userLocation, setUserLocation] = useState<string>('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
-  // 获取用户地理位置
+  // Get user location
   const getUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setErrorMessage(t('releasePage.locationError'));
@@ -49,7 +50,7 @@ export default function ReleasePage() {
         try {
           const { latitude, longitude } = position.coords;
           
-          // 使用逆地理编码获取地址信息
+          // Use reverse geocoding to get address information
           const response = await fetch(
             `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=zh`
           );
@@ -62,14 +63,14 @@ export default function ReleasePage() {
             setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
           }
         } catch (error) {
-          console.error('获取地址信息失败:', error);
+          console.error('Failed to get address info:', error);
           setUserLocation(t('releasePage.locationParseError'));
         } finally {
           setIsGettingLocation(false);
         }
       },
       (error) => {
-        console.error('获取位置失败:', error);
+        console.error('Failed to get location:', error);
         let errorMessage = t('releasePage.locationFailed');
         switch (error.code) {
           case error.PERMISSION_DENIED:
@@ -88,17 +89,26 @@ export default function ReleasePage() {
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 300000 // 5分钟缓存
+        maximumAge: 300000 // 5 minutes cache
       }
     );
   }, []);
 
-  // 组件加载时自动获取位置
+  // Auto get location when component loads
   useEffect(() => {
     getUserLocation();
   }, [getUserLocation]);
 
-  // 获取用户信息并填充品牌字段
+  // Clean up video URL when component unmounts
+  useEffect(() => {
+    return () => {
+      if (videoUrl) {
+        URL.revokeObjectURL(videoUrl);
+      }
+    };
+  }, [videoUrl]);
+
+  // Get user info and populate brand fields
   const fetchUserInfo = useCallback(async () => {
     if (!authInfo) {
       setErrorMessage(t('releasePage.authInfoMissing'));
@@ -114,7 +124,7 @@ export default function ReleasePage() {
 
       if (response.success && response.data) {
         const userInfo = response.data;
-        // 填充品牌名称和描述
+        // Populate brand name and description
         if (userInfo.brand) {
           setBrandName(userInfo.brand);
         }
@@ -123,12 +133,12 @@ export default function ReleasePage() {
         }
       }
     } catch (error) {
-      console.error('获取用户信息失败:', error);
+      console.error('Failed to get user info:', error);
       setErrorMessage(t('releasePage.getUserInfoFailed'));
     }
   }, [authInfo]);
 
-  // 验证表单数据
+  // Validate form data
   const validateForm = useCallback(() => {
     if (!title.trim()) {
       setErrorMessage(t('releasePage.titleRequired'));
@@ -160,7 +170,15 @@ export default function ReleasePage() {
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
+      // Check if video file already exists
+      if (videoFile) {
+        setErrorMessage(t('releasePage.onlyOneVideoAllowed'));
+        return;
+      }
       setVideoFile(file);
+      // Create video URL for display
+      const url = URL.createObjectURL(file);
+      setVideoUrl(url);
     }
   };
 
@@ -170,7 +188,12 @@ export default function ReleasePage() {
   };
 
   const handleRemoveVideo = () => {
+    // Clean up video URL
+    if (videoUrl) {
+      URL.revokeObjectURL(videoUrl);
+    }
     setVideoFile(null);
+    setVideoUrl(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,7 +203,7 @@ export default function ReleasePage() {
     setSuccessMessage('');
 
     try {
-      // 验证必填字段
+      // Validate required fields
       if (!validateForm()) {
         setIsSubmitting(false);
         return;
@@ -189,7 +212,7 @@ export default function ReleasePage() {
       let uploadedImages: string[] = [];
       let uploadedVideo: string = '';
 
-      // 先上传图片
+      // Upload images first
       if (imageFiles.length > 0) {
         setSuccessMessage(t('releasePage.uploadingImages'));
         for (const imageFile of imageFiles) {
@@ -204,35 +227,35 @@ export default function ReleasePage() {
               }
             }
           } catch (error) {
-            console.error('图片上传失败:', error);
+            console.error('Image upload failed:', error);
             setErrorMessage(`${t('releasePage.imageUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
-            setSuccessMessage(''); // 清除成功消息
+            setSuccessMessage(''); // Clear success message
             setIsSubmitting(false);
             return;
           }
         }
       }
 
-      // 再上传视频
+      // Then upload video
       if (videoFile) {
         setSuccessMessage(t('releasePage.uploadingVideo'));
         try {
           const videoUploadResponse = await uploadVideo(videoFile);
-          if (videoUploadResponse.success && videoUploadResponse.data) {
-            uploadedVideo = typeof videoUploadResponse.data === 'string' 
-              ? videoUploadResponse.data 
-              : videoUploadResponse.data.img;
+          if (videoUploadResponse.success && videoUploadResponse.data?.code === 0) {
+            uploadedVideo = videoUploadResponse.data.url;
+          } else {
+            throw new Error(videoUploadResponse.data?.msg || 'Video upload failed');
           }
         } catch (error) {
-          console.error('视频上传失败:', error);
+          console.error('Video upload failed:', error);
           setErrorMessage(`${t('releasePage.videoUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
-          setSuccessMessage(''); // 清除成功消息
+          setSuccessMessage(''); // Clear success message
           setIsSubmitting(false);
           return;
         }
       }
 
-      // 准备发布数据
+      // Prepare post data
       const postData: PostSquareRequest = {
         userId: authInfo!.userId,
         token: authInfo!.token,
@@ -240,25 +263,25 @@ export default function ReleasePage() {
         description: content.trim(),
         location: userLocation || t('releasePage.gettingLocation'),
         images: uploadedImages.join(','), 
-        video: uploadedVideo,
+        video: '/'+uploadedVideo,
         intro: brandInfoChecked ? briefDescription : '',
-        // 其他可选字段可以根据需要添加
+        // Other optional fields can be added as needed
       };
 
       setSuccessMessage(t('releasePage.publishingContent'));
 
-      // 调用发布API
+      // Call publish API
       const response = await postSquareContent(postData);
 
       if (response.success) {
         setSuccessMessage(t('releasePage.publishSuccess'));
-        // 成功后跳转到广场页面
+        // Redirect to personal page after success
         setTimeout(() => {
           router.push('/personal');
         }, 2000);
       } else {
         setErrorMessage(response.message || t('releasePage.publishError'));
-        setSuccessMessage(''); // 清除成功消息
+        setSuccessMessage(''); // Clear success message
       }
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('releasePage.publishProcessError'));
@@ -311,12 +334,12 @@ export default function ReleasePage() {
           />
         </div>
 
-        {/* 媒体上传区域 */}
+        {/* Media upload area */}
         <div>
           
-          {/* 媒体文件网格布局 - 一行4个 */}
+          {/* Media files grid layout - 4 per row */}
           <div className="grid grid-cols-4 gap-3">
-            {/* 显示已上传图片 */}
+            {/* Display uploaded images */}
             {images.map((image, index) => (
               <div key={`image-${index}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-300">
                 <Image src={image} alt="Uploaded" layout="fill" objectFit="cover" />
@@ -331,12 +354,18 @@ export default function ReleasePage() {
             ))}
 
             {/* 显示已上传视频 */}
-            {videoFile && (
-              <div className="relative aspect-square rounded-lg overflow-hidden border border-gray-300 bg-gray-100 flex items-center justify-center">
-                <div className="text-center p-2">
-                  <div className="text-xs text-gray-600 mb-1 font-medium">{t('releasePage.video')}</div>
-                  <div className="text-xs text-gray-500 truncate">{videoFile.name}</div>
-                </div>
+            {videoFile && videoUrl && (
+              <div className="relative aspect-square rounded-lg overflow-hidden border border-gray-300 bg-gray-100">
+                <video
+                  src={videoUrl}
+                  className="w-full h-full object-cover"
+                  muted
+                  preload="metadata"
+                  onLoadedMetadata={(e) => {
+                    // 设置视频到第一帧
+                    e.currentTarget.currentTime = 0.1;
+                  }}
+                />
                 <button
                   type="button"
                   onClick={handleRemoveVideo}
@@ -352,7 +381,7 @@ export default function ReleasePage() {
               <label className="aspect-square flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                 <input
                   type="file"
-                  accept="image/*,video/*"
+                  accept={videoFile ? "image/*" : "image/*,video/*"}
                   className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
@@ -360,6 +389,12 @@ export default function ReleasePage() {
                     if (file.type.startsWith('image/')) {
                       handleImageUpload(e);
                     } else if (file.type.startsWith('video/')) {
+                      // Check if video file already exists
+                      if (videoFile) {
+                        setErrorMessage(t('releasePage.onlyOneVideoAllowed'));
+                        e.target.value = ""; // 重置input
+                        return;
+                      }
                       handleVideoUpload(e);
                     }
                     // 重置input，否则无法重复选同一文件
@@ -368,7 +403,9 @@ export default function ReleasePage() {
                 />
                 <div className="flex flex-col items-center">
                   <Camera className="h-6 w-6 text-gray-400 mb-1" />
-                  <span className="text-xs text-gray-500 text-center">{t('releasePage.addMedia')}</span>
+                  <span className="text-xs text-gray-500 text-center">
+                    {videoFile ? t('releasePage.addImage') : t('releasePage.addMedia')}
+                  </span>
                 </div>
               </label>
             )}

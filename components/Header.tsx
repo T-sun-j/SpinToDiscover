@@ -6,6 +6,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageToggle } from './LanguageToggle';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   showSearch?: boolean;
@@ -27,6 +29,19 @@ export function Header({
   userLink = '/login',
 }: HeaderProps) {
   const { t } = useLanguage();
+  const router = useRouter();
+  const { authInfo } = useAuth();
+
+  const handleUserClick = () => {
+    // 检查本地存储是否有 token
+    if (authInfo?.token && authInfo?.userId) {
+      // 有 token 和 userId，跳转到当前用户的个人页面
+      router.push(`/personal/${authInfo.userId}`);
+    } else {
+      // 没有 token，跳转到登录页面
+      router.push('/login');
+    }
+  };
 
   return (
     <header className={`flex items-center justify-between py-3 w-full  ${className}`}>
@@ -42,7 +57,7 @@ export function Header({
             className="h-14 w-42"
           />
         </Link>  
-        {showLanguage ? <LanguageToggle /> : null}
+        {showLanguage ? <LanguageToggle transparent={transparent} /> : null}
       </div>
 
       {/* 右侧：搜索和用户图标 */}
@@ -50,17 +65,21 @@ export function Header({
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Search className="h-7 w-7 text-[#101729]" />
+              <Search className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
             </Button>
           </Link>
         ) : null}
 
         {showUser ? (
-          <Link href={userLink} aria-label="account">
-            <Button variant="ghost" size="icon" className="text-foreground">
-              <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
-            </Button>
-          </Link>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-foreground"
+            onClick={handleUserClick}
+            aria-label="account"
+          >
+            <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
+          </Button>
         ) : null}
       </div>
     </header>

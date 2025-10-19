@@ -1,9 +1,13 @@
 "use client";
 
 import { useLanguage } from '../contexts/LanguageContext';
-import Image from 'next/image';
+import { Globe } from 'lucide-react';
 
-export function LanguageToggle() {
+interface LanguageToggleProps {
+  transparent?: boolean;
+}
+
+export function LanguageToggle({ transparent = false }: LanguageToggleProps) {
   const { language, setLanguage } = useLanguage();
 
   const toggleLanguage = () => {
@@ -18,8 +22,10 @@ export function LanguageToggle() {
       className="flex items-center text-foreground hover:opacity-80 transition-opacity mt-2"
       aria-label={`Switch to ${language === 'en' ? 'Chinese' : 'English'}`}
     >
-      <Image src="/img/earth.svg" alt="earth" width={16} height={16} priority className="h-6 w-6" />
-      <span className="text-sm font-medium text-[#101729] ml-1">{displayLang}</span>
+      <Globe className={`h-5 w-5 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
+      <span className={`text-sm font-medium ml-1 ${transparent ? 'text-white' : 'text-[#101729]'}`}>
+        {displayLang}
+      </span>
     </button>
   );
 }

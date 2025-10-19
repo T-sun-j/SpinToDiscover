@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
 
 		// 邮箱格式验证
 		if (!email || !validateEmail(email)) {
-			setErrorMessage(t('auth.errorMessage') || 'Invalid email format');
+			setErrorMessage(t('auth.emailValidation'));
 			setIsSubmitting(false);
 			return;
 		}

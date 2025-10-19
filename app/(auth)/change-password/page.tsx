@@ -67,14 +67,14 @@ export default function ChangePasswordPage() {
 
 		// 验证新密码
 		if (!formData.newPassword || !validatePassword(formData.newPassword)) {
-			setErrorMessage(t('auth.errorMessage') || 'Password does not meet requirements');
+			setErrorMessage(t('auth.passwordRequirements'));
 			setIsSubmitting(false);
 			return;
 		}
 
 		// 验证确认密码
 		if (formData.newPassword !== formData.confirmPassword) {
-			setErrorMessage(t('auth.passwordsNotMatch') || 'Passwords do not match');
+			setErrorMessage(t('auth.passwordsNotMatch'));
 			setIsSubmitting(false);
 			return;
 		}

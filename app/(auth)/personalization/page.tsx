@@ -349,7 +349,7 @@ export default function PersonalizationPage() {
                     {isLoading && (
                         <div className="flex items-center gap-2 text-blue-500 text-sm font-inter">
                             <RefreshCw className="h-4 w-4 animate-spin" />
-                            <span>Loading user info...</span>
+                            <span>{t('common.loading')}</span>
                         </div>
                     )}
 

@@ -66,6 +66,7 @@ export const API_CONFIG = {
 
 // API响应类型定义
 export interface ApiResponse<T = any> {
+  url?: string;
   success: boolean;
   data?: T;
   message?: string;
@@ -160,6 +161,31 @@ export interface Publisher {
 }
 
 // 广场内容响应类型
+// 品牌信息类型
+export interface BrandInfo {
+  website: string;
+  logo: string;
+  intro: string;
+  operatingHours: string;
+  customerService: {
+    email: string;
+    intro: string;
+    logo: string;
+    operatingHours: string;
+    website: string;
+    workingHours: string;
+  };
+}
+
+// 互动信息类型
+export interface Interactions {
+  likes: number;
+  shares: number;
+  collects: number;
+  userCollected: boolean;
+  userLiked: boolean;
+}
+
 export interface SquareContent {
   id: string;
   title: string;
@@ -167,19 +193,14 @@ export interface SquareContent {
   location: string;
   images: string[];
   video?: string;
-  website?: string;
-  logo?: string;
-  intro?: string;
-  operatingHours?: string;
-  customerService?: string;
-  workingHours?: string;
+  brandInfo?: BrandInfo;
+  interactions: Interactions;
   publisher: Publisher;
-  likes: number;
-  shares: number;
-  collects: number;
-  commentsCount: number;
+  comments: any[]; // 评论数组
   createdAt: string;
   updatedAt: string;
+  message?: string;
+  success?: boolean;
 }
 
 // 分页信息类型
@@ -342,6 +363,7 @@ export interface MyPageItem {
   likes: number;
   shares: number;
   collects: number;
+  status?: number; // 作品状态：0显示，1隐藏
   commentsCount: number;
   createdAt: string;
   updatedAt: string;
@@ -408,6 +430,13 @@ export interface UploadAvatarResponse {
   code: number;
 }
 
+// 视频上传响应类型
+export interface UploadVideoResponse {
+  url: string;
+  code: number;
+  msg: string;
+}
+
 // 更新用户品牌信息请求参数类型
 export interface UpdateUserBrandRequest {
   email: string;
@@ -453,4 +482,28 @@ export interface FollowListResponse {
   dataList: FollowUser[];
   success: boolean;
   message: string;
+}
+
+// 删除作品请求
+export interface DeleteArticleRequest {
+  userId: string;
+  token: string;
+  id: string; // 作品ID
+}
+
+// 隐藏作品请求
+export interface HideArticleRequest {
+  userId: string;
+  token: string;
+  id: string; // 作品ID
+  status: number; // 1隐藏，0显示
+}
+
+// 发表评论请求接口
+export interface PostCommentRequest {
+  userId: string;
+  token: string;
+  productId: string; // 内容ID
+  parentId?: string; // 父评论ID，回复评论时使用
+  content: string; // 评论内容
 }

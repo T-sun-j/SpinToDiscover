@@ -81,7 +81,7 @@ export default function LoginPage() {
 
 		// 验证密码
 		if (!formData.password || !validatePassword(formData.password)) {
-			setErrorMessage(t('auth.errorMessage') || 'Password does not meet requirements');
+			setErrorMessage(t('auth.passwordRequirements'));
 			setIsSubmitting(false);
 			return;
 		}

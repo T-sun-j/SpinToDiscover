@@ -5,6 +5,7 @@
 
 import { Button } from './button';
 import { RefreshCw, AlertCircle } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
@@ -14,9 +15,11 @@ interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ 
   size = 'md', 
-  text = '加载中...', 
+  text, 
   className = '' 
 }: LoadingSpinnerProps) {
+  const { t } = useLanguage();
+  const displayText = text || t('common.loading');
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-8 w-8',
@@ -26,7 +29,7 @@ export function LoadingSpinner({
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <div className={`animate-spin rounded-full border-b-2 border-[#101729] ${sizeClasses[size]} mb-2`}></div>
-      {text && <p className="text-gray-500 text-sm">{text}</p>}
+      {displayText && <p className="text-gray-500 text-sm">{displayText}</p>}
     </div>
   );
 }
@@ -41,9 +44,11 @@ interface ErrorStateProps {
 export function ErrorState({ 
   error, 
   onRetry, 
-  retryText = '重试',
+  retryText,
   className = ''
 }: ErrorStateProps) {
+  const { t } = useLanguage();
+  const displayRetryText = retryText || t('common.retry');
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
@@ -56,7 +61,7 @@ export function ErrorState({
           className="flex items-center gap-2"
         >
           <RefreshCw className="h-4 w-4" />
-          {retryText}
+          {displayRetryText}
         </Button>
       )}
     </div>

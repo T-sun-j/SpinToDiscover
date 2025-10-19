@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { LoadingSpinner } from './ui/LoadingStates';
 
 interface AuthGuardProps {
@@ -91,6 +92,7 @@ function wouldCauseRedirectLoop(pathname: string, search: string): boolean {
 
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
   const { isAuthenticated, authInfo } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -177,7 +179,7 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
     return fallback || (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <LoadingSpinner size="lg" text="正在验证身份..." />
+          <LoadingSpinner size="lg" text={t('common.verifying')} />
         </div>
       </div>
     );

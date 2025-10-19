@@ -24,6 +24,7 @@ import {
   UserInfoResponse,
   UploadAvatarRequest,
   UploadAvatarResponse,
+  UploadVideoResponse,
   UpdateUserBrandRequest,
   UpdateUserBrandResponse,
   GetFollowedListRequest,
@@ -33,6 +34,8 @@ import {
   BrowsingListResponse,
   GetCollectListRequest,
   CollectListResponse,
+  DeleteArticleRequest,
+  HideArticleRequest,
   API_CONFIG
 } from './api';
 
@@ -311,7 +314,7 @@ export async function getSquareContentList(listData: GetHomeListRequest): Promis
  */
 export async function getSquareContentDetail(detailData: GetSquareDetailRequest): Promise<ApiResponse<SquareContent>> {
   try {
-    const response = await request('gethomelist', {
+    const response = await request('getdetail', {
       userId: detailData.userId,
       token: detailData.token,
       postId: detailData.postId,
@@ -520,9 +523,9 @@ export async function uploadAvatar(file: File): Promise<ApiResponse<UploadAvatar
 /**
  * 上传视频API
  * @param file 视频文件
- * @returns Promise<ApiResponse<UploadAvatarResponse>>
+ * @returns Promise<ApiResponse<UploadVideoResponse>>
  */
-export async function uploadVideo(file: File): Promise<ApiResponse<UploadAvatarResponse>> {
+export async function uploadVideo(file: File): Promise<ApiResponse<UploadVideoResponse>> {
   try {
     // 检查文件大小（限制为200MB）
     const maxSize = 200 * 1024 * 1024; // 200MB
@@ -579,7 +582,7 @@ export async function uploadVideo(file: File): Promise<ApiResponse<UploadAvatarR
       // 空响应可能表示上传成功，返回默认成功响应
       return {
         success: true,
-        data: { img: 'upload_success', code: 0 } as UploadAvatarResponse,
+        data: { url: 'upload_success', code: 0, msg: 'ok' } as UploadVideoResponse,
         message: 'Video uploaded successfully',
         code: 0,
       };
@@ -830,5 +833,50 @@ export async function getCollectList(params: GetCollectListRequest): Promise<Api
       throw new Error(`获取收藏列表失败: ${error.message}`);
     }
     throw new Error('获取收藏列表过程中发生未知错误');
+  }
+}
+
+/**
+ * 删除作品API
+ * @param params 删除作品参数
+ * @returns Promise<ApiResponse>
+ */
+export async function deleteArticle(params: DeleteArticleRequest): Promise<ApiResponse> {
+  try {
+    const response = await request('userArticleDel', {
+      userId: params.userId,
+      token: params.token,
+      id: params.id,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`删除作品失败: ${error.message}`);
+    }
+    throw new Error('删除作品过程中发生未知错误');
+  }
+}
+
+/**
+ * 隐藏/显示作品API
+ * @param params 隐藏作品参数
+ * @returns Promise<ApiResponse>
+ */
+export async function hideArticle(params: HideArticleRequest): Promise<ApiResponse> {
+  try {
+    const response = await request('userArticleHide', {
+      userId: params.userId,
+      token: params.token,
+      id: params.id,
+      status: params.status,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`隐藏作品失败: ${error.message}`);
+    }
+    throw new Error('隐藏作品过程中发生未知错误');
   }
 }

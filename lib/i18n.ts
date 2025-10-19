@@ -122,6 +122,27 @@ export interface Translations {
     customerService: string;
     workingHours: string;
     email: string;
+    gettingLocation: string;
+    loading: string;
+    noContent: string;
+    noRecommendContent: string;
+    noNearbyContent: string;
+    loginRequired: string;
+    pagination: string;
+    loadDetailFailed: string;
+    loadDetailError: string;
+    commentSubmitFailed: string;
+    commentSubmitError: string;
+    operationFailed: string;
+    likeFailed: string;
+    collectFailed: string;
+    linkCopied: string;
+    followFailed: string;
+    contentNotExist: string;
+    contentDeleted: string;
+    loginRequiredForDetail: string;
+    followed: string;
+    follow: string;
   };
   community: {
     onlineUsers: string;
@@ -146,6 +167,12 @@ export interface Translations {
     confirmPassword?: string;
     errorMessage?: string;
     submit?: string;
+    currentEmail?: string;
+    passwordTooShort?: string;
+    authError?: string;
+    resetSuccess?: string;
+    resetError?: string;
+    submitting?: string;
   };
   help: {
     welcome: string;
@@ -190,6 +217,12 @@ export interface Translations {
       privacy: string;
     };
     copyright: string;
+  };
+  common: {
+    loading: string;
+    retry: string;
+    error: string;
+    verifying: string;
   };
   personalCenter: {
     title: string;
@@ -264,6 +297,8 @@ export interface Translations {
     locationTimeout: string;
     authInfoMissing: string;
     getUserInfoFailed: string;
+    onlyOneVideoAllowed: string;
+    addImage: string;
     titleRequired: string;
     contentRequired: string;
     unknownError: string;
@@ -517,6 +552,27 @@ export const translations: Record<Language, Translations> = {
       customerService: 'Customer Service Hotline: 4008 568 580',
       workingHours: 'Working hours: 9:00-22:00 (Spring Festival statutory holiday 10:00-16:00)',
       email: 'E-mail customerservice.cn@loropiana.com',
+      gettingLocation: 'Getting location...',
+      loading: 'Loading...',
+      noContent: 'No Content',
+      noRecommendContent: 'No recommended content, please try again later',
+      noNearbyContent: 'No content found in current location, try another place!',
+      loginRequired: 'Please login to view personalized content recommendations',
+      pagination: 'Page {current} of {total}, {items} items total',
+      loadDetailFailed: 'Failed to load details',
+      loadDetailError: 'Error occurred while loading details',
+      commentSubmitFailed: 'Failed to submit comment, please try again',
+      commentSubmitError: 'Failed to submit comment',
+      operationFailed: 'Operation failed, please try again',
+      likeFailed: 'Failed to like',
+      collectFailed: 'Failed to collect',
+      linkCopied: 'Link copied to clipboard',
+      followFailed: 'Failed to follow',
+      contentNotExist: 'Content does not exist',
+      contentDeleted: 'The content you are accessing may have been deleted or does not exist',
+      loginRequiredForDetail: 'Please login to view content details',
+      followed: 'Followed',
+      follow: 'Follow',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -541,6 +597,12 @@ export const translations: Record<Language, Translations> = {
       confirmPassword: 'Confirm passwords',
       errorMessage: 'Error Message',
       submit: 'Submit',
+      currentEmail: 'Current Email',
+      passwordTooShort: 'Password must be at least 6 characters',
+      authError: 'Authentication required',
+      resetSuccess: 'Password reset successfully',
+      resetError: 'Password reset failed',
+      submitting: 'Updating...',
     },
     help: {
       welcome: 'How can we help you?',
@@ -585,6 +647,12 @@ export const translations: Record<Language, Translations> = {
         privacy: 'Privacy Policy',
       },
       copyright: '© 2025 Spin to Discover',
+    },
+    common: {
+      loading: 'Loading...',
+      retry: 'Retry',
+      error: 'Error',
+      verifying: 'Verifying identity...',
     },
     personalCenter: {
       title: 'User center',
@@ -659,6 +727,8 @@ export const translations: Record<Language, Translations> = {
       locationTimeout: 'Location request timeout',
       authInfoMissing: 'User authentication information missing',
       getUserInfoFailed: 'Failed to get user information',
+      onlyOneVideoAllowed: 'Only one video is allowed',
+      addImage: 'Add Image',
       titleRequired: 'Title cannot be empty',
       contentRequired: 'Content cannot be empty',
       unknownError: 'Unknown error',
@@ -908,6 +978,27 @@ export const translations: Record<Language, Translations> = {
       customerService: '客服热线：4008 568 580',
       workingHours: '工作时间：9:00-22:00（春节法定节假日10:00-16:00）',
       email: '邮箱 customerservice.cn@loropiana.com',
+      gettingLocation: '正在获取位置信息...',
+      loading: '加载中...',
+      noContent: '暂无内容',
+      noRecommendContent: '暂无推荐内容，请稍后再试',
+      noNearbyContent: '当前位置暂无发现内容，换个地方试试吧！',
+      loginRequired: '请先登录以查看个性化内容推荐',
+      pagination: '第 {current} 页，共 {total} 页，总计 {items} 条内容',
+      loadDetailFailed: '加载详情失败',
+      loadDetailError: '加载详情时发生错误',
+      commentSubmitFailed: '评论提交失败，请重试',
+      commentSubmitError: '评论提交失败',
+      operationFailed: '操作失败，请重试',
+      likeFailed: '点赞失败',
+      collectFailed: '收藏失败',
+      linkCopied: '链接已复制到剪贴板',
+      followFailed: '关注失败',
+      contentNotExist: '内容不存在',
+      contentDeleted: '您访问的内容可能已被删除或不存在',
+      loginRequiredForDetail: '请先登录以查看内容详情',
+      followed: '已关注',
+      follow: '关注',
     },
     community: {
       onlineUsers: '在线用户',
@@ -932,6 +1023,12 @@ export const translations: Record<Language, Translations> = {
       confirmPassword: '确认密码',
       errorMessage: '错误信息',
       submit: '提交',
+      currentEmail: '当前邮箱',
+      passwordTooShort: '密码至少需要6位字符',
+      authError: '需要身份验证',
+      resetSuccess: '密码重置成功',
+      resetError: '密码重置失败',
+      submitting: '更新中...',
     },
     help: {
       welcome: '我们如何帮助您？',
@@ -976,6 +1073,12 @@ export const translations: Record<Language, Translations> = {
         privacy: '隐私政策',
       },
       copyright: '© 2025 Spin to Discover',
+    },
+    common: {
+      loading: '加载中...',
+      retry: '重试',
+      error: '错误',
+      verifying: '正在验证身份...',
     },
     personalCenter: {
       title: '个人中心',
@@ -1050,6 +1153,8 @@ export const translations: Record<Language, Translations> = {
       locationTimeout: '获取位置超时',
       authInfoMissing: '用户认证信息缺失',
       getUserInfoFailed: '获取用户信息失败',
+      onlyOneVideoAllowed: '只能上传一个视频',
+      addImage: '添加图片',
       titleRequired: '标题不能为空',
       contentRequired: '内容不能为空',
       unknownError: '未知错误',

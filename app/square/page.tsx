@@ -10,7 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getSquareContentList } from '../../lib/auth';
-import { SquareContent, Publisher, Pagination } from '../../lib/api';
+import { SquareContent, Publisher, Pagination, SERVER_CONFIG } from '../../lib/api';
 import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
 import { OptimizedImage } from '../../components/ui/OptimizedImage';
 import { getCurrentLocationString, checkGeolocationPermission } from '../../lib/utils/geolocation';
@@ -37,8 +37,8 @@ export default function SquarePage() {
 			
 			if (permission === 'denied') {
 				console.warn('用户拒绝了地理位置权限');
-				setUserLocation('中国，北京'); // 使用默认位置
-				return '中国，北京';
+				setUserLocation(''); // 使用默认位置
+				return '';
 			}
 
 			// 获取当前位置
@@ -47,8 +47,8 @@ export default function SquarePage() {
 			return location;
 		} catch (error) {
 			console.warn('获取地理位置失败:', error);
-			setUserLocation('中国，北京'); // 使用默认位置
-			return '中国，北京';
+			setUserLocation(''); // 使用默认位置
+			return '';
 		} finally {
 			setIsGettingLocation(false);
 		}
@@ -56,9 +56,10 @@ export default function SquarePage() {
 
 	// 加载广场内容
 	const loadSquareContent = useCallback(async (location?: string) => {
-		if (!authInfo?.userId || !authInfo?.token) {
-			setPosts([]);
-			setPagination(null);
+		// 推荐页面不需要登录，其他页面需要登录
+		if (activeTab !== 'Recommend' && (!authInfo?.userId || !authInfo?.token)) {
+			// 如果不是推荐页面且没有登录，跳转到登录页
+			router.push('/login');
 			return;
 		}
 
@@ -67,15 +68,15 @@ export default function SquarePage() {
 		
 		try {
 			// 如果没有提供位置，使用当前用户位置或默认位置
-			const currentLocation = location || userLocation || '中国，北京';
+			const currentLocation = location || userLocation || '';
 			
 			const response = await getSquareContentList({
-				userId: authInfo.userId,
-				token: authInfo.token,
-				location: currentLocation,
+				userId: authInfo?.userId || 'default',
+				token: authInfo?.token || 'default',
+				location: activeTab === "Nearby" ? currentLocation : '',
 				tab: activeTab,
 				page: 1,
-				limit: 20
+				limit: 999
 			});
 
 			if (response.success && response.data) {
@@ -89,20 +90,13 @@ export default function SquarePage() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [authInfo, userLocation, activeTab]);
+	}, [authInfo, userLocation, activeTab, router]);
 
-	// 初始化页面：获取地理位置并加载内容
+	// 初始化页面：只加载推荐内容，不获取地理位置
 	useEffect(() => {
-		const initializePage = async () => {
-			// 首先获取用户地理位置
-			const location = await getUserLocation();
-			
-			// 加载内容（如果已认证）
-			loadSquareContent(location);
-		};
-
-		initializePage();
-	}, [loadSquareContent, getUserLocation]);
+		// 默认加载推荐内容，不需要地理位置
+		loadSquareContent();
+	}, [loadSquareContent]);
 
 	const handlePostClick = (postId: string) => {
 		// 如果有认证信息，传递到详情页面
@@ -128,7 +122,11 @@ export default function SquarePage() {
 				<div className="flex items-center justify-between px-4 pt-2 border-b">
 					<div className="flex space-x-3">
 						<button
-							onClick={() => setActiveTab('Recommend')}
+							onClick={() => {
+								setActiveTab('Recommend');
+								// 推荐页面不需要地理位置，直接加载内容
+								loadSquareContent();
+							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'Recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
@@ -138,7 +136,16 @@ export default function SquarePage() {
 							{t('square.recommend')}
 						</button>
 						<button
-							onClick={() => setActiveTab('Following')}
+							onClick={() => {
+								// 检查登录状态
+								if (!authInfo?.userId || !authInfo?.token) {
+									router.push('/login');
+									return;
+								}
+								setActiveTab('Following');
+								// 关注页面不需要地理位置，直接加载内容
+								loadSquareContent();
+							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'Following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
@@ -148,7 +155,19 @@ export default function SquarePage() {
 							{t('square.following')}
 						</button>
 						<button
-							onClick={() => setActiveTab('Nearby')}
+							onClick={async () => {
+								// 检查登录状态
+								if (!authInfo?.userId || !authInfo?.token) {
+									router.push('/login');
+									return;
+								}
+								setActiveTab('Nearby');
+								
+								// 切换到Nearby tab时获取地理位置
+								const location = await getUserLocation();
+								// 使用获取到的地理位置加载内容
+								loadSquareContent(location);
+							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
 								activeTab === 'Nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
@@ -168,7 +187,7 @@ export default function SquarePage() {
 					<div className="flex-1 flex items-center justify-center">
 						<LoadingSpinner 
 							size="lg" 
-							text={isGettingLocation ? "正在获取位置信息..." : "加载中..."} 
+							text={isGettingLocation ? t('square.gettingLocation') : t('square.loading')} 
 						/>
 					</div>
 				)}
@@ -187,11 +206,13 @@ export default function SquarePage() {
 				{!isLoading && !error && !isGettingLocation && posts.length === 0 && (
 					<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 						<FileX className="h-16 w-16 text-gray-300 mb-4" />
-						<h3 className="text-lg font-medium text-gray-900 mb-2">暂无内容</h3>
+						<h3 className="text-lg font-medium text-gray-900 mb-2">{t('square.noContent')}</h3>
 						<p className="text-sm text-gray-500 text-center max-w-sm">
-							{isAuthenticated 
-								? '当前位置暂无发现内容，换个地方试试吧！' 
-								: '请先登录以查看个性化内容推荐'
+							{activeTab === 'Recommend' 
+								? t('square.noRecommendContent')
+								: isAuthenticated 
+									? t('square.noNearbyContent')
+									: t('square.loginRequired')
 							}
 						</p>
 					</div>
@@ -218,7 +239,7 @@ export default function SquarePage() {
 										{post.images.map((image, imageIndex) => (
 											<OptimizedImage
 												key={imageIndex}
-												src={image}
+												src={`${SERVER_CONFIG.STATIC_URL}${image}`}
 												alt={`Post ${post.id} image ${imageIndex + 1}`}
 												className="w-34 h-24 object-cover rounded flex-shrink-0"
 											/>
@@ -226,7 +247,7 @@ export default function SquarePage() {
 									</div>
 
 									{/* 标题 */}
-									<h3 className=" text-gray-900 mb-2 text-sm font-nunito">{post.title}</h3>
+									<h3 className=" text-gray-900 mb-2 text-sm font-nunito font-semibold">{post.title}</h3>
 
 									{/* 描述 */}
 									<p className="text-xs text-gray-600 mb-3 line-clamp-2 leading-relaxed font-inter">{post.description}</p>
@@ -236,7 +257,7 @@ export default function SquarePage() {
 										{/* 发布者信息 */}
 										<div className="flex items-center gap-2">
 											<img
-												src={post.publisher.avatar}
+												src={`${SERVER_CONFIG.STATIC_URL}${post.publisher.avatar}`}
 												alt={post.publisher.nickname}
 												className="w-8 h-8 object-cover rounded-full"
 											/>
@@ -247,15 +268,15 @@ export default function SquarePage() {
 										<div className="flex items-center gap-3">
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Bookmark className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.collects}</span>
+												<span className="text-xs font-nunito">{post.interactions?.collects || 0}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-500">
 												<Heart className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.likes}</span>
+												<span className="text-xs font-nunito">{post.interactions?.likes || 0}</span>
 											</button>
 											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
 												<Share2 className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.shares}</span>
+												<span className="text-xs font-nunito">{post.interactions?.shares || 0}</span>
 											</button>
 										</div>
 									</div>
@@ -274,7 +295,11 @@ export default function SquarePage() {
 						{/* 分页信息 */}
 						{pagination && (
 							<div className="px-4 py-3 text-center text-xs text-gray-500">
-								第 {pagination.currentPage} 页，共 {pagination.totalPages} 页，总计 {pagination.totalItems} 条内容
+								{t('square.pagination')
+									.replace('{current}', pagination.currentPage.toString())
+									.replace('{total}', pagination.totalPages.toString())
+									.replace('{items}', pagination.totalItems.toString())
+								}
 							</div>
 						)}
 					</div>
