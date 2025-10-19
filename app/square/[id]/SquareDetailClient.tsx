@@ -331,7 +331,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					{/* 发布者信息 */}
 					<div className="flex items-center gap-3">
 						<button
-							onClick={handlePublisherClick}
+							// onClick={handlePublisherClick}
 							className="flex items-center gap-3 hover:opacity-80 transition-opacity"
 						>
 							<img

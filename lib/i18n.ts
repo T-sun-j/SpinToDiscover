@@ -251,6 +251,7 @@ export interface Translations {
   };
     personalPage: {
       title: string;
+      brand: string;
       brief: string;
       customerServiceHotline: string;
       workingHours: string;
@@ -711,7 +712,8 @@ export const translations: Record<Language, Translations> = {
     },
     personalPage: {
       title: 'Personal Page',
-      brief: 'Brief description of the personal page',
+      brand: 'Brand',
+      brief: 'Brief',
       customerServiceHotline: 'Customer Service Hotline',
       workingHours: 'Working Hours',
       email: 'Email',
@@ -1167,7 +1169,8 @@ export const translations: Record<Language, Translations> = {
     },
     personalPage: {
       title: '个人页面',
-      brief: '个人页面的简要描述',
+      brand: '品牌',
+      brief: '简介',
       customerServiceHotline: '客服热线',
       workingHours: '工作时间',
       email: '邮箱',

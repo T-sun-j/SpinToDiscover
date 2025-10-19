@@ -94,6 +94,10 @@ export default function SettingsPage() {
 		}
 	};
 
+	const handleBack = () => {
+		router.back();
+	};
+
 	return (
 		<AuthGuard>
 			<main className="flex min-h-dvh flex-col bg-white">
@@ -103,7 +107,7 @@ export default function SettingsPage() {
 			{/* 页面标题 */}
 			<div className="flex items-center justify-between px-6 py-4">
 				<h1 className="text-xl text-[#101729]">{t('settings.setupTitle')}</h1>
-				<button className="text-[#101729] hover:text-[#101729]">
+				<button className="text-[#101729] hover:text-[#101729]" onClick={handleBack}>
 					<ChevronLeft className="h-7 w-7" />
 				</button>
 			</div>
