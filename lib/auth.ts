@@ -36,6 +36,8 @@ import {
   CollectListResponse,
   DeleteArticleRequest,
   HideArticleRequest,
+  SearchRequest,
+  SearchResponse,
   API_CONFIG
 } from './api';
 
@@ -878,5 +880,40 @@ export async function hideArticle(params: HideArticleRequest): Promise<ApiRespon
       throw new Error(`隐藏作品失败: ${error.message}`);
     }
     throw new Error('隐藏作品过程中发生未知错误');
+  }
+}
+
+/**
+ * 搜索API
+ * @param params 搜索参数
+ * @returns Promise<SearchResponse>
+ */
+export async function searchContent(params: SearchRequest): Promise<SearchResponse> {
+  try {
+    const response = await request<SearchResponse>('queryall', {
+      userId: params.userId,
+      token: params.token,
+      typeid: params.typeid,
+      title: params.title,
+    });
+    
+    console.log('Search API response:', response);
+    
+    // 检查token失效
+    if (!response.success && response.message?.includes('token失效')) {
+      throw new Error('TOKEN_EXPIRED');
+    }
+    
+    // 直接返回响应，因为request函数已经返回了原始API响应
+    return response as SearchResponse;
+  } catch (error) {
+    console.error('Search API error:', error);
+    if (error instanceof RequestError) {
+      if (error.message.includes('token失效') || error.message.includes('TOKEN_EXPIRED')) {
+        throw new Error('TOKEN_EXPIRED');
+      }
+      throw new Error(`搜索失败: ${error.message}`);
+    }
+    throw new Error('搜索过程中发生未知错误');
   }
 }

@@ -507,3 +507,35 @@ export interface PostCommentRequest {
   parentId?: string; // 父评论ID，回复评论时使用
   content: string; // 评论内容
 }
+
+// 搜索请求参数类型
+export interface SearchRequest {
+  userId: string;
+  token: string;
+  typeid: string; // 'all' | 'articles' | 'users' | 'brands'
+  title: string; // 搜索关键词
+}
+
+// 用户搜索结果项类型
+export interface UserSearchResult {
+  id: string;
+  name?: string;
+  avatar?: string;
+  addtime: string;
+}
+
+// 文章搜索结果项类型
+export interface ArticleSearchResult {
+  id: string;
+  title: string;
+  description: string;
+  addtime: string;
+}
+
+// 搜索结果响应类型
+export interface SearchResponse {
+  userDataList: UserSearchResult[];
+  articleDataList: ArticleSearchResult[];
+  success: boolean;
+  message: string;
+}
