@@ -11,7 +11,7 @@ export default function HomePage() {
 	const { t } = useLanguage();
 
 	return (
-		<main className="h-screen w-full overflow-hidden">
+		<main className="h-screen w-full overflow-hidden contain-page">
 			{/* 全屏视频背景，靠上展示 */}
 			<video
 				src="/earth.mp4"
@@ -29,7 +29,7 @@ export default function HomePage() {
 			</div>
 
 			{/* 主要内容区域 - 使用flex布局自适应屏幕 */}
-			<div className="relative z-10 flex h-[calc(100vh-64px)] flex-col justify-between px-4">
+			<div className="relative z-10 flex h-[calc(100vh-68px)] flex-col justify-between">
 				{/* 空白区域 - 占据上半部分 */}
 				<div className="flex-1"></div>
 
@@ -54,7 +54,7 @@ export default function HomePage() {
 
 
 				{/* 页脚固定在底部 */}
-				<div className="relative z-10 mt-auto py-2">
+				<div className="relative z-10 mt-auto pb-3 px-4">
 					<Footer />
 				</div>
 				{/* 功能导航 - 底部区域 */}

@@ -147,7 +147,7 @@ export default function RegisterPage() {
 				/>
 
 				{/* 页面标题 */}
-				<div className="flex items-center justify-between px-6 py-4">
+				<div className="flex items-center justify-between px-4 py-4">
 					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.createAccount')}</h1>
 					<button className="text-[#101729] hover:text-[#101729]">
 						<Link href="/">
@@ -157,7 +157,7 @@ export default function RegisterPage() {
 				</div>
 
 				{/* 注册表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-2">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
 						<div className="relative font-inter">

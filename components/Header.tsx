@@ -47,7 +47,7 @@ export function Header({
     <header className={`flex items-center justify-between py-3 w-full  ${className}`}>
       {/* 左侧：Logo 和语言切换 */}
       <div className="flex items-center gap-3">
-        <Link href={logoLink} className="flex items-center gap-2 ml-4">
+        <Link href={logoLink} className="flex items-center gap-2 ml-2">
           <Image
             src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
             alt="logo"
