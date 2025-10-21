@@ -46,13 +46,13 @@ function handleAuthError(error: any) {
       
       // 检查是否已经在登录页面或已经有redirect参数
       if (currentPath.startsWith('/login') || currentSearch.includes('redirect=')) {
-        console.log('Already on login page or has redirect, using default login URL');
-        window.location.href = '/login';
+        // console.log('Already on login page or has redirect, using default login URL');
+        // window.location.href = '/login';
       } else {
         // 只使用路径名，避免查询参数导致的循环
-        const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
-        console.log('Redirecting to login with clean path:', loginUrl);
-        window.location.href = loginUrl;
+        // const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+        // console.log('Redirecting to login with clean path:', loginUrl);
+        // window.location.href = loginUrl;
       }
     }
   }
@@ -94,8 +94,10 @@ export async function request<T = any>(
     const requiresAuth = ['getuserinfo', 'postsquare', 'gethomelist', 'postcomments', 
                          'loveinformation', 'collectinformation', 'collectuser', 'userprofile'];
     
-    if (requiresAuth.includes(action) && !hasValidAuth()) {
-      console.log('Request requires authentication but no valid token found');
+    // 检查是否是推荐页面的gethomelist请求（不需要认证）
+    const isRecommendRequest = action === 'gethomelist' && params.tab === 'recommend';
+    
+    if (requiresAuth.includes(action) && !isRecommendRequest && !hasValidAuth()) {
       handleAuthError({ status: 401, message: 'No valid authentication token' });
       throw new RequestError('Authentication required', 401);
     }

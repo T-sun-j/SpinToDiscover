@@ -9,7 +9,7 @@ import { Footer } from '../../components/Footer';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getSquareContentList } from '../../lib/auth';
+import { getSquareContentList, toggleLove, toggleCollect } from '../../lib/auth';
 import { SquareContent, Publisher, Pagination, SERVER_CONFIG } from '../../lib/api';
 import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
 import { OptimizedImage } from '../../components/ui/OptimizedImage';
@@ -19,13 +19,22 @@ export default function SquarePage() {
 	const { t } = useLanguage();
 	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
-	const [activeTab, setActiveTab] = useState('Recommend');
+	const [activeTab, setActiveTab] = useState('recommend');
 	const [posts, setPosts] = useState<SquareContent[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [userLocation, setUserLocation] = useState<string>('');
 	const [isGettingLocation, setIsGettingLocation] = useState(false);
 	const [pagination, setPagination] = useState<Pagination | null>(null);
+	
+	// 互动状态管理
+	const [postInteractions, setPostInteractions] = useState<{[key: string]: {
+		isLiked: boolean;
+		isBookmarked: boolean;
+		likes: number;
+		bookmarks: number;
+		isInteracting: boolean;
+	}}>({});
 
 
 	// 获取用户地理位置
@@ -56,12 +65,6 @@ export default function SquarePage() {
 
 	// 加载广场内容
 	const loadSquareContent = useCallback(async (location?: string) => {
-		// 推荐页面不需要登录，其他页面需要登录
-		if (activeTab !== 'Recommend' && (!authInfo?.userId || !authInfo?.token)) {
-			// 如果不是推荐页面且没有登录，跳转到登录页
-			router.push('/login');
-			return;
-		}
 
 		setIsLoading(true);
 		setError('');
@@ -70,18 +73,35 @@ export default function SquarePage() {
 			// 如果没有提供位置，使用当前用户位置或默认位置
 			const currentLocation = location || userLocation || '';
 			
+			// 推荐页面不需要传递 token，其他页面需要
+			const shouldPassToken = activeTab !== 'recommend';
+			
 			const response = await getSquareContentList({
-				userId: authInfo?.userId || 'default',
-				token: authInfo?.token || 'default',
-				location: activeTab === "Nearby" ? currentLocation : '',
+				userId: shouldPassToken ? (authInfo?.userId || '') : '',
+				token: shouldPassToken ? (authInfo?.token || '') : '',
+				location: activeTab === "nearby" ? currentLocation : '',
 				tab: activeTab,
 				page: 1,
 				limit: 999
 			});
 
 			if (response.success && response.data) {
-				setPosts(response.data.posts || []);
+				const newPosts = response.data.posts || [];
+				setPosts(newPosts);
 				setPagination(response.data.pagination || null);
+				
+				// 初始化互动状态
+				const newInteractions: {[key: string]: any} = {};
+				newPosts.forEach((post: SquareContent) => {
+					newInteractions[post.id] = {
+						isLiked: false, // 初始状态为未点赞，因为API没有返回用户状态
+						isBookmarked: false, // 初始状态为未收藏，因为API没有返回用户状态
+						likes: post.likes || 0, // 使用API返回的likes字段
+						bookmarks: post.collects || 0, // 使用API返回的collects字段
+						isInteracting: false
+					};
+				});
+				setPostInteractions(newInteractions);
 			} else {
 				setError('加载内容失败');
 			}
@@ -107,6 +127,153 @@ export default function SquarePage() {
 		}
 	};
 
+	// 点赞功能
+	const handleLike = async (postId: string, event: React.MouseEvent) => {
+		event.stopPropagation(); // 阻止事件冒泡，避免触发帖子点击
+		
+		if (!authInfo?.userId || !authInfo?.token || !isAuthenticated) {
+			router.push('/login');
+			return;
+		}
+
+		const currentInteraction = postInteractions[postId];
+		if (currentInteraction?.isInteracting) return;
+
+		setPostInteractions(prev => ({
+			...prev,
+			[postId]: {
+				...prev[postId],
+				isInteracting: true
+			}
+		}));
+
+		try {
+			const response = await toggleLove({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				productId: postId,
+				isLove: currentInteraction?.isLiked ? 0 : 1
+			});
+
+			if (response.success) {
+				setPostInteractions(prev => ({
+					...prev,
+					[postId]: {
+						...prev[postId],
+						isLiked: !prev[postId]?.isLiked,
+						likes: (prev[postId]?.likes || 0) + (prev[postId]?.isLiked ? -1 : 1),
+						isInteracting: false
+					}
+				}));
+			} else {
+				alert(t('square.operationFailed'));
+			}
+		} catch (error) {
+			console.error('点赞失败:', error);
+			alert(t('square.operationFailed'));
+		} finally {
+			setPostInteractions(prev => ({
+				...prev,
+				[postId]: {
+					...prev[postId],
+					isInteracting: false
+				}
+			}));
+		}
+	};
+
+	// 收藏功能
+	const handleBookmark = async (postId: string, event: React.MouseEvent) => {
+		event.stopPropagation(); // 阻止事件冒泡，避免触发帖子点击
+		
+		if (!authInfo?.userId || !authInfo?.token || !isAuthenticated) {
+			router.push('/login');
+			return;
+		}
+
+		const currentInteraction = postInteractions[postId];
+		if (currentInteraction?.isInteracting) return;
+
+		setPostInteractions(prev => ({
+			...prev,
+			[postId]: {
+				...prev[postId],
+				isInteracting: true
+			}
+		}));
+
+		try {
+			const response = await toggleCollect({
+				userId: authInfo.userId,
+				token: authInfo.token,
+				productId: postId,
+				isCollect: currentInteraction?.isBookmarked ? 0 : 1
+			});
+
+			if (response.success) {
+				setPostInteractions(prev => ({
+					...prev,
+					[postId]: {
+						...prev[postId],
+						isBookmarked: !prev[postId]?.isBookmarked,
+						bookmarks: (prev[postId]?.bookmarks || 0) + (prev[postId]?.isBookmarked ? -1 : 1),
+						isInteracting: false
+					}
+				}));
+			} else {
+				alert(t('square.operationFailed'));
+			}
+		} catch (error) {
+			console.error('收藏失败:', error);
+			alert(t('square.operationFailed'));
+		} finally {
+			setPostInteractions(prev => ({
+				...prev,
+				[postId]: {
+					...prev[postId],
+					isInteracting: false
+				}
+			}));
+		}
+	};
+
+	// 分享功能
+	const handleShare = async (post: SquareContent, event: React.MouseEvent) => {
+		event.stopPropagation(); // 阻止事件冒泡，避免触发帖子点击
+		
+		try {
+			if (navigator.share) {
+				await navigator.share({
+					title: post.title || 'Untitled',
+					text: post.description || '',
+					url: `${window.location.origin}/square/${post.id}`,
+				});
+				// 分享成功后更新分享数量
+				setPosts(prevPosts => 
+					prevPosts.map(p => 
+						p.id === post.id 
+							? { ...p, shares: (p.shares || 0) + 1 }
+							: p
+					)
+				);
+			} else {
+				// 复制链接到剪贴板
+				await navigator.clipboard.writeText(`${window.location.origin}/square/${post.id}`);
+				alert(t('square.linkCopied'));
+				// 复制成功后也更新分享数量
+				setPosts(prevPosts => 
+					prevPosts.map(p => 
+						p.id === post.id 
+							? { ...p, shares: (p.shares || 0) + 1 }
+							: p
+					)
+				);
+			}
+		} catch (error) {
+			console.error('分享失败:', error);
+		}
+	};
+
 	return (
 		<div className="min-h-screen bg-white">
 			<main className=" flex min-h-[100vh] flex-col">
@@ -123,12 +290,12 @@ export default function SquarePage() {
 					<div className="flex space-x-3">
 						<button
 							onClick={() => {
-								setActiveTab('Recommend');
+								setActiveTab('recommend');
 								// 推荐页面不需要地理位置，直接加载内容
 								loadSquareContent();
 							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'Recommend' 
+								activeTab === 'recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -142,12 +309,12 @@ export default function SquarePage() {
 									router.push('/login');
 									return;
 								}
-								setActiveTab('Following');
+								setActiveTab('following');
 								// 关注页面不需要地理位置，直接加载内容
 								loadSquareContent();
 							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'Following' 
+								activeTab === 'following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -161,7 +328,7 @@ export default function SquarePage() {
 									router.push('/login');
 									return;
 								}
-								setActiveTab('Nearby');
+								setActiveTab('nearby');
 								
 								// 切换到Nearby tab时获取地理位置
 								const location = await getUserLocation();
@@ -169,7 +336,7 @@ export default function SquarePage() {
 								loadSquareContent(location);
 							}}
 							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
-								activeTab === 'Nearby' 
+								activeTab === 'nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
 							}`}
@@ -208,7 +375,7 @@ export default function SquarePage() {
 						<FileX className="h-16 w-16 text-gray-300 mb-4" />
 						<h3 className="text-lg font-medium text-gray-900 mb-2">{t('square.noContent')}</h3>
 						<p className="text-sm text-gray-500 text-center max-w-sm">
-							{activeTab === 'Recommend' 
+							{activeTab === 'recommend' 
 								? t('square.noRecommendContent')
 								: isAuthenticated 
 									? t('square.noNearbyContent')
@@ -264,21 +431,42 @@ export default function SquarePage() {
 											<span className="text-sm text-gray-600 font-nunito">{post.publisher.nickname}</span>
 										</div>
 
-										{/* 互动按钮 */}
-										<div className="flex items-center gap-3">
-											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
-												<Bookmark className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.interactions?.collects || 0}</span>
-											</button>
-											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-500">
-												<Heart className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.interactions?.likes || 0}</span>
-											</button>
-											<button className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700">
-												<Share2 className="h-4 w-4" />
-												<span className="text-xs font-nunito">{post.interactions?.shares || 0}</span>
-											</button>
-										</div>
+									{/* 互动按钮 */}
+									<div className="flex items-center gap-3">
+										<button 
+											onClick={(e) => handleBookmark(post.id, e)}
+											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
+											className={`flex flex-col items-center gap-0.5 transition-colors ${
+												postInteractions[post.id]?.isBookmarked 
+													? 'text-blue-600' 
+													: 'text-gray-500 hover:text-gray-700'
+											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
+											title={!isAuthenticated ? '请先登录' : ''}
+										>
+											<Bookmark className={`h-4 w-4 ${postInteractions[post.id]?.isBookmarked ? 'fill-current' : ''}`} />
+											<span className="text-xs font-nunito">{postInteractions[post.id]?.bookmarks || post.collects || 0}</span>
+										</button>
+										<button 
+											onClick={(e) => handleLike(post.id, e)}
+											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
+											className={`flex flex-col items-center gap-0.5 transition-colors ${
+												postInteractions[post.id]?.isLiked 
+													? 'text-red-500' 
+													: 'text-gray-500 hover:text-red-500'
+											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
+											title={!isAuthenticated ? '请先登录' : ''}
+										>
+											<Heart className={`h-4 w-4 ${postInteractions[post.id]?.isLiked ? 'fill-current' : ''}`} />
+											<span className="text-xs font-nunito">{postInteractions[post.id]?.likes || post.likes || 0}</span>
+										</button>
+										<button 
+											onClick={(e) => handleShare(post, e)}
+											className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700 transition-colors"
+										>
+											<Share2 className="h-4 w-4" />
+											<span className="text-xs font-nunito">{post.shares || 0}</span>
+										</button>
+									</div>
 									</div>
 								</div>
 								{/* 分隔线 */}

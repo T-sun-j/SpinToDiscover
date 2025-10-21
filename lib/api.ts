@@ -194,13 +194,17 @@ export interface SquareContent {
   images: string[];
   video?: string;
   brandInfo?: BrandInfo;
-  interactions: Interactions;
+  interactions?: Interactions; // 改为可选，因为API可能不返回
   publisher: Publisher;
   comments: any[]; // 评论数组
   createdAt: string;
   updatedAt: string;
   message?: string;
   success?: boolean;
+  // 直接字段，根据API返回结构
+  likes?: number;
+  collects?: number;
+  shares?: number;
 }
 
 // 分页信息类型

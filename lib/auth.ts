@@ -291,14 +291,22 @@ export async function postSquareContent(postData: PostSquareRequest): Promise<Ap
  */
 export async function getSquareContentList(listData: GetHomeListRequest): Promise<ApiResponse<SquareListResponse>> {
   try {
-    const response = await request('gethomelist', {
-      userId: listData.userId,
-      token: listData.token,
+    // 推荐页面不需要传递 userId 和 token
+    const isRecommendTab = listData.tab === 'recommend';
+
+    const requestParams: any = {
       tab: listData.tab || '',
       page: listData.page || 1,
       limit: listData.limit || 10,
       location: listData.location,
-    });
+    };
+
+    if (!isRecommendTab) {
+      requestParams.userId = listData.userId;
+      requestParams.token = listData.token;
+    }
+
+    const response = await request('gethomelist', requestParams);
     
     return response;
   } catch (error) {

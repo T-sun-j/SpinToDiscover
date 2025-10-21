@@ -57,36 +57,7 @@ export default function HomePage() {
 				<div className="relative z-10 mt-auto pb-3 px-4">
 					<Footer />
 				</div>
-				{/* 功能导航 - 底部区域 */}
-				{/* <div className="pb-4">
-					<h2 className="text-lg font-semibold text-white mb-3 text-center">{t('navigation.quickAccess')}</h2>
-					<div className="grid grid-cols-2 gap-3">
-						<Link href="/discover">
-							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
-								<MapPin className="h-4 w-4" />
-								<span className="text-xs">{t('navigation.discover')}</span>
-							</Button>
-						</Link>
-						<Link href="/community">
-							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
-								<Users className="h-4 w-4" />
-								<span className="text-xs">{t('navigation.community')}</span>
-							</Button>
-						</Link>
-						<Link href="/settings">
-							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
-								<Settings className="h-4 w-4" />
-								<span className="text-xs">{t('navigation.settings')}</span>
-							</Button>
-						</Link>
-						<Link href="/help">
-							<Button variant="outline" className="w-full h-14 flex-col gap-1" size="lg">
-								<HelpCircle className="h-4 w-4" />
-								<span className="text-xs">{t('navigation.help')}</span>
-							</Button>
-						</Link>
-					</div>
-				</div> */}
+				
 			</div>
 
 		</main>

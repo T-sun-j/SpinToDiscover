@@ -36,7 +36,7 @@ export function Header({
     // 检查本地存储是否有 token
     if (authInfo?.token && authInfo?.userId) {
       // 有 token 和 userId，跳转到当前用户的个人页面
-      router.push(`/personal/${authInfo.userId}`);
+      router.push(`/personal-center`);
     } else {
       // 没有 token，跳转到登录页面
       router.push('/login');

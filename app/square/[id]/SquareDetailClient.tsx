@@ -285,6 +285,14 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								? t('square.contentDeleted')
 								: t('square.loginRequiredForDetail')
 							}
+							action={!isAuthenticated ? (
+								<Button 
+									onClick={() => router.push('/login')}
+									className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600"
+								>
+									{t('square.loginRequiredForDetail')}
+								</Button>
+							) : undefined}
 						/>
 					</div>
 					<Footer />
@@ -331,7 +339,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					{/* 发布者信息 */}
 					<div className="flex items-center gap-3">
 						<button
-							// onClick={handlePublisherClick}
+							onClick={handlePublisherClick}
 							className="flex items-center gap-3 hover:opacity-80 transition-opacity"
 						>
 							<img

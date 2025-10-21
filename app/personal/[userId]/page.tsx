@@ -37,6 +37,15 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     const { t } = useLanguage();
     const router = useRouter();
     const { getEmail, authInfo } = useAuth();
+    
+    // 使用useApi hook获取用户参数
+    const { userParams } = useApi(
+        async (params) => {
+            // 这个函数不会被调用，我们只是用它来获取userParams
+            return null;
+        },
+        null
+    );
     const [isFollowing, setIsFollowing] = useState(false);
     const [postsData, setPostsData] = useState<MyPageItem[]>([]);
     const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
@@ -53,6 +62,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     
     // 从路由参数获取目标用户ID
     const targetUserId = params.userId;
+    console.log(targetUserId);
 
     // 直接管理API状态，不依赖useApi hook
     const [data, setData] = useState<any>({
@@ -80,10 +90,8 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         setError(null);
         
         try {
-            // 如果有登录信息，使用登录信息；否则使用默认信息
-            const userId = authInfo?.userId || 'default';
-            const token = authInfo?.token || 'default';
-            
+            // 优先使用userParams中的token，如果没有则使用authInfo中的token
+            const token = userParams?.token || authInfo?.token || '';
             const response = await getMyPageList({
                 userId: targetUserId,
                 token: token,
@@ -112,10 +120,9 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         setUserInfoError(null);
         
         try {
-            // 如果有登录信息，使用登录信息；否则使用默认信息
-            const userId = authInfo?.userId || 'default';
-            const token = authInfo?.token || 'default';
-            const email = authInfo?.email || 'default@example.com';
+            // 优先使用userParams中的token，如果没有则使用authInfo中的token
+            const token = userParams?.token || authInfo?.token || '';
+            const email = '';
             
             const response = await getUserInfo({
                 email: email,
@@ -152,19 +159,19 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         }
     }, [targetUserId]);
 
-    // 更新作品数据
-    useEffect(() => {
-        if (data?.posts) {
-            setPostsData(data.posts);
-        }
-    }, [data]);
-
     // 更新用户信息数据
     useEffect(() => {
         if (userInfoData && userInfoData.success && userInfoData.data) {
             setUserInfo(userInfoData.data);
         }
     }, [userInfoData]);
+
+    // 更新作品数据
+    useEffect(() => {
+        if (data?.posts) {
+            setPostsData(data.posts);
+        }
+    }, [data]);
 
     const handleBack = () => {
         router.back();
