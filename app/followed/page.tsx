@@ -77,15 +77,24 @@ export default function FollowedPage() {
 
   // 更新关注用户数据
   useEffect(() => {
-    if (followedData && followedData.success && followedData.data?.dataList) {
-      setFollowedUsers(followedData.data.dataList);
+    if (followedData && followedData.success) {
+      const responseData = followedData as any;
+      if (responseData.dataList) {
+        console.log('关注列表数据:', responseData.dataList);
+        setFollowedUsers(responseData.dataList);
+        
+      }
     }
   }, [followedData]);
 
   // 更新粉丝用户数据
   useEffect(() => {
-    if (followersData && followersData.success && followersData.data?.dataList) {
-      setFollowersUsers(followersData.data.dataList);
+    if (followersData && followersData.success) {
+      const responseData = followersData as any;
+      if (responseData.dataList) {
+        console.log('粉丝列表数据:', responseData.dataList);
+        setFollowersUsers(responseData.dataList);
+      }
     }
   }, [followersData]);
 
@@ -108,6 +117,7 @@ export default function FollowedPage() {
 
 
   const currentUsers = activeTab === 'following' ? followedUsers : followersUsers;
+  console.log('currentUsers:', currentUsers);
   const currentLoading = activeTab === 'following' ? followedLoading : followersLoading;
   const currentError = activeTab === 'following' ? followedError : followersError;
 
@@ -221,7 +231,7 @@ export default function FollowedPage() {
       {!currentLoading && !currentError && currentUsers.length > 0 && (
         <div className="flex-1 px-4 py-4 space-y-4">
           {currentUsers.map((user) => (
-            <Link href={`/personal`} key={user.userId}>
+            <Link href={`/personal/${user.userId}`} key={user.userId}>
               <div className="flex items-center gap-4 p-2 hover:bg-gray-50 rounded-lg">
                 <Image
                   src={buildAvatarUrl(user.avatar)}

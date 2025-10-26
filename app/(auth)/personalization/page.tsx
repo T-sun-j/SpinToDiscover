@@ -280,7 +280,7 @@ export default function PersonalizationPage() {
                 />
 
                 {/* 页面标题和返回按钮 */}
-                <div className="flex items-center justify-between px-6 py-4">
+                <div className="flex items-center justify-between px-2 py-4">
                     <h1 className="text-xl font-poppins text-[#101729]">{t('personalization.title')}</h1>
                     <button
                         onClick={handleBack}
@@ -291,7 +291,7 @@ export default function PersonalizationPage() {
                 </div>
 
                 {/* 个人化表单 */}
-                <form onSubmit={handleSubmit} className="flex-1 space-y-6 px-6 font-inter">
+                <form onSubmit={handleSubmit} className="flex-1 space-y-6 px-2 font-inter">
                     {/* 头像上传区域 */}
                     <div className="flex flex-col items-center space-y-4">
                         <div
