@@ -149,6 +149,7 @@ export interface Translations {
       loadContentError: string;
       locationPermissionDenied: string;
       locationError: string;
+      clearFilter: string;
     };
   community: {
     onlineUsers: string;
@@ -290,6 +291,14 @@ export interface Translations {
       confirmDeleteDescription: string;
       cancel: string;
       confirm: string;
+      followSuccess: string;
+      unfollowSuccess: string;
+      followError: string;
+      unfollowError: string;
+      followProcessError: string;
+      unfollowProcessError: string;
+      following: string;
+      userNotFound: string;
     };
     userInfo: {
       loading: string;
@@ -458,6 +467,16 @@ export interface Translations {
     noFollowingDescription: string;
     noFollowersDescription: string;
   };
+  regionSelect: {
+    title: string;
+    currentLocation: string;
+    searching: string;
+    popularRegions: string;
+    confirm: string;
+    searchHint: string;
+    searchDescription: string;
+    noResults: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -610,6 +629,7 @@ export const translations: Record<Language, Translations> = {
       loadContentError: 'Error occurred while loading content',
       locationPermissionDenied: 'Location permission denied',
       locationError: 'Failed to get location',
+      clearFilter: 'Clear filter',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -751,6 +771,14 @@ export const translations: Record<Language, Translations> = {
       confirmDeleteDescription: 'This action cannot be undone and the post will be permanently removed.',
       cancel: 'Cancel',
       confirm: 'Confirm Delete',
+      followSuccess: 'Followed successfully',
+      unfollowSuccess: 'Unfollowed successfully',
+      followError: 'Failed to follow',
+      unfollowError: 'Failed to unfollow',
+      followProcessError: 'Error occurred while following',
+      unfollowProcessError: 'Error occurred while unfollowing',
+      following: 'Following',
+      userNotFound: 'User not found',
     },
     userInfo: {
       loading: 'Loading user info...',
@@ -917,6 +945,16 @@ export const translations: Record<Language, Translations> = {
       noFollowingDescription: 'You haven\'t followed anyone yet. Start following users to see them here.',
       noFollowersDescription: 'No one is following you yet. Share great content to attract followers.',
     },
+    regionSelect: {
+      title: 'Region Select',
+      currentLocation: 'Current Location',
+      searching: 'Searching...',
+      popularRegions: 'Popular Regions',
+      confirm: 'Confirm',
+      searchHint: 'Search for a city',
+      searchDescription: 'Enter the name of a city to find and select it',
+      noResults: 'No cities found',
+    },
   },
   zh: {
     appName: {
@@ -1067,6 +1105,7 @@ export const translations: Record<Language, Translations> = {
       loadContentError: '加载内容时发生错误',
       locationPermissionDenied: '用户拒绝了地理位置权限',
       locationError: '获取地理位置失败',
+      clearFilter: '清除筛选',
     },
     community: {
       onlineUsers: '在线用户',
@@ -1208,6 +1247,14 @@ export const translations: Record<Language, Translations> = {
       confirmDeleteDescription: '此操作不可撤销，删除后将无法恢复。',
       cancel: '取消',
       confirm: '确认删除',
+      followSuccess: '已关注',
+      unfollowSuccess: '已取消关注',
+      followError: '关注失败',
+      unfollowError: '取消关注失败',
+      followProcessError: '关注时发生错误',
+      unfollowProcessError: '取消关注时发生错误',
+      following: '已关注',
+      userNotFound: '用户不存在',
     },
     userInfo: {
       loading: '加载用户信息中...',
@@ -1373,6 +1420,16 @@ export const translations: Record<Language, Translations> = {
       noFollowers: '暂无粉丝',
       noFollowingDescription: '您还没有关注任何人。开始关注用户以在这里看到他们。',
       noFollowersDescription: '还没有人关注您。分享精彩内容来吸引粉丝吧。',
+    },
+    regionSelect: {
+      title: '地区选择',
+      currentLocation: '当前位置',
+      searching: '搜索中...',
+      popularRegions: '热门地区',
+      confirm: '确认',
+      searchHint: '搜索城市',
+      searchDescription: '输入城市名称来查找并选择',
+      noResults: '未找到城市',
     },
   },
 };

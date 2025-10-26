@@ -21,6 +21,7 @@ import {
   FollowUserRequest,
   InteractionResponse,
   GetUserInfoRequest,
+  GetOtherUserInfoRequest,
   UserInfoResponse,
   UploadAvatarRequest,
   UploadAvatarResponse,
@@ -166,6 +167,30 @@ export async function getUserInfo(
       throw new Error(`获取用户信息失败: ${error.message}`);
     }
     throw new Error('获取用户信息过程中发生未知错误');
+  }
+}
+
+/**
+ * 获取其他用户信息API
+ * @param otherUserData 其他用户信息查询数据
+ * @returns Promise<ApiResponse<UserInfoResponse>>
+ */
+export async function getOtherUserInfo(
+  otherUserData: GetOtherUserInfoRequest
+): Promise<ApiResponse<UserInfoResponse>> {
+  try {
+    const response = await request<UserInfoResponse>('getothersmassage', {
+      userId: otherUserData.userId,
+      token: otherUserData.token,
+      otherId: otherUserData.otherId,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`获取其他用户信息失败: ${error.message}`);
+    }
+    throw new Error('获取其他用户信息过程中发生未知错误');
   }
 }
 

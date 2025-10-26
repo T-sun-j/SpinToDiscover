@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useApi } from '../../../lib/hooks/useApi';
 import { getMyPageList } from '../../../lib/services';
-import { getUserInfo, deleteArticle, hideArticle } from '../../../lib/auth';
+import { getUserInfo, getOtherUserInfo, deleteArticle, hideArticle, toggleFollowUser } from '../../../lib/auth';
 import { MyPageItem, UserInfoResponse, buildAvatarUrl } from '../../../lib/api';
 import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } from '../../../lib/constants';
 import { classNames } from '../../../lib/utils/classNames';
@@ -47,6 +47,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         null
     );
     const [isFollowing, setIsFollowing] = useState(false);
+    const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [postsData, setPostsData] = useState<MyPageItem[]>([]);
     const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
     const [isDeleting, setIsDeleting] = useState<string | null>(null); // 正在删除的作品ID
@@ -122,18 +123,38 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         try {
             // 优先使用userParams中的token，如果没有则使用authInfo中的token
             const token = userParams?.token || authInfo?.token || '';
-            const email = '';
+            const currentUserId = authInfo?.userId || '';
             
-            const response = await getUserInfo({
-                email: email,
-                userId: targetUserId,
-                token: token,
-            });
+            let response: any;
             
-            if (response.success && response.data) {
-                setUserInfoData(response);
+            // 判断是否为查看自己的页面
+            if (targetUserId === currentUserId) {
+                // 查看自己的页面，使用getUserInfo接口
+                response = await getUserInfo({
+                    email: authInfo?.email || '',
+                    userId: targetUserId,
+                    token: token,
+                });
+                if (response.success && response.data) {
+                    setUserInfoData(response);
+                } else {
+                    setUserInfoError(t('personalPage.loadUserInfoFailed'));
+                }
             } else {
-                setUserInfoError(t('personalPage.loadUserInfoFailed'));
+                // 查看其他用户的页面，使用getOtherUserInfo接口
+                response = await getOtherUserInfo({
+                    userId: currentUserId,
+                    token: token,
+                    otherId: targetUserId,
+                });
+                if (response.success && response) {
+                    console.log(response);
+                    setUserInfoData(response);
+                    setUserInfo(response.userData);
+                    setIsFollowing(response.isFollow);
+                } else {
+                    setUserInfoError(t('personalPage.loadUserInfoFailed'));
+                }
             }
         } catch (error) {
             console.error('加载用户信息失败:', error);
@@ -147,9 +168,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     useEffect(() => {
         if (targetUserId && !hasLoaded.current) {
             hasLoaded.current = true;
-            loadPostsData();
+            // 只有查看自己的页面时才调用loadPostsData
+            if (targetUserId === authInfo?.userId) {
+                loadPostsData();
+            }
         }
-    }, [targetUserId]);
+    }, [targetUserId, authInfo?.userId]);
 
     // 获取用户信息
     useEffect(() => {
@@ -161,24 +185,122 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
     // 更新用户信息数据
     useEffect(() => {
-        if (userInfoData && userInfoData.success && userInfoData.data) {
+        if (userInfoData && userInfoData.success) {
+            if (userInfoData.data) {
             setUserInfo(userInfoData.data);
+            }
+            // 从API响应中获取关注状态
+            if (userInfoData.isFollow !== undefined) {
+                setIsFollowing(userInfoData.isFollow);
+            }
+            
+            // 如果是查看其他用户页面，从getOtherUserInfo响应中获取作品数据
+            if (targetUserId !== authInfo?.userId && userInfoData.proDataList) {
+                setPostsData(userInfoData.proDataList);
+                console.log(userInfoData.proDataList,'userInfoData.proDataList');
+                setData({
+                    posts: userInfoData.proDataList,
+                    pagination: {
+                        currentPage: 1,
+                        totalPages: 1,
+                        totalItems: userInfoData.proDataList.length,
+                        hasNext: false,
+                        hasPrev: false
+                    }
+                });
+            }
         }
-    }, [userInfoData]);
+    }, [userInfoData, targetUserId, authInfo?.userId]);
 
-    // 更新作品数据
+    // 更新作品数据 - 只对查看自己页面的情况生效
     useEffect(() => {
-        if (data?.posts) {
+        if (data?.posts && targetUserId === authInfo?.userId) {
             setPostsData(data.posts);
         }
-    }, [data]);
+    }, [data, targetUserId, authInfo?.userId]);
 
     const handleBack = () => {
         router.back();
     };
 
-    const handleFollowToggle = () => {
-        setIsFollowing(!isFollowing);
+    const handleFollowToggle = async () => {
+        if (!authInfo || !targetUserId || isFollowLoading) {
+            return;
+        }
+
+        setIsFollowLoading(true);
+        setErrorMessage('');
+        setSuccessMessage('');
+
+        try {
+            const response = await toggleFollowUser({
+                userId: authInfo.userId,
+                token: authInfo.token,
+                authorId: targetUserId,
+                isCollect: isFollowing ? 1 : 0, // 1: 取消关注, 0: 关注
+            });
+
+            if (response.success) {
+                setIsFollowing(!isFollowing);
+                setSuccessMessage(isFollowing ? t('personalPage.unfollowSuccess') : t('personalPage.followSuccess'));
+                
+                // 关注/取消关注成功后，重新调用getOtherUserInfo接口刷新数据
+                if (targetUserId !== authInfo?.userId) {
+                    try {
+                        const refreshResponse = await getOtherUserInfo({
+                            userId: authInfo.userId,
+                            token: authInfo.token,
+                            otherId: targetUserId,
+                        });
+                        
+                        if (refreshResponse.success && refreshResponse) {
+                            setUserInfoData(refreshResponse);
+                            // 根据API响应结构处理数据
+                            const responseData = refreshResponse as any;
+                            if (responseData.userData) {
+                                setUserInfo(responseData.userData);
+                            }
+                            if (responseData.isFollow !== undefined) {
+                                setIsFollowing(responseData.isFollow);
+                            }
+                            
+                            // 更新作品数据
+                            if (responseData.proDataList) {
+                                setPostsData(responseData.proDataList);
+                                setData({
+                                    posts: responseData.proDataList,
+                                    pagination: {
+                                        currentPage: 1,
+                                        totalPages: 1,
+                                        totalItems: responseData.proDataList.length,
+                                        hasNext: false,
+                                        hasPrev: false
+                                    }
+                                });
+                            }
+                        }
+                    } catch (refreshError) {
+                        console.error('刷新用户信息失败:', refreshError);
+                        // 即使刷新失败，也不影响关注操作的成功
+                    }
+                }
+                
+                // 3秒后清除成功消息
+                setTimeout(() => setSuccessMessage(''), 3000);
+            } else {
+                // 处理API错误，如"用户不存在"
+                if (response.message && response.message.includes('用户不存在')) {
+                    setErrorMessage(t('personalPage.userNotFound') || '用户不存在');
+                } else {
+                    setErrorMessage(response.message || (isFollowing ? t('personalPage.unfollowError') : t('personalPage.followError')));
+                }
+            }
+        } catch (error) {
+            console.error('关注操作失败:', error);
+            setErrorMessage(error instanceof Error ? error.message : (isFollowing ? t('personalPage.unfollowProcessError') : t('personalPage.followProcessError')));
+        } finally {
+            setIsFollowLoading(false);
+        }
     };
 
     const handleVideoPlay = (videoUrl: string) => {
@@ -218,8 +340,10 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
             if (response.success) {
                 setSuccessMessage(t('personalPage.deleteSuccess'));
-                // 从列表中移除已删除的作品
-                setPostsData(prev => prev.filter(post => post.id !== articleToDelete));
+                // 重新加载数据以获取最新状态 - 只有查看自己页面时才重新加载
+                if (targetUserId === authInfo?.userId) {
+                    await loadPostsData();
+                }
                 // 3秒后清除成功消息
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
@@ -258,12 +382,10 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
             if (response.success) {
                 setSuccessMessage(newStatus === 1 ? t('personalPage.hideSuccess') : t('personalPage.showSuccess'));
-                // 更新本地作品状态
-                setPostsData(prev => prev.map(post => 
-                    post.id === articleId 
-                        ? { ...post, status: newStatus }
-                        : post
-                ));
+                // 重新加载数据以获取最新状态 - 只有查看自己页面时才重新加载
+                if (targetUserId === authInfo?.userId) {
+                    await loadPostsData();
+                }
                 // 3秒后清除成功消息
                 setTimeout(() => setSuccessMessage(''), 3000);
             } else {
@@ -378,6 +500,39 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.email')}:{userInfo.email}</p>
                     </div>)}
 
+                        {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
+                        {targetUserId !== authInfo?.userId && (
+                            <div className=" flex items-center gap-2 ml-14" style={{ zIndex: 10 }}>
+                                <button
+                                    onClick={handleFollowToggle}
+                                    disabled={isFollowLoading}
+                                    className={classNames(
+                                        'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+                                        isFollowing 
+                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
+                                            : 'bg-[#101729] text-white hover:bg-gray-800'
+                                    )}
+                                >
+                                    {isFollowLoading ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Heart className={classNames(
+                                            'h-4 w-4',
+                                            isFollowing ? 'fill-current' : ''
+                                        )} />
+                                    )}
+                                    <span>
+                                        {isFollowLoading 
+                                            ? t('personalPage.processing')
+                                            : isFollowing 
+                                                ? t('personalPage.following')
+                                                : t('personalPage.follow')
+                                        }
+                                    </span>
+                                </button>
+                            </div>
+                        )}
+
                         {/* Edit按钮布局到底部右下角 - 只有查看自己的页面时才显示 */}
                         {targetUserId === authInfo?.userId && (
                             <Link
@@ -391,7 +546,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     </div>
 
                 </div>
-                <div className="mx-4" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
+                
 
                 {/* 错误和成功消息 */}
                 {errorMessage && (
@@ -412,7 +567,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 )}
 
                 {/* My Posts section */}
-                <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'h-[calc(72vh-200px)]')}>
+                <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'h-[calc(72vh-130px)]')}>
 
                     {loading && (
                         <div className={classNames(
@@ -486,11 +641,13 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     )}
 
                     {!loading && !error && postsData.length > 0 && (
-                        <div className="grid grid-cols-1 gap-4 text-[#101729] overflow-y-auto h-[calc(72vh-90px)]">
+                        <div className="grid grid-cols-1 gap-4 text-[#101729] overflow-y-auto h-[calc(72vh-130px)]">
                             {postsData.map((post) => {
                                 
                                 return (
+                                    
                                 <div key={post.id} className="bg-white" onClick={() => router.push(`/square/${post.id}`)}>
+                                    <div className="" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
                                     <div className="py-4">
                                         <div className={classNames(
                                             'flex items-center gap-2',
@@ -638,7 +795,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 </div>
                 {/* Footer - 只有查看自己的页面时才显示发布按钮 */}
                 {targetUserId === authInfo?.userId && (
-                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4 mt-8 z-10')}>
+                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'z-10')}>
                         <div className={classNames(
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
                             UI_CONSTANTS.SPACING.GAP_4
@@ -653,7 +810,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                     )}
                                     size="lg"
                                 >
-                                    <CirclePlus className="h-48 w-48 text-[#101729]" />
+                                    <CirclePlus className="h-12 w-12 text-[#101729]" />
                                     <span className={classNames(
                                         'text-xs',
                                         UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD

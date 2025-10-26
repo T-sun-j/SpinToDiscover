@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { Search, MapPin, Bookmark, Heart, Share2, Filter, FileX } from 'lucide-react';
+import { Search, MapPin, Bookmark, Heart, Share2, Filter, FileX, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { getSquareContentList, toggleLove, toggleCollect } from '../../lib/auth';
 import { SquareContent, Publisher, Pagination, SERVER_CONFIG } from '../../lib/api';
 import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
@@ -19,11 +19,13 @@ export default function SquarePage() {
 	const { t } = useLanguage();
 	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [activeTab, setActiveTab] = useState('recommend');
 	const [posts, setPosts] = useState<SquareContent[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [userLocation, setUserLocation] = useState<string>('');
+	const [filterLocation, setFilterLocation] = useState<string>(''); // 筛选的地址
 	const [isGettingLocation, setIsGettingLocation] = useState(false);
 	const [pagination, setPagination] = useState<Pagination | null>(null);
 	
@@ -64,23 +66,39 @@ export default function SquarePage() {
 	}, []);
 
 	// 加载广场内容
-	const loadSquareContent = useCallback(async (location?: string) => {
+	const loadSquareContent = useCallback(async (location?: string, tab?: string) => {
 
 		setIsLoading(true);
 		setError('');
 		
 		try {
-			// 如果没有提供位置，使用当前用户位置或默认位置
-			const currentLocation = location || userLocation || '';
+			// 使用传入的tab参数，如果没有则使用当前的activeTab
+			const currentTab = tab || activeTab;
+			
+			// 优先使用传入的location参数，如果没有则根据tab类型决定使用哪个位置
+			let currentLocation = '';
+			if (location) {
+				// 如果传入了location参数，直接使用
+				currentLocation = location;
+			} else {
+				// 如果没有传入location参数，根据tab类型决定使用哪个位置
+				if (currentTab === 'nearby') {
+					// 附近页面使用定位地址
+					currentLocation = userLocation || '';
+				} else {
+					// 推荐和关注页面使用筛选地址
+					currentLocation = filterLocation || '';
+				}
+			}
 			
 			// 推荐页面不需要传递 token，其他页面需要
-			const shouldPassToken = activeTab !== 'recommend';
+			const shouldPassToken = currentTab !== 'recommend';
 			
 			const response = await getSquareContentList({
 				userId: shouldPassToken ? (authInfo?.userId || '') : '',
 				token: shouldPassToken ? (authInfo?.token || '') : '',
-				location: activeTab === "nearby" ? currentLocation : '',
-				tab: activeTab,
+				location: currentLocation, // 所有tab都使用location参数
+				tab: currentTab,
 				page: 1,
 				limit: 999
 			});
@@ -94,10 +112,10 @@ export default function SquarePage() {
 				const newInteractions: {[key: string]: any} = {};
 				newPosts.forEach((post: SquareContent) => {
 					newInteractions[post.id] = {
-						isLiked: false, // 初始状态为未点赞，因为API没有返回用户状态
-						isBookmarked: false, // 初始状态为未收藏，因为API没有返回用户状态
-						likes: post.likes || 0, // 使用API返回的likes字段
-						bookmarks: post.collects || 0, // 使用API返回的collects字段
+						isLiked: false, 
+						isBookmarked: false, 
+						likes: post.likes || 0, 
+						bookmarks: post.collects || 0, 
 						isInteracting: false
 					};
 				});
@@ -110,13 +128,32 @@ export default function SquarePage() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [authInfo, userLocation, activeTab, router]);
+	}, [authInfo, userLocation, filterLocation, activeTab, router]);
 
-	// 初始化页面：只加载推荐内容，不获取地理位置
+	// 初始化页面：根据URL参数设置tab和location
 	useEffect(() => {
-		// 默认加载推荐内容，不需要地理位置
-		loadSquareContent();
-	}, [loadSquareContent]);
+		// 从URL参数获取tab和location
+		const tab = searchParams.get('tab');
+		const location = searchParams.get('location');
+		
+		if (tab) {
+			setActiveTab(tab);
+		}
+		
+		if (location) {
+			// 根据当前tab设置对应的位置
+			if (tab === 'nearby') {
+				setUserLocation(location);
+			} else {
+				setFilterLocation(location);
+			}
+			// 如果有location参数，使用该location加载内容
+			loadSquareContent(location);
+		} else {
+			// 默认加载推荐内容，不需要地理位置
+			loadSquareContent();
+		}
+	}, [searchParams]); // 只依赖searchParams
 
 	const handlePostClick = (postId: string) => {
 		// 如果有认证信息，传递到详情页面
@@ -237,6 +274,19 @@ export default function SquarePage() {
 		}
 	};
 
+	// 清除筛选条件
+	const clearLocationFilter = () => {
+		if (activeTab === 'nearby') {
+			setUserLocation('');
+		} else {
+			setFilterLocation('');
+		}
+		// 清除URL参数并重新加载内容
+		router.push('/square');
+		// 重新加载内容，不传递location参数
+		loadSquareContent('');
+	};
+
 	// 分享功能
 	const handleShare = async (post: SquareContent, event: React.MouseEvent) => {
 		event.stopPropagation(); // 阻止事件冒泡，避免触发帖子点击
@@ -285,16 +335,18 @@ export default function SquarePage() {
 					userLink="/personal-center"
 				/>
 
-				{/* 排序标签 */}
-				<div className="flex items-center justify-between px-4 pt-2 border-b">
-					<div className="flex space-x-3">
+				{/* 导航区域 - 一行显示 */}
+				<div className="flex items-center justify-between px-2 pt-3 pb-2 border-b">
+					{/* 左侧：三个tab */}
+					<div className="flex space-x-2">
 						<button
 							onClick={() => {
-								setActiveTab('recommend');
-								// 推荐页面不需要地理位置，直接加载内容
-								loadSquareContent();
+								const newTab = 'recommend';
+								setActiveTab(newTab);
+								// 推荐页面使用筛选地址
+								loadSquareContent(filterLocation, newTab);
 							}}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
+							className={`text-sm font-medium px-3 py-1.5 rounded-full transition-all font-poppins ${
 								activeTab === 'recommend' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -309,11 +361,12 @@ export default function SquarePage() {
 									router.push('/login');
 									return;
 								}
-								setActiveTab('following');
-								// 关注页面不需要地理位置，直接加载内容
-								loadSquareContent();
+								const newTab = 'following';
+								setActiveTab(newTab);
+								// 关注页面使用筛选地址
+								loadSquareContent(filterLocation, newTab);
 							}}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
+							className={`text-sm font-medium px-3 py-1.5 rounded-full transition-all font-poppins ${
 								activeTab === 'following' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -328,14 +381,15 @@ export default function SquarePage() {
 									router.push('/login');
 									return;
 								}
-								setActiveTab('nearby');
+								const newTab = 'nearby';
+								setActiveTab(newTab);
 								
 								// 切换到Nearby tab时获取地理位置
 								const location = await getUserLocation();
 								// 使用获取到的地理位置加载内容
-								loadSquareContent(location);
+								loadSquareContent(location, newTab);
 							}}
-							className={`text-sm font-medium px-4 py-2 rounded-full transition-all font-poppins ${
+							className={`text-sm font-medium px-3 py-1.5 rounded-full transition-all font-poppins ${
 								activeTab === 'nearby' 
 									? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' 
 									: 'text-gray-600 hover:text-gray-800'
@@ -344,9 +398,35 @@ export default function SquarePage() {
 							{t('square.nearby')}
 						</button>
 					</div>
-					<Button variant="ghost" size="sm">
-						<Filter className="h-4 w-4" />
-					</Button>
+
+					{/* 右侧：筛选按钮和地址 */}
+					<div className="flex items-center">
+						<Button 
+							variant="ghost" 
+							size="sm"
+							onClick={() => router.push(`/region-select?from=square&tab=${activeTab}`)}
+							className="text-gray-600 hover:text-gray-800 px-2 py-1"
+						>
+							<Filter className="h-4 w-4" />
+						</Button>
+						
+						{/* 显示当前选择的地区 - 只显示三个字加省略号 */}
+						{((activeTab === 'nearby' && userLocation) || (activeTab !== 'nearby' && filterLocation)) && (
+							<div className="flex items-center gap-1 text-xs text-gray-600 bg-gray-100 px-1 py-1 rounded-full max-w-20">
+								<MapPin className="h-3 w-3 flex-shrink-0" />
+								<span className="font-nunito truncate">
+									{activeTab === 'nearby' ? userLocation : filterLocation}
+								</span>
+								<button
+									onClick={clearLocationFilter}
+									className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors flex-shrink-0"
+									title={t('square.clearFilter')}
+								>
+									<X className="h-3 w-3" />
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 
 				{/* 加载状态 */}

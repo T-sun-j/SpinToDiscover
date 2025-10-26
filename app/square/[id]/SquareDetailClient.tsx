@@ -10,7 +10,8 @@ import {
 	ChevronDown,
 	Play,
 	Expand,
-	UserPlus
+	UserPlus,
+	MapPin
 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -286,7 +287,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								: t('square.loginRequiredForDetail')
 							}
 							action={!isAuthenticated ? (
-								<Button 
+								<Button
 									onClick={() => router.push('/login')}
 									className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600"
 								>
@@ -351,7 +352,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						</button>
 
 						{/* 关注按钮 - 只有当前用户不是发布者时才显示 */}
-						{isAuthenticated && authInfo?.userId !== post.publisher?.id && (
+						{/* {isAuthenticated && authInfo?.userId !== post.publisher?.id && (
 							<button
 								onClick={handleFollowAuthor}
 								disabled={isInteracting}
@@ -363,10 +364,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								<UserPlus className={`h-3 w-3 ${isFollowed ? 'fill-current' : ''}`} />
 								<span>{isFollowed ? t('square.followed') : t('square.follow')}</span>
 							</button>
-						)}
+						)} */}
 
 						<div className="flex items-center gap-1 ml-auto">
-							
+							<MapPin className="h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-600 font-nunito">{post.location || 'Unknown Location'}</span>
 						</div>
 					</div>
@@ -438,14 +439,21 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							{post.brandInfo.website && (
 								<div className="flex items-center gap-3">
 									<img src="/img/Icon-website.svg" alt="Website" className="h-6 w-6" />
-									<a 
-										href={post.brandInfo.website.startsWith('http') ? post.brandInfo.website : `https://${post.brandInfo.website}`} 
+									<a
+										href={post.brandInfo.website.startsWith('http') ? post.brandInfo.website : `https://${post.brandInfo.website}`}
 										className="text-[#101729] hover:underline"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
 										{post.brandInfo.website}
 									</a>
+									{post.brandInfo.logo && (
+										<OptimizedImage
+											src={`${SERVER_CONFIG.STATIC_URL}${post.brandInfo.logo}`}
+											alt="Brand Logo"
+											className="h-6 w-auto ml-2"
+										/>
+									)}
 								</div>
 							)}
 
@@ -456,48 +464,15 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 									<div className="flex-1">
 										<p className="text-sm text-gray-700 font-nunito leading-relaxed">
 											{post.brandInfo.intro}
-											{post.brandInfo.logo && (
-												<OptimizedImage
-													src={`${SERVER_CONFIG.STATIC_URL}${post.brandInfo.logo}`}
-													alt="Brand Logo"
-													className="h-4 w-auto ml-2"
-												/>
-											)}
+
 										</p>
 									</div>
 								</div>
 							)}
+							{post.brandInfo.customerService?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{post.brandInfo.customerService}</p>:null}
+							{post.brandInfo.workingHours?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.workingHours')}:{post.brandInfo.workingHours}</p>:null}
+							{post.brandInfo.email?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.email')}:{post.brandInfo.email}</p>:null}
 
-							{/* 营业时间 */}
-							{post.brandInfo.operatingHours && (
-								<div className="flex items-center gap-3 ml-8">
-									<span className="text-sm text-gray-700 font-inter">{post.brandInfo.operatingHours}</span>
-								</div>
-							)}
-
-							{/* 客服信息 */}
-							{post.brandInfo.customerService && (
-								<>
-									{/* 客服邮箱 */}
-									{post.brandInfo.customerService.email && (
-										<div className="flex items-center gap-3 ml-8">
-											<span className="text-sm text-gray-700 font-inter">Email: {post.brandInfo.customerService.email}</span>
-										</div>
-									)}
-									{/* 客服介绍 */}
-									{post.brandInfo.customerService.intro && (
-										<div className="flex items-center gap-3 ml-8">
-											<span className="text-sm text-gray-700 font-inter">{post.brandInfo.customerService.intro}</span>
-										</div>
-									)}
-									{/* 客服工作时间 */}
-									{post.brandInfo.customerService.workingHours && (
-										<div className="flex items-center gap-3 ml-8">
-											<span className="text-sm text-gray-700 font-inter">Working Hours: {post.brandInfo.customerService.workingHours}</span>
-										</div>
-									)}
-								</>
-							)}
 						</div>
 					)}
 
@@ -598,11 +573,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								<button
 									onClick={handleSubmitComment}
 									disabled={!isAuthenticated || !comment.trim() || isSubmittingComment}
-									className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-1 ${
-										(!isAuthenticated || !comment.trim() || isSubmittingComment)
+									className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-1 ${(!isAuthenticated || !comment.trim() || isSubmittingComment)
 											? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 											: 'bg-blue-500 text-white hover:bg-blue-600'
-									}`}
+										}`}
 								>
 									{isSubmittingComment ? (
 										<>
@@ -643,7 +617,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 							</svg>
 						</button>
-						
+
 						{/* 视频播放器 */}
 						<video
 							src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}

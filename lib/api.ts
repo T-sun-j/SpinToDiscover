@@ -6,10 +6,11 @@
 // 服务器配置
 export const SERVER_CONFIG = {
   // 服务器基础URL
-  BASE_URL: 'https://dis.diatal.com',
+  BASE_URL: 'http://www.spinlinx.com',
   
   // 静态资源URL
-  STATIC_URL: 'https://dis.diatal.com',
+  STATIC_URL: 'http://www.spinlinx.com',
+  // STATIC_URL: 'https://dis.diatal.com',
 }
 
 // 工具函数：构建头像URL
@@ -167,14 +168,11 @@ export interface BrandInfo {
   logo: string;
   intro: string;
   operatingHours: string;
-  customerService: {
-    email: string;
-    intro: string;
-    logo: string;
-    operatingHours: string;
-    website: string;
-    workingHours: string;
-  };
+  adress: string;
+  customerService: string;
+  workingHours: string;
+  tel: string;
+  email: string;
 }
 
 // 互动信息类型
@@ -386,6 +384,13 @@ export interface GetUserInfoRequest {
   token: string;
 }
 
+// 获取其他用户信息请求参数类型
+export interface GetOtherUserInfoRequest {
+  userId: string;
+  token: string;
+  otherId: string;
+}
+
 // 用户信息类型
 export interface UserInfo {
   id: string;
@@ -421,6 +426,8 @@ export interface UserInfoResponse {
   tel?: string;
   customerService?: string | null;
   workingHours?: string | null;
+  isFollow: boolean;
+  userData: UserInfoResponse;
 }
 
 // 头像上传请求参数类型
