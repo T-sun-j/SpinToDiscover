@@ -5,8 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:prod": "NODE_ENV=production next build",
+    "build:static": "NODE_ENV=production next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:build": "npm run build:static",
+    "deploy:test": "npm run build:static && npx serve out",
+    "deploy:upload": "npm run build:static && rsync -avz out/ user@your-server:/var/www/spintodiscover/out/"
   },
   "repository": {
     "type": "git",
