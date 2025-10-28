@@ -6,10 +6,10 @@
 // 服务器配置
 export const SERVER_CONFIG = {
   // 服务器基础URL
-  BASE_URL: 'https://www.spinlinx.com',
+  BASE_URL: 'http://std.spinlinx.com',
   
   // 静态资源URL
-  STATIC_URL: 'https://www.spinlinx.com',
+  STATIC_URL: 'http://std.spinlinx.com',
   // STATIC_URL: 'https://dis.diatal.com',
 }
 
