@@ -5,11 +5,12 @@
 
 // 服务器配置
 export const SERVER_CONFIG = {
-  // 服务器基础URL - 支持环境变量和相对路径
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? '' : 'http://localhost:3000'),
+  // 服务器基础URL
+  BASE_URL: 'https://www.spinlinx.com',
   
-  // 静态资源URL - 支持环境变量和相对路径
-  STATIC_URL: process.env.NEXT_PUBLIC_STATIC_URL || (typeof window !== 'undefined' ? '' : 'http://localhost:3000'),
+  // 静态资源URL
+  STATIC_URL: 'https://www.spinlinx.com',
+  // STATIC_URL: 'https://dis.diatal.com',
 }
 
 // 工具函数：构建头像URL
@@ -40,11 +41,11 @@ export const buildAvatarUrl = (avatarPath?: string, fallback: string = '/img/ava
 
 // API基础配置
 export const API_CONFIG = {
-  // 基础URL - 支持nginx代理路径
-  BASE_URL: `${SERVER_CONFIG.BASE_URL}/api/homeapi.php`,
+  // 基础URL
+  BASE_URL: `${SERVER_CONFIG.BASE_URL}/homeapi.php`,
   
-  // 上传服务URL - 支持nginx代理路径
-  UPLOAD_URL: `${SERVER_CONFIG.BASE_URL}/api/upimg.php`,
+  // 上传服务URL
+  UPLOAD_URL: `${SERVER_CONFIG.BASE_URL}/upimg.php`,
   
   // 请求超时时间 (毫秒)
   TIMEOUT: 10000,
