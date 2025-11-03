@@ -531,7 +531,11 @@ export default function ReleasePage() {
               type="checkbox"
               checked={allowingComments}
               onChange={(e) => setAllowingComments(e.target.checked)}
-              className="form-checkbox h-4 w-4 rounded-sm border-gray-400 text-[#101729] focus:ring-[#101729]"
+              className={`form-checkbox h-4 w-4 rounded-sm border-gray-400 ${
+                allowingComments
+                  ? 'bg-[#101729] text-white border-[#101729]'
+                  : 'bg-gray-200 text-[#101729] border-gray-400'
+              } focus:ring-[#101729] transition-colors`}
             />
             <span className="text-gray-700 text-sm">{t('releasePage.allowingComments')}</span>
           </div>

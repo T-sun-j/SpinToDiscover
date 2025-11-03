@@ -284,13 +284,24 @@ export default function RegisterPage() {
 
 					{/* 条款同意 */}
 					<div className="flex items-start gap-3">
-						<input
-							type="checkbox"
-							id="acceptTerms"
-							checked={formData.acceptTerms}
-							onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
-							className="mt-1 h-4 w-4 rounded border-gray-300 bg-white text-primary focus:ring-primary/60"
-						/>
+						<label className="relative h-4 w-4 flex items-center">
+							<input
+								type="checkbox"
+								id="acceptTerms"
+								checked={formData.acceptTerms}
+								onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
+								className="peer h-4 w-4 appearance-none border-1 rounded border-gray-300 text-primary focus:ring-primary/60 checked:border-[#101729] outline-none"
+							/>
+							<span className={
+								"pointer-events-none absolute left-0 top-0 h-4 w-4 flex items-center justify-center " +
+								(formData.acceptTerms ? "" : "hidden")
+							}>
+								{/* Checkmark SVG */}
+								<svg className="h-3 w-3 text-[#101729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+								</svg>
+							</span>
+						</label>
 						<label htmlFor="acceptTerms" className="text-sm text-gray-600 font-inter text-[12px]">
 							{t('auth.acceptTerms')}{' '}
 							<Link href="/about" className="underline hover:text-gray-800">{t('auth.termsOfUse')}</Link>
