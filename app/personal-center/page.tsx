@@ -155,7 +155,7 @@ export default function PersonalCenterPage() {
                                 height={12}
                                 className={classNames(
                                     UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                    'h-8 w-8 object-cover'
+                                    'h-12 w-12 object-cover'
                                 )}
                             />
                         </div>
@@ -164,7 +164,7 @@ export default function PersonalCenterPage() {
                         <div className="flex-1 flex items-center text-[#101729]">
                             <div className="flex-1">
                                 <h2 className={classNames(
-                                    'text-lg',
+                                    'text-xl',
                                     UI_CONSTANTS.COLORS.PRIMARY,
                                     UI_CONSTANTS.FONTS.POPPINS,
                                     'flex items-center gap-1'

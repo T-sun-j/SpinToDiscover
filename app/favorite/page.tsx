@@ -41,17 +41,89 @@ export default function FavoritePage() {
     }
   }, [userParams?.userId, userParams?.token, execute]);
 
+  // 转换API返回的数据格式为CollectItem格式
+  const transformCollectData = (apiData: any): CollectItem[] => {
+    if (!apiData || !Array.isArray(apiData) || apiData.length === 0) {
+      return [];
+    }
+
+    return apiData.map((item: any) => {
+      // 从API响应中提取数据
+      const id = item._id?.$oid || item.proid || '';
+      const product = item.product?.[0] || {};
+      const title = product.title || '';
+      
+      // 从product中提取其他信息（如果API返回完整的产品信息）
+      const description = product.description || '';
+      const images = product.piclist || [];
+      const video = product.video || '';
+      const location = product.location || '';
+      
+      // 从用户信息中提取作者信息（如果API返回）
+      const authorId = item.uid || '';
+      const author = item.users?.[0] || {
+        userId: authorId,
+        nickname: '',
+        avatar: ''
+      };
+      
+      // 转换时间戳为日期字符串
+      const collectedAt = item.createtime 
+        ? new Date(item.createtime * 1000).toISOString()
+        : new Date().toISOString();
+
+      return {
+        id,
+        title,
+        description,
+        images,
+        video,
+        location,
+        collectedAt,
+        author: {
+          userId: author.userId || authorId,
+          nickname: author.nickname || '',
+          avatar: author.avatar || ''
+        }
+      };
+    });
+  };
+
   // 更新收藏数据
   useEffect(() => {
-    if (data && data.success) {
-      // 如果API返回成功，但data为空或dataList为空数组，则设置为空数组
-      if (data.data?.dataList) {
-        setCollectData(data.data.dataList);
-      } else {
-        setCollectData([]);
+    if (data) {
+      // 如果data.success存在，说明是包装在ApiResponse中的格式
+      if (data.success && data.data) {
+        // 如果data.data是数组（新格式），直接转换
+        if (Array.isArray(data.data)) {
+          const transformed = transformCollectData(data.data);
+          setCollectData(transformed);
+        }
+        // 如果data.data.dataList存在（旧格式），使用dataList
+        else if (data.data.dataList && Array.isArray(data.data.dataList)) {
+          setCollectData(data.data.dataList);
+        }
+        // 如果data.data是对象，尝试转换
+        else {
+          const transformed = transformCollectData([data.data]);
+          setCollectData(transformed);
+        }
+      } 
+      // 如果data是数组（直接返回数组格式），直接转换
+      else if (Array.isArray(data)) {
+        const transformed = transformCollectData(data);
+        setCollectData(transformed);
       }
-    } else if (data && !data.success) {
-      // 如果API返回失败（如"用户不存在"），也设置为空数组
+      // 如果data.dataList存在（兼容旧格式）
+      else if ((data as any).dataList && Array.isArray((data as any).dataList)) {
+        setCollectData((data as any).dataList);
+      }
+      // 其他情况，尝试转换
+      else {
+        const transformed = transformCollectData([data]);
+        setCollectData(transformed);
+      }
+    } else {
       setCollectData([]);
     }
   }, [data]);
@@ -79,11 +151,11 @@ export default function FavoritePage() {
           </div>
         ))}
         {/* Fill remaining slots if less than 3 images */}
-        {item.images.length < 3 && Array.from({ length: 3 - item.images.length }).map((_, index) => (
+        {/* {item.images.length < 3 && Array.from({ length: 3 - item.images.length }).map((_, index) => (
           <div key={`placeholder-${index}`} className="w-full h-28 bg-gray-100 rounded-md flex items-center justify-center">
             <span className="text-gray-400 text-xs">{t("favoritePage.noImage")}</span>
           </div>
-        ))}
+        ))} */}
       </div>
 
       {/* Title & description */}

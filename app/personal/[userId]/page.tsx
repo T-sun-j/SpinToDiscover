@@ -426,12 +426,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 height={16}
                                 className={classNames(
                                     UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                    'w-10 h-10 object-cover'
+                                    'w-12 h-12 object-cover'
                                 )}
                             />
                             <div>
                                 <h2 className={classNames(
-                                    'text-lg text-[#101729]',
+                                    'text-xl text-[#101729]',
                                     UI_CONSTANTS.COLORS.PRIMARY,
                                     UI_CONSTANTS.FONTS.POPPINS
                                 )}>
@@ -456,58 +456,62 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     </div>
 
                     {/* 用户信息 */}
-                    <div className="relative flex flex-col gap-3 ml-14">
+                    <div className="relative flex flex-col gap-3 mt-3">
                         {/* 品牌信息 */}
-                        <div className="flex items-center gap-3">
-                            <span className="text-l text-[#101729] font-nunito">{t('personalPage.brand')}:</span>
-                            {userInfo?.brand ? (
-                                userInfo?.officialsite ? (
-                                    <a
-                                        href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
-                                        className="text-[#101729] font-nunito underline hover:opacity-80"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {userInfo.brand}
-                                    </a>
+                        <div className="flex items-center">
+                            <span className="text-l text-[#101729] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brand')}:</span>
+                            <div className="flex items-center gap-2 flex-1 pl-4">
+                                {userInfo?.brand ? (
+                                    userInfo?.officialsite ? (
+                                        <a
+                                            href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
+                                            className="text-[#101729] font-nunito underline hover:opacity-80"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {userInfo.brand}
+                                        </a>
+                                    ) : (
+                                        <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
+                                    )
                                 ) : (
-                                    <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
-                                )
-                            ) : (
-                                <span className="text-[#777] font-nunito">--</span>
-                            )}
+                                    <span className="text-[#777] font-nunito">--</span>
+                                )}
+                                {userInfo?.logo && (
+                                    <Image
+                                        src={buildAvatarUrl(userInfo.logo)}
+                                        alt="Brand Logo"
+                                        width={32}
+                                        height={32}
+                                        className="h-12 w-auto max-w-20 object-cover"
+                                    />
+                                )}
+                            </div>
                         </div>
 
                         {/* 简介 */}
                         {userInfo?.brief && (
-                            <div className="flex items-start gap-3">
-                                <span className="text-l text-[#101729] font-nunito ml-2">{t('personalPage.brief')}:</span>
-                                <div className="flex-1 flex">
-                                    <p className="text-[12px] pt-1 text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
-                                    {userInfo?.logo && (
-                                        <img
-                                            src={buildAvatarUrl(userInfo.logo)}
-                                            alt="Brand Logo"
-                                            className="h-8 w-auto ml-2"
-                                        />
-                                    )}
+                            <div className="flex items-start">
+                                <span className="text-l text-[#101729] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brief')}:</span>
+                                <div className="flex-1 pl-4">
+                                    <p className="text-base text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
                                 </div>
                             </div>
                         )}
-                        {userInfo?.tel && userInfo?.address && userInfo?.email && ( <div className="ml-14">
-                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{userInfo.tel}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.workingHours')}:{userInfo.address}</p>
-                        <p className="text-[12px] text-gray-700 font-inter">{t('personalPage.email')}:{userInfo.email}</p>
+                        {userInfo?.tel && userInfo?.address && userInfo?.email && ( <div className="ml-17">
+                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{userInfo.tel}</p>
+                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.workingHours')}:{userInfo.address}</p>
+                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.email')}:{userInfo.email}</p>
                     </div>)}
 
                         {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
                         {targetUserId !== authInfo?.userId && (
-                            <div className=" flex items-center gap-2 ml-14" style={{ zIndex: 10 }}>
+                            <div className="flex items-center gap-2" style={{ zIndex: 10 }}>
                                 <button
                                     onClick={handleFollowToggle}
                                     disabled={isFollowLoading}
                                     className={classNames(
-                                        'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+                                        'flex items-center gap-2 px-4 py-2 rounded-lg text-base font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
                                         isFollowing 
                                             ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
                                             : 'bg-[#101729] text-white hover:bg-gray-800'
@@ -551,8 +555,8 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 {/* 错误和成功消息 */}
                 {errorMessage && (
                     <div className="mx-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-red-600 text-sm">
-                            <AlertCircle className="h-4 w-4" />
+                        <div className="flex items-center gap-2 text-red-600 text-base">
+                            <AlertCircle className="h-5 w-5" />
                             <span>{errorMessage}</span>
                         </div>
                     </div>
@@ -560,7 +564,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 
                 {successMessage && (
                     <div className="mx-4 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-green-600 text-sm">
+                        <div className="flex items-center gap-2 text-green-600 text-base">
                             <span>{successMessage}</span>
                         </div>
                     </div>
@@ -657,7 +661,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                 'h-3 w-3','text-[#101729]'
                                             )} />
                                             <span className={classNames(
-                                                'text-xs', 'text-[#101729]'
+                                                'text-sm', 'text-[#101729]'
                                             )}>{post.location}</span>
                                         </div>
                                         <div className={classNames(
@@ -716,12 +720,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                             })}
                                         </div>
                                         <h3 className={classNames(
-                                            'text-[#101729] mb-2 text-sm',
+                                            'text-[#101729] mb-2 text-base',
                                             UI_CONSTANTS.FONTS.NUNITO,
                                             UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
                                         )}>{post.title}</h3>
                                         <p className={classNames(
-                                            'text-xs text-[#101729] mb-3 line-clamp-2 leading-relaxed',
+                                            'text-sm text-[#101729] mb-3 line-clamp-2 leading-relaxed',
                                             UI_CONSTANTS.FONTS.INTER
                                         )}>{post.description}</p>
                                         {/* 只有查看自己的页面时才显示操作按钮 */}
@@ -748,7 +752,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             <Trash2 className="h-4 w-4" />
                                                         )}
                                                         <span className={classNames(
-                                                            'text-xs',
+                                                            'text-sm',
                                                             UI_CONSTANTS.FONTS.NUNITO
                                                         )}>
                                                             {isDeleting === post.id ? t('personalPage.deleting') : t('personalPage.delete')}
@@ -772,7 +776,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             <EyeOff className="h-4 w-4" />
                                                         )}
                                                         <span className={classNames(
-                                                            'text-xs',
+                                                            'text-sm',
                                                             UI_CONSTANTS.FONTS.NUNITO
                                                         )}>
                                                             {isHiding === post.id 
@@ -806,13 +810,13 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                     className={classNames(
                                         'bg-transparent rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#101729]',
                                         UI_CONSTANTS.FONTS.NUNITO,
-                                        'text-lg font-bold'
+                                        'text-xl font-bold'
                                     )}
                                     size="lg"
                                 >
                                     <CirclePlus className="h-12 w-12 text-[#101729]" />
                                     <span className={classNames(
-                                        'text-xs',
+                                        'text-sm',
                                         UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
                                     )}>{t('personalCenter.post.button')}</span>
                                 </Button>
@@ -826,21 +830,21 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                     <AlertDialogContent className="max-w-sm p-6 bg-white border border-gray-200 shadow-xl">
                         <AlertDialogHeader className="text-center">
-                            <AlertDialogTitle className="text-lg font-semibold text-gray-900 mb-2">
+                            <AlertDialogTitle className="text-xl font-semibold text-gray-900 mb-2">
                                 {t('personalPage.confirmDelete')}
                             </AlertDialogTitle>
-                            <AlertDialogDescription className="text-sm text-gray-600 leading-relaxed">
+                            <AlertDialogDescription className="text-base text-gray-600 leading-relaxed">
                                 {t('personalPage.confirmDeleteMessage')}<br />
                                 {t('personalPage.confirmDeleteDescription')}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="flex-row gap-3  justify-center">
-                            <AlertDialogCancel className="h-10 px-6 text-sm rounded-lg border-gray-300 text-gray-700 hover:bg-gray-50">
+                            <AlertDialogCancel className="h-10 px-6 text-base rounded-lg border-gray-300 text-gray-700 hover:bg-gray-50">
                                 {t('personalPage.cancel')}
                             </AlertDialogCancel>
                             <AlertDialogAction 
                                 onClick={handleDeleteArticle}
-                                className="h-10 px-6 text-sm mt-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium"
+                                className="h-10 px-6 text-base mt-2 rounded-lg bg-gray-800 hover:bg-gray-900 text-white font-medium"
                             >
                                 {t('personalPage.confirm')}
                             </AlertDialogAction>

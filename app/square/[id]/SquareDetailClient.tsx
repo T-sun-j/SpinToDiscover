@@ -44,6 +44,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 	const [expandedImage, setExpandedImage] = useState<number | null>(null);
 	const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 	const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+	const [replyingTo, setReplyingTo] = useState<{ id: string; nickname: string } | null>(null);
 
 	// API相关状态
 	const [post, setPost] = useState<SquareContent | null>(null);
@@ -69,6 +70,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 			});
 
 			if (response.success && response.data) {
+				// 确保comments数组存在
+				if (!Array.isArray(response.data.comments)) {
+					response.data.comments = [];
+				}
 				setPost(response.data);
 				// 设置初始互动状态
 				setLikes(response.data.interactions?.likes || 0);
@@ -105,12 +110,14 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				userId: authInfo.userId,
 				token: authInfo.token,
 				productId: params.id,
+				parentId: replyingTo?.id,
 				content: comment.trim(),
 			});
 
 			if (response.success) {
-				// 评论提交成功，清空输入框
+				// 评论提交成功，清空输入框和回复状态
 				setComment('');
+				setReplyingTo(null);
 				// 重新加载详情以获取最新评论
 				loadSquareDetail(params.id);
 			} else {
@@ -483,7 +490,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							disabled={isInteracting || !isAuthenticated}
 							className={`flex items-center gap-2 transition-colors ${isBookmarked ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
-							title={!isAuthenticated ? '请先登录' : ''}
+							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
 							<Bookmark className={`h-6 w-6 ${isBookmarked ? 'fill-current' : ''}`} />
 							<span className="text-sm font-nunito">{bookmarks.toLocaleString()}</span>
@@ -493,7 +500,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							disabled={isInteracting || !isAuthenticated}
 							className={`flex items-center gap-2 transition-colors ${isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
-							title={!isAuthenticated ? '请先登录' : ''}
+							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
 							<Heart className={`h-6 w-6 ${isLiked ? 'fill-current' : ''}`} />
 							<span className="text-sm font-nunito">{likes.toLocaleString()}</span>
@@ -516,46 +523,157 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 						{/* 评论列表 */}
 						<div className="space-y-4">
-							{(post.comments || []).length > 0 ? (
-								post.comments.map((comment: any, index: number) => (
-									<div key={comment.id || index} className="flex gap-3">
-										<OptimizedImage
-											src={buildAvatarUrl(comment.author?.avatar || post.publisher?.avatar)}
-											alt="avatar"
-											className="w-8 h-8 rounded-full flex-shrink-0"
-										/>
-										<div className="flex-1">
-											<div className="flex items-center gap-2 mb-1">
-												<span className="font-sm text-gray-900 font-inter">
-													{comment.author?.nickname || comment.author || 'Anonymous'}
-												</span>
+							{Array.isArray(post.comments) && post.comments.length > 0 ? (
+								post.comments.map((comment, index: number) => {
+									const commentId = comment.id || `comment-${index}`;
+									const authorNickname = comment.author?.nickname || 'Anonymous';
+									const authorAvatar = comment.author?.avatar || '';
+									const commentContent = comment.content || '';
+									const repliesCount = comment.replies || 0;
+									const replyList = comment.replyList || [];
+									const createdAt = comment.createdAt || '';
+
+									return (
+										<div key={commentId} className="space-y-3">
+											{/* 主评论 */}
+											<div className="flex gap-3">
+												<OptimizedImage
+													src={buildAvatarUrl(authorAvatar || post.publisher?.avatar)}
+													alt="avatar"
+													className="w-8 h-8 rounded-full flex-shrink-0"
+												/>
+												<div className="flex-1">
+													<div className="flex items-center gap-2 mb-1">
+														<span className="text-sm font-medium text-gray-900 font-inter">
+															{authorNickname}
+														</span>
+														{createdAt && (
+															<span className="text-xs text-gray-500 font-inter">
+																{createdAt}
+															</span>
+														)}
+													</div>
+													<p className="text-gray-700 mb-2 text-sm font-inter leading-relaxed">{commentContent}</p>
+													<button 
+														onClick={() => {
+															setReplyingTo({ id: commentId, nickname: authorNickname });
+															// 滚动到输入框
+															setTimeout(() => {
+																const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+																input?.focus();
+															}, 100);
+														}}
+														className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm"
+													>
+														<MessageCircle className="h-4 w-4" />
+														<span className="font-inter">{t('square.reply')}</span>
+														{repliesCount > 0 && (
+															<span className="text-gray-400 font-inter">({repliesCount})</span>
+														)}
+													</button>
+												</div>
 											</div>
-											<p className="text-gray-700 mb-2 font-inter">{comment.content || comment.text}</p>
-											<button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
-												<MessageCircle className="h-6 w-6" />
-												<span className="text-sm font-inter">{t('square.reply')}</span>
-												{comment.replies > 0 && (
-													<span className="text-sm text-gray-400 font-inter">({comment.replies})</span>
-												)}
-											</button>
+
+											{/* 回复列表 */}
+											{Array.isArray(replyList) && replyList.length > 0 && (
+												<div className="ml-11 space-y-3 border-l-2 border-gray-200 pl-4">
+													{replyList.map((reply, replyIndex: number) => {
+														const replyId = reply.id || `reply-${index}-${replyIndex}`;
+														const replyAuthorNickname = reply.author?.nickname || 'Anonymous';
+														const replyAuthorAvatar = reply.author?.avatar || '';
+														const replyContent = reply.content || '';
+														const replyCreatedAt = reply.createdAt || '';
+
+														return (
+															<div key={replyId} className="flex gap-3">
+																<OptimizedImage
+																	src={buildAvatarUrl(replyAuthorAvatar || post.publisher?.avatar)}
+																	alt="avatar"
+																	className="w-6 h-6 rounded-full flex-shrink-0"
+																/>
+																<div className="flex-1">
+																	<div className="flex items-center gap-2 mb-1">
+																		<span className="text-xs font-medium text-gray-900 font-inter">
+																			{replyAuthorNickname}
+																		</span>
+																		{replyCreatedAt && (
+																			<span className="text-xs text-gray-500 font-inter">
+																				{replyCreatedAt}
+																			</span>
+																		)}
+																	</div>
+																	<p className="text-gray-700 text-xs font-inter leading-relaxed">{replyContent}</p>
+																</div>
+															</div>
+														);
+													})}
+												</div>
+											)}
 										</div>
-									</div>
-								))
+									);
+								})
 							) : (
 								<div className="text-center py-8">
-									<p className="text-gray-500 font-inter">暂无评论</p>
+									<p className="text-gray-500 font-inter">{t('square.noComments')}</p>
 								</div>
 							)}
 						</div>
 
 						{/* 评论输入框 */}
-						<div className="flex gap-3 pt-4 border-t">
-							<div className="flex-1 flex gap-2">
+						<div className="pt-4 border-t">
+							{/* 回复提示 */}
+							{replyingTo && (
+								<div className="mb-2 flex items-center justify-between bg-blue-50 px-3 py-2 rounded-lg">
+									<span className="text-sm text-blue-700 font-inter">
+										{t('square.replyingTo')} {replyingTo.nickname}：
+									</span>
+									<button
+										onClick={() => setReplyingTo(null)}
+										className="text-blue-500 hover:text-blue-700 text-sm font-bold"
+									>
+										×
+									</button>
+								</div>
+							)}
+							<div className="flex gap-3">
+								<div className="flex-1 flex gap-2">
 								<input
 									type="text"
-									value={comment}
-									onChange={(e) => setComment(e.target.value)}
-									placeholder={isAuthenticated ? t('square.inputComments') : '请先登录'}
+									value={replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：${comment}` : comment}
+									onChange={(e) => {
+										if (replyingTo) {
+											const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
+											// 如果输入值包含前缀，提取实际内容
+											if (e.target.value.startsWith(prefix)) {
+												setComment(e.target.value.slice(prefix.length));
+											} else if (e.target.value.length < prefix.length) {
+												// 如果用户尝试删除前缀，阻止删除
+												return;
+											} else {
+												// 如果前缀被修改，保持前缀不变，只更新后续内容
+												setComment(e.target.value.slice(prefix.length));
+											}
+										} else {
+											setComment(e.target.value);
+										}
+									}}
+									onKeyDown={(e) => {
+										if (replyingTo) {
+											const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
+											const input = e.currentTarget;
+											// 如果光标在前缀范围内，阻止删除
+											if (input.selectionStart !== null && input.selectionStart < prefix.length) {
+												if (e.key === 'Backspace' || e.key === 'Delete') {
+													e.preventDefault();
+													// 将光标移到前缀之后
+													setTimeout(() => {
+														input.setSelectionRange(prefix.length, prefix.length);
+													}, 0);
+												}
+											}
+										}
+									}}
+									placeholder={isAuthenticated ? (replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：` : t('square.inputComments')) : t('square.pleaseLoginFirst')}
 									disabled={!isAuthenticated || isSubmittingComment}
 									onKeyPress={(e) => {
 										if (e.key === 'Enter' && !e.shiftKey) {
@@ -584,7 +702,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 												<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
 												<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 											</svg>
-											发送中...
+											{t('square.submittingComment')}
 										</>
 									) : (
 										<>
@@ -595,6 +713,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 										</>
 									)}
 								</button>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -150,6 +150,9 @@ export interface Translations {
       locationPermissionDenied: string;
       locationError: string;
       clearFilter: string;
+      noComments: string;
+      submittingComment: string;
+      replyingTo: string;
     };
   community: {
     onlineUsers: string;
@@ -489,7 +492,7 @@ export const translations: Record<Language, Translations> = {
       searchPlaceholder: 'Search...',
     },
     buttons: {
-      spinToDiscover: 'Spin to Discover',
+      spinToDiscover: 'SpinLinX',
       createAccount: 'Create a new account',
     },
     navigation: {
@@ -608,7 +611,7 @@ export const translations: Record<Language, Translations> = {
       noRecommendContent: 'No recommended content, please try again later',
       noNearbyContent: 'No content found in current location, try another place!',
       loginRequired: 'Please login to view personalized content recommendations',
-      pagination: 'Page {current} of {total}, {items} items total',
+      pagination: '{items} items total',
       loadDetailFailed: 'Failed to load details',
       loadDetailError: 'Error occurred while loading details',
       commentSubmitFailed: 'Failed to submit comment, please try again',
@@ -630,6 +633,9 @@ export const translations: Record<Language, Translations> = {
       locationPermissionDenied: 'Location permission denied',
       locationError: 'Failed to get location',
       clearFilter: 'Clear filter',
+      noComments: 'No comments yet',
+      submittingComment: 'Sending...',
+      replyingTo: 'Replying to',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -703,7 +709,7 @@ export const translations: Record<Language, Translations> = {
         about: 'About Us',
         privacy: 'Privacy Policy',
       },
-      copyright: '© 2025 Spin to Discover',
+      copyright: '© 2025 SpinLinX',
     },
     common: {
       loading: 'Loading...',
@@ -847,16 +853,16 @@ export const translations: Record<Language, Translations> = {
     about: {
       title: 'About Us',
       back: 'Back',
-      introduction: 'Spin to Discover is not just a platform - it is a stage for meaningful connections.',
+      introduction: 'SpinLinX is not just a platform - it is a stage for meaningful connections.',
       belief: 'We believe that every brand and every artist has a story, a vision, and a spark of soul that deserves to be seen.',
       missionTitle: 'Our Mission',
       mission: 'Our mission is to bring together independent creators, artisans, designers, and artists from around the world, curating a global map of light - where every point you see is a story waiting to be discovered.',
       valuesTitle: 'Our Values',
-      values: 'Here, we value originality, craftsmanship, creativity, and authenticity. Every brand and artist that joins Spin to Discover is chosen for their unique identity, meaningful vision, and cultural significance.',
+      values: 'Here, we value originality, craftsmanship, creativity, and authenticity. Every brand and artist that joins SpinLinX is chosen for their unique identity, meaningful vision, and cultural significance.',
       experience: 'By spinning the globe, you are not just exploring products or artworks - you are discovering stories, dreams, and the people behind them.',
       motto: 'Spin. Discover. Connect. Because the world shines brighter when we share our light.',
       protectTitle: 'Together, let\'s protect what truly matters',
-      protectDescription: 'Spin to Protect is the charitable initiative of Spin to Discover',
+      protectDescription: 'Spin to Protect is the charitable initiative of SpinLinX',
     },
     privacy: {
       title: 'Privacy Policy',
@@ -884,7 +890,7 @@ export const translations: Record<Language, Translations> = {
       mainTitle: 'Together, let\'s protect what truly matters',
       craftImageAlt: 'Hands working on traditional craft',
       artisanImageAlt: 'Artisan woman in her workshop',
-      introduction: 'Spin to Protect is the charitable initiative of Spin to Discover, inviting you to contribute and transform your brand\'s light into real-world impact.',
+      introduction: 'Spin to Protect is the charitable initiative of SpinLinX, inviting you to contribute and transform your brand\'s light into real-world impact.',
       mission: 'All donations will support disaster relief, education, and essential aid for underserved communities through trusted global partners. We commit to 100% transparency—every donation will be tracked and reported, and you may choose your preferred cause or allow the platform to allocate it where it\'s most needed.',
       impact: 'No matter the amount, your contribution is a beam of hope that brings light to the world\'s darkest corners.',
       donateLink: 'How to donate?',
@@ -1084,7 +1090,7 @@ export const translations: Record<Language, Translations> = {
       noRecommendContent: '暂无推荐内容，请稍后再试',
       noNearbyContent: '当前位置暂无发现内容，换个地方试试吧！',
       loginRequired: '请先登录以查看个性化内容推荐',
-      pagination: '第 {current} 页，共 {total} 页，总计 {items} 条内容',
+      pagination: '总计 {items} 条内容',
       loadDetailFailed: '加载详情失败',
       loadDetailError: '加载详情时发生错误',
       commentSubmitFailed: '评论提交失败，请重试',
@@ -1106,6 +1112,9 @@ export const translations: Record<Language, Translations> = {
       locationPermissionDenied: '用户拒绝了地理位置权限',
       locationError: '获取地理位置失败',
       clearFilter: '清除筛选',
+      noComments: '暂无评论',
+      submittingComment: '发送中...',
+      replyingTo: '回复',
     },
     community: {
       onlineUsers: '在线用户',
@@ -1179,7 +1188,7 @@ export const translations: Record<Language, Translations> = {
         about: '关于我们',
         privacy: '隐私政策',
       },
-      copyright: '© 2025 Spin to Discover',
+      copyright: '© 2025 SpinLinX',
     },
     common: {
       loading: '加载中...',
@@ -1323,16 +1332,16 @@ export const translations: Record<Language, Translations> = {
     about: {
       title: '关于我们',
       back: '返回',
-      introduction: 'Spin to Discover 不仅仅是一个平台——它是有意义连接的舞台。',
+      introduction: 'SpinLinX 不仅仅是一个平台——它是有意义连接的舞台。',
       belief: '我们相信每个品牌和每位艺术家都有自己的故事、愿景和值得被看见的灵魂火花。',
       missionTitle: '我们的使命',
       mission: '我们的使命是将来自世界各地的独立创作者、工匠、设计师和艺术家聚集在一起，策划一个全球光明地图——您看到的每个点都是一个等待被发现的故事。',
       valuesTitle: '我们的价值观',
-      values: '在这里，我们重视原创性、工艺、创造力和真实性。每个加入 Spin to Discover 的品牌和艺术家都因其独特的身份、有意义的愿景和文化意义而被选中。',
+      values: '在这里，我们重视原创性、工艺、创造力和真实性。每个加入 SpinLinX 的品牌和艺术家都因其独特的身份、有意义的愿景和文化意义而被选中。',
       experience: '通过旋转地球仪，您不仅仅是在探索产品或艺术品——您正在发现故事、梦想和背后的人们。',
       motto: '旋转。发现。连接。因为当我们分享光明时，世界会更加明亮。',
       protectTitle: '让我们一起保护真正重要的东西',
-      protectDescription: 'Spin to Protect 是 Spin to Discover 的慈善倡议',
+      protectDescription: 'Spin to Protect 是 SpinLinX 的慈善倡议',
     },
     privacy: {
       title: '隐私政策',
@@ -1360,7 +1369,7 @@ export const translations: Record<Language, Translations> = {
       mainTitle: '让我们一起保护真正重要的东西',
       craftImageAlt: '制作传统工艺品的双手',
       artisanImageAlt: '工作坊中的女工匠',
-      introduction: 'Spin to Protect 是 Spin to Discover 的慈善倡议，邀请您贡献并将您品牌的光明转化为现实世界的影响。',
+      introduction: 'Spin to Protect 是 SpinLinX 的慈善倡议，邀请您贡献并将您品牌的光明转化为现实世界的影响。',
       mission: '所有捐款将通过可信的全球合作伙伴支持救灾、教育和为服务不足社区提供基本援助。我们承诺100%透明度——每笔捐款都将被跟踪和报告，您可以选择您偏好的事业或让平台将其分配到最需要的地方。',
       impact: '无论金额多少，您的贡献都是为世界最黑暗角落带来光明的希望之光。',
       donateLink: '如何捐款？',

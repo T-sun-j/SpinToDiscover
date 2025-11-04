@@ -194,7 +194,7 @@ export interface SquareContent {
   brandInfo?: BrandInfo;
   interactions?: Interactions; // 改为可选，因为API可能不返回
   publisher: Publisher;
-  comments: any[]; // 评论数组
+  comments: Comment[]; // 评论数组
   createdAt: string;
   updatedAt: string;
   message?: string;
@@ -232,12 +232,17 @@ export interface PostCommentRequest {
 // 评论响应类型
 export interface Comment {
   id: string;
-  author: Publisher;
+  author: {
+    id: string;
+    nickname: string;
+    avatar?: string;
+  };
   content: string;
-  parentId?: string;
-  replies?: Comment[];
-  createdAt: string;
-  updatedAt: string;
+  replies: number; // 回复数量
+  replyList: Comment[]; // 回复列表
+  createdAt: string; // 格式: "YYYY-MM-DD HH:MM"
+  parentId?: string; // 父评论ID，用于回复
+  updatedAt?: string; // 可选更新时间
 }
 
 // 发表评论响应类型

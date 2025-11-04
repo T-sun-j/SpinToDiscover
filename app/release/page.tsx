@@ -159,12 +159,9 @@ export default function ReleasePage() {
       setErrorMessage(t('releasePage.titleRequired'));
       return false;
     }
-    if (!content.trim()) {
-      setErrorMessage(t('releasePage.contentRequired'));
-      return false;
-    }
+    // 内容字段不再必填，移除验证
     return true;
-  }, [title, content, t]);
+  }, [title, t]);
 
   const handleBack = () => {
     router.back();
@@ -348,7 +345,6 @@ export default function ReleasePage() {
               onChange={(e) => setContent(e.target.value)}
               rows={6}
               className="w-full rounded-lg bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
-              required
             />
           </div>
 
@@ -490,7 +486,6 @@ export default function ReleasePage() {
                   value={brandName}
                   onChange={(e) => setBrandName(e.target.value)}
                   className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
-                  required={brandInfoChecked}
                 />
               </div>
 
@@ -502,7 +497,6 @@ export default function ReleasePage() {
                   onChange={(e) => setBriefDescription(e.target.value)}
                   rows={4}
                   className="w-full rounded-lg bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
-                  required={brandInfoChecked}
                 />
               </div>
             </div>
@@ -518,12 +512,12 @@ export default function ReleasePage() {
           )}
 
           {/* Success Message */}
-          {successMessage && (
+          {/* {successMessage && (
             <div className="flex items-center gap-2 text-green-500 text-sm">
               <div className="h-2 w-2 rounded-full bg-green-500"></div>
               <span>{successMessage}</span>
             </div>
-          )}
+          )} */}
 
           {/* Allowing Comments Checkbox */}
           <div className="flex items-center gap-2">

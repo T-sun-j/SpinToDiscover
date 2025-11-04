@@ -5,7 +5,7 @@ import { LanguageProvider } from '../contexts/LanguageContext';
 import { AuthProvider } from '../contexts/AuthContext';
 
 export const metadata = {
-  title: 'Spin to Discover',
+  title: 'SpinLinX',
   description: 'Spin. Discover. Connect.',
 };
 

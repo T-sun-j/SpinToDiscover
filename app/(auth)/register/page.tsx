@@ -139,8 +139,8 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-white">
-			<main className=" flex min-h-[100vh] flex-col">
+		<div className="min-h-screen w-full flex items-center justify-center bg-white">
+			<main className="w-full flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
 					showLanguage
@@ -157,7 +157,7 @@ export default function RegisterPage() {
 				</div>
 
 				{/* 注册表单 */}
-				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-2">
+				<form onSubmit={handleSubmit} className="flex-1 space-y-6 px-4">
 					{/* 邮箱输入 */}
 					<div className="space-y-2">
 						<div className="relative font-inter">
@@ -234,7 +234,7 @@ export default function RegisterPage() {
 					)}
 
 					{/* 成功信息 */}
-					{success && (
+					{/* {success && (
 						<div className="flex items-center justify-center gap-3 bg-green-50 border border-green-200 rounded-lg p-4 text-green-700 text-sm font-inter">
 							<svg className="h-5 w-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -250,7 +250,7 @@ export default function RegisterPage() {
 								</div>
 							</div>
 						</div>
-					)}
+					)} */}
 
 					{/* 位置状态信息（使用小图标展示） */}
 					{isGettingLocation && (

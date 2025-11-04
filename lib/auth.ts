@@ -349,11 +349,27 @@ export async function getSquareContentList(listData: GetHomeListRequest): Promis
  */
 export async function getSquareContentDetail(detailData: GetSquareDetailRequest): Promise<ApiResponse<SquareContent>> {
   try {
-    const response = await request('getdetail', {
+    const response = await request<SquareContent>('getdetail', {
       userId: detailData.userId,
       token: detailData.token,
       postId: detailData.postId,
     });
+    
+    // 处理评论数据：comments在data外面（顶层），需要合并到data中
+    if (response.success && response.data) {
+      // 优先从顶层response获取comments（因为comments在data外面）
+      if (Array.isArray((response as any).comments)) {
+        response.data.comments = (response as any).comments;
+      } 
+      // 如果顶层没有，检查data中是否有comments
+      else if (Array.isArray(response.data.comments)) {
+        // comments已经在data中，无需处理
+      } 
+      // 如果都没有，初始化为空数组
+      else {
+        response.data.comments = [];
+      }
+    }
     
     return response;
   } catch (error) {

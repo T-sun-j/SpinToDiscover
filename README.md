@@ -1,4 +1,4 @@
-# Spin to Discover
+# SpinLinX
 
 一个现代化的移动端网站，采用深色太空主题设计，支持多语言切换。
 

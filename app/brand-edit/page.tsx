@@ -214,6 +214,12 @@ export default function BrandEditPage() {
             return;
         }
 
+        // 验证品牌名称必填
+        if (!formData.brand.trim()) {
+            setError(t('brandEditPage.brandRequired') || '品牌名称不能为空');
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -287,6 +293,7 @@ export default function BrandEditPage() {
                                 value={formData.brand}
                                 onChange={(e) => handleInputChange('brand', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                                required
                             />
                         </div>
 

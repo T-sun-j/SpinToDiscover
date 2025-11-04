@@ -7,7 +7,7 @@
 export const API_CONSTANTS = {
   // 分页默认值
   DEFAULT_PAGE: 1,
-  DEFAULT_LIMIT: 20,
+  DEFAULT_LIMIT: 999,
   MAX_LIMIT: 100,
   
   // 请求超时时间

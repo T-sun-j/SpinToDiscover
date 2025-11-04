@@ -564,8 +564,6 @@ export default function SquarePage() {
 						{pagination && (
 							<div className="px-4 py-3 text-center text-xs text-gray-500">
 								{t('square.pagination')
-									.replace('{current}', pagination.currentPage.toString())
-									.replace('{total}', pagination.totalPages.toString())
 									.replace('{items}', pagination.totalItems.toString())
 								}
 							</div>
