@@ -24,6 +24,19 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Webpack 配置，改善 chunk 加载错误处理
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // 客户端配置：改善 chunk 加载错误处理
+      config.optimization = {
+        ...config.optimization,
+        // 确保 chunk 文件名稳定
+        moduleIds: 'deterministic',
+        chunkIds: 'deterministic',
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
