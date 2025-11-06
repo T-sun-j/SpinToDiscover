@@ -275,6 +275,13 @@ export interface FollowUserRequest {
   isCollect: 0 | 1; // 0: 取消关注, 1: 关注
 }
 
+// 分享请求参数类型
+export interface ShareRequest {
+  userId: string;
+  token: string;
+  productId: string;
+}
+
 // 互动响应类型
 export interface InteractionResponse {
   success: boolean;

@@ -19,6 +19,7 @@ import {
   LoveRequest,
   CollectRequest,
   FollowUserRequest,
+  ShareRequest,
   InteractionResponse,
   GetUserInfoRequest,
   GetOtherUserInfoRequest,
@@ -470,6 +471,28 @@ export async function toggleFollowUser(followData: FollowUserRequest): Promise<A
       throw new Error(`关注操作失败: ${error.message}`);
     }
     throw new Error('关注操作过程中发生未知错误');
+  }
+}
+
+/**
+ * 分享内容API
+ * @param shareData 分享数据
+ * @returns Promise<ApiResponse<InteractionResponse>>
+ */
+export async function shareContent(shareData: ShareRequest): Promise<ApiResponse<InteractionResponse>> {
+  try {
+    const response = await request<InteractionResponse>('shareinformation', {
+      userId: shareData.userId,
+      token: shareData.token,
+      productId: shareData.productId,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`分享操作失败: ${error.message}`);
+    }
+    throw new Error('分享操作过程中发生未知错误');
   }
 }
 

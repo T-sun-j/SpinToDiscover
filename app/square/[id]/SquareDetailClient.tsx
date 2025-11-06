@@ -20,7 +20,7 @@ import { Footer } from '../../../components/Footer';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getSquareContentDetail, toggleLove, toggleCollect, toggleFollowUser, postComment } from '../../../lib/auth';
+import { getSquareContentDetail, toggleLove, toggleCollect, toggleFollowUser, postComment, shareContent } from '../../../lib/auth';
 import { SquareContent, SERVER_CONFIG, buildAvatarUrl } from '../../../lib/api';
 import { LoadingSpinner, ErrorState, EmptyState } from '../../../components/ui/LoadingStates';
 import { OptimizedImage } from '../../../components/ui/OptimizedImage';
@@ -40,6 +40,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 	const [isFollowed, setIsFollowed] = useState(false);
 	const [likes, setLikes] = useState(0);
 	const [bookmarks, setBookmarks] = useState(0);
+	const [shares, setShares] = useState(0);
 	const [isInteracting, setIsInteracting] = useState(false);
 	const [expandedImage, setExpandedImage] = useState<number | null>(null);
 	const [isSubmittingComment, setIsSubmittingComment] = useState(false);
@@ -78,6 +79,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				// 设置初始互动状态
 				setLikes(response.data.interactions?.likes || 0);
 				setBookmarks(response.data.interactions?.collects || 0);
+				setShares(response.data.interactions?.shares || response.data.shares || 0);
 				setIsLiked(response.data.interactions?.userLiked || false);
 				setIsBookmarked(response.data.interactions?.userCollected || false);
 			} else {
@@ -138,11 +140,12 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 		setIsInteracting(true);
 		try {
+			console.log('isLiked', isLiked);
 			const response = await toggleLove({
 				userId: authInfo.userId,
 				token: authInfo.token,
 				productId: params.id,
-				isLove: isLiked ? 0 : 1
+				isLove: isLiked ? 1 : 0
 			});
 
 			if (response.success) {
@@ -170,7 +173,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				userId: authInfo.userId,
 				token: authInfo.token,
 				productId: params.id,
-				isCollect: isBookmarked ? 0 : 1
+				isCollect: isBookmarked ? 1 : 0
 			});
 
 			if (response.success) {
@@ -187,17 +190,45 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		}
 	};
 
-	const handleShare = () => {
+	const handleShare = async () => {
+		// 先调用分享接口增加分享次数
+		if (authInfo?.userId && authInfo?.token) {
+			try {
+				await shareContent({
+					userId: authInfo.userId,
+					token: authInfo.token,
+					productId: params.id,
+				});
+				// 分享接口调用成功后更新分享数量
+				setShares(prev => prev + 1);
+			} catch (error) {
+				console.error('分享接口调用失败:', error);
+				// 即使接口调用失败，也继续执行分享功能
+			}
+		}
+
+		// 继续原有的分享链接功能
 		if (post && navigator.share) {
-			navigator.share({
-				title: post.title || 'Untitled',
-				text: post.description || '',
-				url: window.location.href,
-			});
+			try {
+				await navigator.share({
+					title: post.title || 'Untitled',
+					text: post.description || '',
+					url: window.location.href,
+				});
+			} catch (error) {
+				// 用户取消分享时不显示错误
+				if ((error as Error).name !== 'AbortError') {
+					console.error('分享失败:', error);
+				}
+			}
 		} else {
 			// 复制链接到剪贴板
-			navigator.clipboard.writeText(window.location.href);
-			alert(t('square.linkCopied'));
+			try {
+				await navigator.clipboard.writeText(window.location.href);
+				alert(t('square.linkCopied'));
+			} catch (error) {
+				console.error('复制链接失败:', error);
+			}
 		}
 	};
 
@@ -510,7 +541,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
 						>
 							<Share2 className="h-6 w-6" />
-							<span className="text-sm font-nunito">{t('square.share')}</span>
+							<span className="text-sm font-nunito">{shares.toLocaleString()}</span>
 						</button>
 					</div>
 

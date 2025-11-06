@@ -9,7 +9,7 @@ import { Footer } from '../../components/Footer';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getSquareContentList, toggleLove, toggleCollect } from '../../lib/auth';
+import { getSquareContentList, toggleLove, toggleCollect, shareContent } from '../../lib/auth';
 import { SquareContent, Publisher, Pagination, SERVER_CONFIG } from '../../lib/api';
 import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
 import { OptimizedImage } from '../../components/ui/OptimizedImage';
@@ -291,6 +291,29 @@ export default function SquarePage() {
 	const handleShare = async (post: SquareContent, event: React.MouseEvent) => {
 		event.stopPropagation(); // 阻止事件冒泡，避免触发帖子点击
 		
+		// 先调用分享接口增加分享次数
+		if (authInfo?.userId && authInfo?.token) {
+			try {
+				await shareContent({
+					userId: authInfo.userId,
+					token: authInfo.token,
+					productId: post.id,
+				});
+				// 分享接口调用成功后更新分享数量
+				setPosts(prevPosts => 
+					prevPosts.map(p => 
+						p.id === post.id 
+							? { ...p, shares: (p.shares || 0) + 1 }
+							: p
+					)
+				);
+			} catch (error) {
+				console.error('分享接口调用失败:', error);
+				// 即使接口调用失败，也继续执行分享功能
+			}
+		}
+
+		// 继续原有的分享链接功能
 		try {
 			if (navigator.share) {
 				await navigator.share({
@@ -298,29 +321,16 @@ export default function SquarePage() {
 					text: post.description || '',
 					url: `${window.location.origin}/square/${post.id}`,
 				});
-				// 分享成功后更新分享数量
-				setPosts(prevPosts => 
-					prevPosts.map(p => 
-						p.id === post.id 
-							? { ...p, shares: (p.shares || 0) + 1 }
-							: p
-					)
-				);
 			} else {
 				// 复制链接到剪贴板
 				await navigator.clipboard.writeText(`${window.location.origin}/square/${post.id}`);
 				alert(t('square.linkCopied'));
-				// 复制成功后也更新分享数量
-				setPosts(prevPosts => 
-					prevPosts.map(p => 
-						p.id === post.id 
-							? { ...p, shares: (p.shares || 0) + 1 }
-							: p
-					)
-				);
 			}
 		} catch (error) {
-			console.error('分享失败:', error);
+			// 用户取消分享时不显示错误
+			if ((error as Error).name !== 'AbortError') {
+				console.error('分享失败:', error);
+			}
 		}
 	};
 
