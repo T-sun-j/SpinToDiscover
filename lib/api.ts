@@ -203,6 +203,9 @@ export interface SquareContent {
   likes?: number;
   collects?: number;
   shares?: number;
+  // 用户互动状态字段（API可能直接返回这些字段）
+  isLove?: boolean | number; // 用户是否点赞：true/1 表示已点赞，false/0 表示未点赞
+  isCollect?: boolean | number; // 用户是否收藏：true/1 表示已收藏，false/0 表示未收藏
 }
 
 // 分页信息类型

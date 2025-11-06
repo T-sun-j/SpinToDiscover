@@ -31,8 +31,8 @@ export default function SquarePage() {
 	
 	// 互动状态管理
 	const [postInteractions, setPostInteractions] = useState<{[key: string]: {
-		isLiked: boolean;
-		isBookmarked: boolean;
+		isLove: boolean;
+		isCollect: boolean;
 		likes: number;
 		bookmarks: number;
 		isInteracting: boolean;
@@ -111,9 +111,10 @@ export default function SquarePage() {
 				// 初始化互动状态
 				const newInteractions: {[key: string]: any} = {};
 				newPosts.forEach((post: SquareContent) => {
+					// 直接使用 API 返回的字段 isLove 和 isCollect
 					newInteractions[post.id] = {
-						isLiked: false, 
-						isBookmarked: false, 
+						isLove: post.isLove === true || post.isLove === 1 || false, 
+						isCollect: post.isCollect === true || post.isCollect === 1 || false, 
 						likes: post.likes || 0, 
 						bookmarks: post.collects || 0, 
 						isInteracting: false
@@ -189,7 +190,7 @@ export default function SquarePage() {
 				userId: authInfo.userId,
 				token: authInfo.token,
 				productId: postId,
-				isLove: currentInteraction?.isLiked ? 0 : 1
+				isLove: currentInteraction?.isLove ? 0 : 1
 			});
 
 			if (response.success) {
@@ -197,8 +198,8 @@ export default function SquarePage() {
 					...prev,
 					[postId]: {
 						...prev[postId],
-						isLiked: !prev[postId]?.isLiked,
-						likes: (prev[postId]?.likes || 0) + (prev[postId]?.isLiked ? -1 : 1),
+						isLove: !prev[postId]?.isLove,
+						likes: (prev[postId]?.likes || 0) + (prev[postId]?.isLove ? -1 : 1),
 						isInteracting: false
 					}
 				}));
@@ -244,7 +245,7 @@ export default function SquarePage() {
 				userId: authInfo.userId,
 				token: authInfo.token,
 				productId: postId,
-				isCollect: currentInteraction?.isBookmarked ? 0 : 1
+				isCollect: currentInteraction?.isCollect ? 0 : 1
 			});
 
 			if (response.success) {
@@ -252,8 +253,8 @@ export default function SquarePage() {
 					...prev,
 					[postId]: {
 						...prev[postId],
-						isBookmarked: !prev[postId]?.isBookmarked,
-						bookmarks: (prev[postId]?.bookmarks || 0) + (prev[postId]?.isBookmarked ? -1 : 1),
+						isCollect: !prev[postId]?.isCollect,
+						bookmarks: (prev[postId]?.bookmarks || 0) + (prev[postId]?.isCollect ? -1 : 1),
 						isInteracting: false
 					}
 				}));
@@ -527,26 +528,26 @@ export default function SquarePage() {
 											onClick={(e) => handleBookmark(post.id, e)}
 											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 											className={`flex flex-col items-center gap-0.5 transition-colors ${
-												postInteractions[post.id]?.isBookmarked 
+												postInteractions[post.id]?.isCollect 
 													? 'text-blue-600' 
 													: 'text-gray-500 hover:text-gray-700'
 											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 											title={!isAuthenticated ? '请先登录' : ''}
 										>
-											<Bookmark className={`h-4 w-4 ${postInteractions[post.id]?.isBookmarked ? 'fill-current' : ''}`} />
+											<Bookmark className={`h-4 w-4 ${postInteractions[post.id]?.isCollect ? 'fill-current' : ''}`} />
 											<span className="text-xs font-nunito">{postInteractions[post.id]?.bookmarks || post.collects || 0}</span>
 										</button>
 										<button 
 											onClick={(e) => handleLike(post.id, e)}
 											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 											className={`flex flex-col items-center gap-0.5 transition-colors ${
-												postInteractions[post.id]?.isLiked 
+												postInteractions[post.id]?.isLove 
 													? 'text-red-500' 
 													: 'text-gray-500 hover:text-red-500'
 											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 											title={!isAuthenticated ? '请先登录' : ''}
 										>
-											<Heart className={`h-4 w-4 ${postInteractions[post.id]?.isLiked ? 'fill-current' : ''}`} />
+											<Heart className={`h-4 w-4 ${postInteractions[post.id]?.isLove ? 'fill-current' : ''}`} />
 											<span className="text-xs font-nunito">{postInteractions[post.id]?.likes || post.likes || 0}</span>
 										</button>
 										<button 
