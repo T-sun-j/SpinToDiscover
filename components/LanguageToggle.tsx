@@ -22,8 +22,8 @@ export function LanguageToggle({ transparent = false }: LanguageToggleProps) {
       className="flex items-center text-foreground hover:opacity-80 transition-opacity mt-2"
       aria-label={`Switch to ${language === 'en' ? 'Chinese' : 'English'}`}
     >
-      <Globe className={`h-5 w-5 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
-      <span className={`text-sm font-medium ml-1 ${transparent ? 'text-white' : 'text-[#101729]'}`}>
+      <Globe className={`h-5 w-5 ${transparent ? 'text-white' : 'text-[#11295b]'}`} />
+      <span className={`text-sm font-medium ml-1 ${transparent ? 'text-white' : 'text-[#11295b]'}`}>
         {displayLang}
       </span>
     </button>

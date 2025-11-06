@@ -78,7 +78,7 @@ export default function PersonalCenterPage() {
                 HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
                 UI_CONSTANTS.SPACING.PX_6,
                 'py-4',
-                'text-[#101729]'
+                'text-[#11295b]'
             )}>
                 <h1 className={classNames(
                     'text-xl',
@@ -88,7 +88,7 @@ export default function PersonalCenterPage() {
                     onClick={() => router.push('/square')}
                     className={classNames(
                         UI_CONSTANTS.COLORS.PRIMARY,
-                        'hover:text-[#101729]'
+                        'hover:text-[#11295b]'
                     )}
                 >
                     <ChevronLeft className={UI_CONSTANTS.SIZES.ICON_LG} />
@@ -134,7 +134,7 @@ export default function PersonalCenterPage() {
                             className={classNames(
                                 'ml-2 p-1',
                                 UI_CONSTANTS.COLORS.PRIMARY,
-                                'hover:text-[#101729]/80'
+                                'hover:text-[#11295b]/80'
                             )}
                         >
                             <RefreshCw className={classNames(
@@ -161,7 +161,7 @@ export default function PersonalCenterPage() {
                         </div>
 
                         {/* Username and user info */}
-                        <div className="flex-1 flex items-center text-[#101729]">
+                        <div className="flex-1 flex items-center text-[#11295b]">
                             <div className="flex-1">
                                 <h2 className={classNames(
                                     'text-xl',
@@ -183,7 +183,7 @@ export default function PersonalCenterPage() {
                         </div>
 
                         {/* Edit and Settings buttons */}
-                        <div className={classNames('flex items-center', 'text-[#101729]',UI_CONSTANTS.SPACING.GAP_2)}>
+                        <div className={classNames('flex items-center', 'text-[#11295b]',UI_CONSTANTS.SPACING.GAP_2)}>
                             <Link href="/settings">
                                 <Button variant="ghost" size="icon" className={UI_CONSTANTS.COLORS.PRIMARY}>
                                     <Settings className={UI_CONSTANTS.SIZES.ICON_LG} />
@@ -211,7 +211,7 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#101729] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-14 rounded-xl',
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
@@ -225,7 +225,7 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#101729] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-14 rounded-xl',
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
@@ -239,7 +239,7 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#101729] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-14 rounded-xl',
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
@@ -253,7 +253,7 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#101729] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-14 rounded-xl',
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
@@ -274,16 +274,16 @@ export default function PersonalCenterPage() {
                     <Link href="/release">
                         <Button
                             className={classNames(
-                                'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#101729]',
+                                'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#11295b]',
                                 UI_CONSTANTS.COLORS.PRIMARY,
                                 UI_CONSTANTS.FONTS.NUNITO,
                                 'text-lg font-bold'
                             )}
                             size="lg"
                         >
-                            <CirclePlus className="h-48 w-48 ,'text-[#101729]'," />
+                            <CirclePlus className="h-48 w-48 ,'text-[#11295b]'," />
                             <span className={classNames(
-                                'text-xs','text-[#101729]',
+                                'text-xs','text-[#11295b]',
                                 UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
                             )}>{t('personalCenter.post.button')}</span>
                         </Button>

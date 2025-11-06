@@ -267,8 +267,8 @@ export default function BrandEditPage() {
 
                 {/* Back button and title */}
                 <div className="flex items-center justify-between px-6 py-4">
-                    <h1 className="text-xl text-[#101729] font-poppins">{t('brandEditPage.title')}</h1>
-                    <button onClick={() => router.push('/personal')} className="text-[#101729] hover:text-[#101729]">
+                    <h1 className="text-xl text-[#11295b] font-poppins">{t('brandEditPage.title')}</h1>
+                    <button onClick={() => router.push('/personal')} className="text-[#11295b] hover:text-[#11295b]">
                     <ChevronLeft className={classNames(
                                     UI_CONSTANTS.SIZES.ICON_LG,
                                     UI_CONSTANTS.COLORS.PRIMARY
@@ -279,7 +279,7 @@ export default function BrandEditPage() {
                 {isLoadingUserInfo ? (
                     <div className="flex-1 flex items-center justify-center">
                         <div className="text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#101729] mx-auto mb-4"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#11295b] mx-auto mb-4"></div>
                             <p className="text-gray-500">{t('brandEditPage.loading')}</p>
                         </div>
                     </div>
@@ -429,7 +429,7 @@ export default function BrandEditPage() {
                         {/* Submit Button */}
                         <Button
                             type="submit"
-                            className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+                            className="w-full bg-[#11295b] text-white shadow-md rounded-lg"
                             size="lg"
                             disabled={loading || !!success}
                         >

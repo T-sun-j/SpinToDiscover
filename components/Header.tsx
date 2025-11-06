@@ -65,7 +65,7 @@ export function Header({
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Search className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
+              <Search className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#11295b]'}`} />
             </Button>
           </Link>
         ) : null}
@@ -78,7 +78,7 @@ export function Header({
             onClick={handleUserClick}
             aria-label="account"
           >
-            <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#101729]'}`} />
+            <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#11295b]'}`} />
           </Button>
         ) : null}
       </div>

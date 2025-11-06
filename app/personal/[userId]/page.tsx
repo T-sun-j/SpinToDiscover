@@ -416,7 +416,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN
                     )}>
                         <div className={classNames(
-                            'flex items-center text-[#101729]',
+                            'flex items-center text-[#11295b]',
                             UI_CONSTANTS.SPACING.GAP_4
                         )}>
                             <Image
@@ -431,7 +431,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             />
                             <div>
                                 <h2 className={classNames(
-                                    'text-xl text-[#101729]',
+                                    'text-xl text-[#11295b]',
                                     UI_CONSTANTS.COLORS.PRIMARY,
                                     UI_CONSTANTS.FONTS.POPPINS
                                 )}>
@@ -441,7 +441,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         </div>
                         {/* Edit and Settings buttons */}
                         <div className={classNames(
-                            'flex items-center text-[#101729]',
+                            'flex items-center text-[#11295b]',
                             UI_CONSTANTS.SPACING.GAP_2
                         )}>
 
@@ -459,20 +459,20 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     <div className="relative flex flex-col gap-3 mt-3">
                         {/* 品牌信息 */}
                         <div className="flex items-center">
-                            <span className="text-l text-[#101729] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brand')}:</span>
+                            <span className="text-l text-[#11295b] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brand')}:</span>
                             <div className="flex items-center gap-2 flex-1 pl-4">
                                 {userInfo?.brand ? (
                                     userInfo?.officialsite ? (
                                         <a
                                             href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
-                                            className="text-[#101729] font-nunito underline hover:opacity-80"
+                                            className="text-[#11295b] font-nunito underline hover:opacity-80"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             {userInfo.brand}
                                         </a>
                                     ) : (
-                                        <span className="text-[#101729] font-nunito">{userInfo.brand}</span>
+                                        <span className="text-[#11295b] font-nunito">{userInfo.brand}</span>
                                     )
                                 ) : (
                                     <span className="text-[#777] font-nunito">--</span>
@@ -492,7 +492,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         {/* 简介 */}
                         {userInfo?.brief && (
                             <div className="flex items-start">
-                                <span className="text-l text-[#101729] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brief')}:</span>
+                                <span className="text-l text-[#11295b] text-right font-nunito min-w-[50px] flex-shrink-0">{t('personalPage.brief')}:</span>
                                 <div className="flex-1 pl-4">
                                     <p className="text-base text-gray-700 font-inter leading-relaxed">{userInfo.brief}</p>
                                 </div>
@@ -506,7 +506,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                         {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
                         {targetUserId !== authInfo?.userId && (
-                            <div className="flex items-center gap-2" style={{ zIndex: 10 }}>
+                            <div className="flex items-center justify-center gap-2" style={{ zIndex: 10 }}>
                                 <button
                                     onClick={handleFollowToggle}
                                     disabled={isFollowLoading}
@@ -514,7 +514,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                         'flex items-center gap-2 px-4 py-2 rounded-lg text-base font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
                                         isFollowing 
                                             ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
-                                            : 'bg-[#101729] text-white hover:bg-gray-800'
+                                            : 'bg-[#11295b] text-white hover:bg-gray-800'
                                     )}
                                 >
                                     {isFollowLoading ? (
@@ -544,7 +544,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 className="absolute right-0 bottom-0 flex items-center gap-1 hover:opacity-80"
                                 style={{ zIndex: 10 }}
                             >
-                                <Edit className="h-4 w-4 text-[#101729]" />
+                                <Edit className="h-4 w-4 text-[#11295b]" />
                             </Link>
                         )}
                     </div>
@@ -584,7 +584,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 UI_CONSTANTS.COLORS.PRIMARY
                             )} />
                             <span className={classNames(
-                                'ml-2 text-[#101729]',
+                                'ml-2 text-[#11295b]',
                                 UI_CONSTANTS.COLORS.PRIMARY,
                                 UI_CONSTANTS.FONTS.NUNITO
                             )}>{t("personalPage.loading")}</span>
@@ -601,7 +601,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 UI_CONSTANTS.COLORS.RED_500
                             )} />
                             <span className={classNames(
-                                'ml-2 text-[#101729]',
+                                'ml-2 text-[#11295b]',
                                 UI_CONSTANTS.COLORS.RED_500,
                                 UI_CONSTANTS.FONTS.NUNITO
                             )}>{t("personalPage.error")}</span>
@@ -610,7 +610,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                     {!loading && !error && postsData.length === 0 && (
                         <div className={classNames(
-                            'flex flex-col items-center justify-center text-[#101729]',
+                            'flex flex-col items-center justify-center text-[#11295b]',
                             UI_CONSTANTS.SPACING.PY_12
                         )}>
                             <div className={classNames(
@@ -637,7 +637,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             <p className={classNames(
                                 UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
                                 UI_CONSTANTS.FONTS.INTER,
-                                'text-center text-[#101729]'
+                                'text-center text-[#11295b]'
                             )}>
                                 {t("personalPage.noPostsDescription")}
                             </p>
@@ -645,7 +645,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     )}
 
                     {!loading && !error && postsData.length > 0 && (
-                        <div className="grid grid-cols-1 gap-4 text-[#101729] overflow-y-auto h-[calc(72vh-130px)]">
+                        <div className="grid grid-cols-1 gap-4 text-[#11295b] overflow-y-auto h-[calc(72vh-130px)]">
                             {postsData.map((post) => {
                                 
                                 return (
@@ -658,10 +658,10 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                             UI_CONSTANTS.SPACING.MB_4
                                         )}>
                                             <MapPin className={classNames(
-                                                'h-3 w-3','text-[#101729]'
+                                                'h-3 w-3','text-[#11295b]'
                                             )} />
                                             <span className={classNames(
-                                                'text-sm', 'text-[#101729]'
+                                                'text-sm', 'text-[#11295b]'
                                             )}>{post.location}</span>
                                         </div>
                                         <div className={classNames(
@@ -720,12 +720,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                             })}
                                         </div>
                                         <h3 className={classNames(
-                                            'text-[#101729] mb-2 text-base',
+                                            'text-[#11295b] mb-2 text-base',
                                             UI_CONSTANTS.FONTS.NUNITO,
                                             UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD,
                                         )}>{post.title}</h3>
                                         <p className={classNames(
-                                            'text-sm text-[#101729] mb-3 line-clamp-2 leading-relaxed',
+                                            'text-sm text-[#11295b] mb-3 line-clamp-2 leading-relaxed',
                                             UI_CONSTANTS.FONTS.INTER
                                         )}>{post.description}</p>
                                         {/* 只有查看自己的页面时才显示操作按钮 */}
@@ -743,7 +743,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                         }}
                                                         disabled={isDeleting === post.id}
                                                         className={classNames(
-                                                            'flex flex-col items-center gap-0.5 text-[#101729] hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed'
+                                                            'flex flex-col items-center gap-0.5 text-[#11295b] hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed'
                                                         )}
                                                     >
                                                         {isDeleting === post.id ? (
@@ -765,7 +765,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                         }}
                                                         disabled={isHiding === post.id}
                                                         className={classNames(
-                                                            'flex flex-col items-center gap-0.5 text-[#101729] hover:text-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
+                                                            'flex flex-col items-center gap-0.5 text-[#11295b] hover:text-orange-600 disabled:opacity-50 disabled:cursor-not-allowed'
                                                         )}
                                                     >
                                                         {isHiding === post.id ? (
@@ -808,13 +808,13 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             <Link href="/release">
                                 <Button
                                     className={classNames(
-                                        'bg-transparent rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#101729]',
+                                        'bg-transparent rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#11295b]',
                                         UI_CONSTANTS.FONTS.NUNITO,
                                         'text-xl font-bold'
                                     )}
                                     size="lg"
                                 >
-                                    <CirclePlus className="h-12 w-12 text-[#101729]" />
+                                    <CirclePlus className="h-12 w-12 text-[#11295b]" />
                                     <span className={classNames(
                                         'text-sm',
                                         UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD

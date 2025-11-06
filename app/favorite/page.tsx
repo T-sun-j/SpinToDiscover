@@ -144,7 +144,7 @@ export default function FavoritePage() {
             />
             {/* play icon overlay for first image if has video */}
             {index === 0 && item.video && (
-              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#101729]/80 flex items-center justify-center">
+              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#11295b]/80 flex items-center justify-center">
                 <Play className="w-3 h-3 text-white" />
               </div>
             )}
@@ -160,7 +160,7 @@ export default function FavoritePage() {
 
       {/* Title & description */}
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-[18px] text-[#101729] font-poppins flex-1">
+        <h3 className="text-[18px] text-[#11295b] font-poppins flex-1">
           {item.title}
         </h3>
         <button
@@ -170,10 +170,10 @@ export default function FavoritePage() {
           <Heart className="h-5 w-5 fill-current" />
         </button>
       </div>
-      <p className="text-sm leading-6 text-[#101729]/80 font-nunito mb-2">
+      <p className="text-sm leading-6 text-[#11295b]/80 font-nunito mb-2">
         {item.description}
       </p>
-      <div className="flex justify-between text-xs text-[#101729]/60">
+      <div className="flex justify-between text-xs text-[#11295b]/60">
         <span className="font-nunito">{item.author.nickname}</span>
         <span className="font-nunito">
           {t("favoritePage.collectedOn")} {new Date(item.collectedAt).toLocaleDateString()}
@@ -185,10 +185,10 @@ export default function FavoritePage() {
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <Heart className="h-16 w-16 text-gray-300 mb-4" />
-      <h3 className="text-lg  text-[#101729] font-poppins mb-2">
+      <h3 className="text-lg  text-[#11295b] font-poppins mb-2">
         {t("favoritePage.emptyTitle")}
       </h3>
-      <p className="text-[15px] text-[#101729]/60 font-nunito max-w-sm">
+      <p className="text-[15px] text-[#11295b]/60 font-nunito max-w-sm">
         {t("favoritePage.emptyDescription")}
       </p>
     </div>
@@ -202,13 +202,13 @@ export default function FavoritePage() {
 
       {/* Page title & back */}
       <div className="flex items-center justify-between px-6 py-2">
-        <h1 className="text-2xl text-[#101729] font-poppins">
+        <h1 className="text-2xl text-[#11295b] font-poppins">
           {t("favoritePage.title")}
         </h1>
         <button
           aria-label={t("favoritePage.back")}
           onClick={() => router.back()}
-          className="text-[#101729] hover:text-[#101729]"
+          className="text-[#11295b] hover:text-[#11295b]"
         >
           <ChevronLeft className="h-7 w-7" />
         </button>
@@ -218,8 +218,8 @@ export default function FavoritePage() {
       <section className="px-6 pb-6 flex-1">
         {loading && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-[#101729]" />
-            <span className="ml-2 text-[#101729] font-nunito">{t("favoritePage.loading")}</span>
+            <Loader2 className="w-5 h-5 animate-spin text-[#11295b]" />
+            <span className="ml-2 text-[#11295b] font-nunito">{t("favoritePage.loading")}</span>
           </div>
         )}
 

@@ -18,13 +18,13 @@ export default function ProtectPage() {
 
       {/* Page title & back */}
       <div className="flex items-center justify-between px-6 py-2">
-        <h1 className="text-2xl font-semibold text-[#101729] font-poppins">
+        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
           {t("protect.title")}
         </h1>
         <button
           aria-label={t("protect.back")}
           onClick={() => router.back()}
-          className="text-[#101729] hover:text-[#101729]"
+          className="text-[#11295b] hover:text-[#11295b]"
         >
           <ChevronLeft className="h-7 w-7" />
         </button>
@@ -35,7 +35,7 @@ export default function ProtectPage() {
         <div className="space-y-6">
           {/* Main Title */}
           <div className="text-center py-4">
-            <h2 className="text-[24px] font-bold text-[#101729] font-poppins leading-tight">
+            <h2 className="text-[24px] font-bold text-[#11295b] font-poppins leading-tight">
               {t("protect.mainTitle")}
             </h2>
           </div>
@@ -71,21 +71,21 @@ export default function ProtectPage() {
           <div className="space-y-6">
             {/* Introduction */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
                 {t("protect.introduction")}
               </p>
             </div>
 
             {/* Mission */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
                 {t("protect.mission")}
               </p>
             </div>
 
             {/* Impact */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
                 {t("protect.impact")}
               </p>
             </div>
@@ -106,10 +106,10 @@ export default function ProtectPage() {
 
             {/* Additional Info */}
             <div className="bg-gray-50 rounded-lg p-4 mt-6">
-              <h3 className="text-[16px] font-semibold text-[#101729] font-poppins mb-2">
+              <h3 className="text-[16px] font-semibold text-[#11295b] font-poppins mb-2">
                 {t("protect.transparencyTitle")}
               </h3>
-              <p className="text-[14px] leading-5 text-[#101729]/80 font-nunito">
+              <p className="text-[14px] leading-5 text-[#11295b]/80 font-nunito">
                 {t("protect.transparency")}
               </p>
             </div>

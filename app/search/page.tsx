@@ -162,10 +162,10 @@ export default function SearchPage() {
 
         {/* 页面标题和返回按钮 */}
         <div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl text-[#101729] font-poppins">{t('search.title')}</h1>
+					<h1 className="text-xl text-[#11295b] font-poppins">{t('search.title')}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#101729] hover:text-[#101729]"
+						className="text-[#11295b] hover:text-[#11295b]"
 					>
 						<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -188,7 +188,7 @@ export default function SearchPage() {
               </Button>
               
               {showDropdown && (
-                <div className="absolute top-full text-[#101729] left-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                <div className="absolute top-full text-[#11295b] left-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                   {searchConditions.map((condition) => (
                     <button
                       key={condition.value}
@@ -215,7 +215,7 @@ export default function SearchPage() {
               onChange={(e) => setKeyword(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={t('search.searchPlaceholder')}
-              className="flex-1 text-[#101729] px-3 py-2 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-10"
+              className="flex-1 text-[#11295b] px-3 py-2 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-10"
             />
 
             {/* Search Button */}

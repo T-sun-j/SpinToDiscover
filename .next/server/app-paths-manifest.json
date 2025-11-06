@@ -1,5 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
+  "/followed/page": "app/followed/page.js",
+  "/personal-center/page": "app/personal-center/page.js",
   "/square/page": "app/square/page.js",
-  "/square/[id]/page": "app/square/[id]/page.js"
+  "/favorite/page": "app/favorite/page.js",
+  "/settings/page": "app/settings/page.js"
 }

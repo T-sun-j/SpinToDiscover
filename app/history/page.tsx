@@ -72,7 +72,7 @@ export default function HistoryPage() {
             />
             {/* play icon overlay for first image if video exists */}
             {index === 0 && item.video && (
-              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#101729]/80 flex items-center justify-center">
+              <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-[#11295b]/80 flex items-center justify-center">
                 <Play className="w-3 h-3 text-white" />
               </div>
             )}
@@ -87,15 +87,15 @@ export default function HistoryPage() {
       </div>
 
       {/* Title & description */}
-      <h3 className="text-[18px] font-semibold text-[#101729] font-poppins mb-2">
+      <h3 className="text-[18px] font-semibold text-[#11295b] font-poppins mb-2">
         {item.title}
       </h3>
-      <p className="text-sm leading-6 text-[#101729]/80 font-nunito mb-2">
+      <p className="text-sm leading-6 text-[#11295b]/80 font-nunito mb-2">
         {item.description}
       </p>
       
       {/* Location and viewed time */}
-      <div className="flex justify-between text-xs text-[#101729]/60">
+      <div className="flex justify-between text-xs text-[#11295b]/60">
         <span className="font-nunito">{item.location}</span>
         <span className="font-nunito">
           {t("history.viewedOn")} {new Date(item.viewedAt).toLocaleDateString()}
@@ -112,13 +112,13 @@ export default function HistoryPage() {
 
       {/* Page title & back */}
       <div className="flex justify-between items-center px-6 py-2">
-        <h1 className="text-xl text-[#101729] font-poppins">
+        <h1 className="text-xl text-[#11295b] font-poppins">
           {t("personalCenter.menu.history")}
         </h1>
         <button
           aria-label={t("history.back")}
           onClick={() => router.back()}
-          className="text-[#101729] hover:text-[#101729]"
+          className="text-[#11295b] hover:text-[#11295b]"
         >
           <ChevronLeft className="w-7 h-7" />
         </button>
@@ -128,8 +128,8 @@ export default function HistoryPage() {
       <section className="px-6 pb-6">
         {loading && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-[#101729]" />
-            <span className="ml-2 text-[#101729] font-nunito">{t("history.loading")}</span>
+            <Loader2 className="w-5 h-5 animate-spin text-[#11295b]" />
+            <span className="ml-2 text-[#11295b] font-nunito">{t("history.loading")}</span>
           </div>
         )}
 
@@ -145,10 +145,10 @@ export default function HistoryPage() {
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <History className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-[#101729] font-nunito mb-2">
+            <h3 className="text-lg font-semibold text-[#11295b] font-nunito mb-2">
               {t("history.noHistory")}
             </h3>
-            <p className="text-[#101729]/60 font-inter text-center">
+            <p className="text-[#11295b]/60 font-inter text-center">
               {t("history.noHistoryDescription")}
             </p>
           </div>

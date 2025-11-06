@@ -281,10 +281,10 @@ export default function PersonalizationPage() {
 
                 {/* 页面标题和返回按钮 */}
                 <div className="flex items-center justify-between px-2 py-4">
-                    <h1 className="text-xl font-poppins text-[#101729]">{t('personalization.title')}</h1>
+                    <h1 className="text-xl font-poppins text-[#11295b]">{t('personalization.title')}</h1>
                     <button
                         onClick={handleBack}
-                        className="text-[#101729] hover:text-[#101729]" 
+                        className="text-[#11295b] hover:text-[#11295b]" 
                     >
                         <ChevronLeft className="w-7 h-7" />
                     </button>
@@ -295,7 +295,7 @@ export default function PersonalizationPage() {
                     {/* 头像上传区域 */}
                     <div className="flex flex-col items-center space-y-4">
                         <div
-                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-gray-300 hover:border-[#101729] transition-colors"
+                            className="w-48 h-48 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer border-2 border-gray-300 hover:border-[#11295b] transition-colors"
                             onClick={() => fileInputRef.current?.click()}
                         >
                             {formData.avatarPreview ? (
@@ -315,7 +315,7 @@ export default function PersonalizationPage() {
                             onChange={handleAvatarUpload}
                             className="hidden"
                         />
-                        <p className="text-md text-[#101729] font-bold">{t('personalization.clickToUpload')}</p>
+                        <p className="text-md text-[#11295b] font-bold">{t('personalization.clickToUpload')}</p>
                     </div>
 
                     {/* 昵称输入 */}
@@ -325,7 +325,7 @@ export default function PersonalizationPage() {
                             value={formData.nickname}
                             onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             placeholder={t('personalization.nicknamePlaceholder')}
-                            className="w-full rounded-lg bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#101729]/60"
+                            className="w-full rounded-lg bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#11295b]/60"
                         />
                     </div>
 
@@ -356,7 +356,7 @@ export default function PersonalizationPage() {
                     {/* 提交按钮 */}
                     <Button
                         type="submit"
-                        className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
+                        className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
                         size="lg"
                         disabled={isSubmitting || isUploadingAvatar || !!successMessage}
                     >

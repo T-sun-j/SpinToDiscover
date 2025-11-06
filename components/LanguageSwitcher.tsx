@@ -13,7 +13,7 @@ export function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         className={cn(
-          "text-[11px] px-0 py-1 h-auto",
+          "text-[11px] px-0 py-1 h-auto font-inter",
           language === 'en' ? "text-muted-foreground" : "text-muted-foreground"
         )}
         // onClick={() => setLanguage('en')}
@@ -24,7 +24,7 @@ export function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         className={cn(
-          "text-[11px] px-0 py-1 h-auto",
+          "text-[11px] px-0 py-1 h-auto font-inter",
           language === 'zh' ? "text-muted-foreground" : "text-muted-foreground"
         )}
         // onClick={() => setLanguage('zh')}

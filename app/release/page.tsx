@@ -318,8 +318,8 @@ export default function ReleasePage() {
 
         {/* Back button and title */}
         <div className="flex items-center justify-between px-6 py-4">
-          <h1 className="text-xl text-[#101729] font-poppins">{t('releasePage.title')}</h1>
-          <button onClick={handleBack} className="text-[#101729] hover:text-[#101729]">
+          <h1 className="text-xl text-[#11295b] font-poppins">{t('releasePage.title')}</h1>
+          <button onClick={handleBack} className="text-[#11295b] hover:text-[#11295b]">
             <ChevronLeft className="h-7 w-7" />
           </button>
         </div>
@@ -451,7 +451,7 @@ export default function ReleasePage() {
           {/* Advantage Info Section */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg text-[#101729] font-poppins">{t('releasePage.advantageInfo')}</h2>
+              <h2 className="text-lg text-[#11295b] font-poppins">{t('releasePage.advantageInfo')}</h2>
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -470,7 +470,7 @@ export default function ReleasePage() {
                       setUserBrandInfo(null);
                     }
                   }}
-                  className="form-checkbox h-4 w-4 rounded-sm border-gray-400 text-[#101729] focus:ring-[#101729]"
+                  className="form-checkbox h-4 w-4 rounded-sm border-gray-400 text-[#11295b] focus:ring-[#11295b]"
                 />
                 <span className="text-sm text-gray-600">{t('releasePage.fillBrandInfo')}</span>
               </div>
@@ -527,9 +527,9 @@ export default function ReleasePage() {
               onChange={(e) => setAllowingComments(e.target.checked)}
               className={`form-checkbox h-4 w-4 rounded-sm border-gray-400 ${
                 allowingComments
-                  ? 'bg-[#101729] text-white border-[#101729]'
-                  : 'bg-gray-200 text-[#101729] border-gray-400'
-              } focus:ring-[#101729] transition-colors`}
+                  ? 'bg-[#11295b] text-white border-[#11295b]'
+                  : 'bg-gray-200 text-[#11295b] border-gray-400'
+              } focus:ring-[#11295b] transition-colors`}
             />
             <span className="text-gray-700 text-sm">{t('releasePage.allowingComments')}</span>
           </div>
@@ -537,7 +537,7 @@ export default function ReleasePage() {
           {/* Release Button */}
           <Button
             type="submit"
-            className="w-full bg-[#101729] text-white shadow-md rounded-lg"
+            className="w-full bg-[#11295b] text-white shadow-md rounded-lg"
             size="lg"
             disabled={isSubmitting || (!!successMessage && !errorMessage)}
           >

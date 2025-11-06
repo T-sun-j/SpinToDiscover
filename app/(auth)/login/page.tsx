@@ -133,10 +133,10 @@ export default function LoginPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.loginTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#11295b]">{t('auth.loginTitle')}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#101729] hover:text-[#101729]"
+						className="text-[#11295b] hover:text-[#11295b]"
 					>
 						<ChevronLeft className="h-7 w-7" />
 					</button>
@@ -192,7 +192,7 @@ export default function LoginPage() {
 					{/* 登录按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
+						className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
 						disabled={isSubmitting}
 					>

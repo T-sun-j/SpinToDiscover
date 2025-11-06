@@ -21,9 +21,9 @@ export const API_CONSTANTS = {
 export const UI_CONSTANTS = {
   // 颜色
   COLORS: {
-    PRIMARY: '#101729',
-    PRIMARY_OPACITY_80: '#101729/80',
-    PRIMARY_OPACITY_60: '#101729/60',
+    PRIMARY: '#11295b',
+    PRIMARY_OPACITY_80: '#11295b/80',
+    PRIMARY_OPACITY_60: '#11295b/60',
     GRAY_100: 'bg-gray-100',
     GRAY_400: 'text-gray-400',
     RED_500: 'text-red-500',

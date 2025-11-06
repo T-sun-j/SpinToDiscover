@@ -20,11 +20,11 @@ export default function PrivacyPage() {
         <button
           aria-label={t("privacy.back")}
           onClick={() => router.back()}
-          className="text-[#101729] hover:text-[#101729] mr-4"
+          className="text-[#11295b] hover:text-[#11295b] mr-4"
         >
           <ChevronLeft className="h-8 w-8" />
         </button>
-        <h1 className="text-2xl font-semibold text-[#101729] font-poppins">
+        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
           {t("privacy.title")}
         </h1>
       </div>
@@ -33,42 +33,42 @@ export default function PrivacyPage() {
       <section className="px-6 pb-6 flex-1">
         <div className="space-y-6">
           {/* Purpose Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.purpose")}
           </p>
 
           {/* Design/Methodology Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.design")}
           </p>
 
           {/* Findings Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.findings")}
           </p>
 
           {/* Trust and Loyalty Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.trust")}
           </p>
 
           {/* Security Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.security")}
           </p>
 
           {/* Data Collection Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.dataCollection")}
           </p>
 
           {/* Data Usage Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.dataUsage")}
           </p>
 
           {/* Contact Section */}
-          <p className="text-[14px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[14px] leading-6 text-[#11295b] font-nunito">
             {t("privacy.contact")}
           </p>
         </div>

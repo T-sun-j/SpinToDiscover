@@ -120,10 +120,10 @@ export default function ChangePasswordPage() {
 
 				{/* 页面标题和返回按钮 */}
 				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.resetPasswordTitle')}</h1>
+					<h1 className="text-xl font-poppins text-[#11295b]">{t('auth.resetPasswordTitle')}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#101729] hover:text-[#101729]"
+						className="text-[#11295b] hover:text-[#11295b]"
 					>
 						<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -188,7 +188,7 @@ export default function ChangePasswordPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
+						className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
 						size="lg"
 						disabled={isSubmitting || !!successMessage}
 					>

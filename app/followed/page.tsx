@@ -148,7 +148,7 @@ export default function FollowedPage() {
             {t('followedPage.follower')}
           </button>
         </div>
-        <button onClick={handleBack} className="text-[#101729] hover:text-[#101729] font-nunito">
+        <button onClick={handleBack} className="text-[#11295b] hover:text-[#11295b] font-nunito">
           <ChevronLeft className="h-7 w-7" />
         </button>
       </div>
@@ -165,7 +165,7 @@ export default function FollowedPage() {
             UI_CONSTANTS.COLORS.PRIMARY
           )} />
           <span className={classNames(
-            'ml-2 text-[#101729]',
+            'ml-2 text-[#11295b]',
             UI_CONSTANTS.COLORS.PRIMARY,
             UI_CONSTANTS.FONTS.NUNITO
           )}>{t('followedPage.loading')}</span>
@@ -183,7 +183,7 @@ export default function FollowedPage() {
             UI_CONSTANTS.COLORS.RED_500
           )} />
           <span className={classNames(
-            'ml-2 text-[#101729]',
+            'ml-2 text-[#11295b]',
             UI_CONSTANTS.COLORS.RED_500,
             UI_CONSTANTS.FONTS.NUNITO
           )}>{t('followedPage.error')}</span>
@@ -193,7 +193,7 @@ export default function FollowedPage() {
       {/* Empty State */}
       {!currentLoading && !currentError && currentUsers.length === 0 && (
         <div className={classNames(
-          'flex flex-col items-center justify-center text-[#101729]',
+          'flex flex-col items-center justify-center text-[#11295b]',
           UI_CONSTANTS.SPACING.PY_12
         )}>
           <div className={classNames(
@@ -220,7 +220,7 @@ export default function FollowedPage() {
           <p className={classNames(
             UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
             UI_CONSTANTS.FONTS.INTER,
-            'text-center text-[#101729]'
+            'text-center text-[#11295b]'
           )}>
             {activeTab === 'following' ? t('followedPage.noFollowingDescription') : t('followedPage.noFollowersDescription')}
           </p>
@@ -240,7 +240,7 @@ export default function FollowedPage() {
                   height={48}
                   className="rounded-full w-10 h-10 object-cover"
                 />
-                <span className="text-lg text-[#101729] font-nunito">{user.nickname}</span>
+                <span className="text-lg text-[#11295b] font-nunito">{user.nickname}</span>
               </div>
               <div style={{ borderBottom: '1px solid #e5e7eb' }}></div>
             </Link>

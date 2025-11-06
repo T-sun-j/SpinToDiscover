@@ -138,7 +138,7 @@ export default function RegionSelectPage() {
                     HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
                     UI_CONSTANTS.SPACING.PX_6,
                     'py-4',
-                    'text-[#101729]'
+                    'text-[#11295b]'
                 )}>
                     <h1 className={classNames(
                         'text-xl font-bold',
@@ -149,7 +149,7 @@ export default function RegionSelectPage() {
                         onClick={() => router.back()}
                         className={classNames(
                             UI_CONSTANTS.COLORS.PRIMARY,
-                            'hover:text-[#101729]'
+                            'hover:text-[#11295b]'
                         )}
                     >
                         <ChevronLeft className={UI_CONSTANTS.SIZES.ICON_LG} />
@@ -187,7 +187,7 @@ export default function RegionSelectPage() {
                                         <div 
                                             className="bg-gray-100 rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition-colors"
                                         >
-                                            <span className="text-sm font-nunito text-[#101729]">{selectedRegion}</span>
+                                            <span className="text-sm font-nunito text-[#11295b]">{selectedRegion}</span>
                                         </div>
                                     )}
                                     
@@ -200,7 +200,7 @@ export default function RegionSelectPage() {
                                                     onClick={() => handleSelectRegion(region)}
                                                 >
                                                     <div className="flex flex-col">
-                                                        <span className="text-sm font-nunito text-[#101729] font-semibold">{region.name}</span>
+                                                        <span className="text-sm font-nunito text-[#11295b] font-semibold">{region.name}</span>
                                                         <span className="text-xs text-gray-500">{region.country}</span>
                                                     </div>
                                                 </div>
@@ -238,7 +238,7 @@ export default function RegionSelectPage() {
                 <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
                     <Button
                         onClick={handleConfirm}
-                        className="w-full bg-[#101729] text-white rounded-lg font-nunito font-semibold py-3"
+                        className="w-full bg-[#11295b] text-white rounded-lg font-nunito font-semibold py-3"
                     >
                         {t('regionSelect.confirm')}
                     </Button>

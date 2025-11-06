@@ -148,8 +148,8 @@ export default function RegisterPage() {
 
 				{/* 页面标题 */}
 				<div className="flex items-center justify-between px-4 py-4">
-					<h1 className="text-xl font-poppins text-[#101729]">{t('auth.createAccount')}</h1>
-					<button className="text-[#101729] hover:text-[#101729]">
+					<h1 className="text-xl font-poppins text-[#11295b]">{t('auth.createAccount')}</h1>
+					<button className="text-[#11295b] hover:text-[#11295b]">
 						<Link href="/">
 							<ChevronLeft className="h-7 w-7" />
 						</Link>
@@ -290,14 +290,14 @@ export default function RegisterPage() {
 								id="acceptTerms"
 								checked={formData.acceptTerms}
 								onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
-								className="peer h-4 w-4 appearance-none border-1 rounded border-gray-300 text-primary focus:ring-primary/60 checked:border-[#101729] outline-none"
+								className="peer h-4 w-4 appearance-none border-1 rounded border-gray-300 text-primary focus:ring-primary/60 checked:border-[#11295b] outline-none"
 							/>
 							<span className={
 								"pointer-events-none absolute left-0 top-0 h-4 w-4 flex items-center justify-center " +
 								(formData.acceptTerms ? "" : "hidden")
 							}>
 								{/* Checkmark SVG */}
-								<svg className="h-3 w-3 text-[#101729]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<svg className="h-3 w-3 text-[#11295b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
 								</svg>
 							</span>
@@ -316,7 +316,7 @@ export default function RegisterPage() {
 						className={`w-full shadow-md rounded-lg font-nunito font-bold ${
 							success 
 								? 'bg-green-500 text-white' 
-								: 'bg-[#101729] text-white'
+								: 'bg-[#11295b] text-white'
 						}`}
 						size="lg"
 						disabled={!formData.acceptTerms || isLoading || success}

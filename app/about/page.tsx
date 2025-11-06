@@ -20,11 +20,11 @@ export default function AboutPage() {
         <button
           aria-label={t("about.back")}
           onClick={() => router.back()}
-          className="text-[#101729] hover:text-[#101729] mr-4"
+          className="text-[#11295b] hover:text-[#11295b] mr-4"
         >
           <ChevronLeft className="h-8 w-8" />
         </button>
-        <h1 className="text-2xl font-semibold text-[#101729] font-poppins">
+        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
           {t("about.title")}
         </h1>
       </div>
@@ -41,36 +41,36 @@ export default function AboutPage() {
         </div>
         <div className="space-y-6">
           {/* Introduction */}
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
             {t("about.introduction")}
           </p>
           
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
             {t("about.belief")}
           </p>
 
           {/* Mission */}
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
             {t("about.mission")}
           </p>
 
           {/* Values */}
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
             {t("about.values")}
           </p>
 
           {/* Experience */}
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
             {t("about.experience")}
           </p>
 
           {/* Motto */}
-          <p className="text-[15px] leading-6 text-[#101729] font-nunito ">
+          <p className="text-[15px] leading-6 text-[#11295b] font-nunito ">
             {t("about.motto")}
           </p>
 
           {/* Spin to Protect Section */}
-          <div className="bg-[#101729] rounded-lg p-6 mt-8">
+          <div className="bg-[#11295b] rounded-lg p-6 mt-8">
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h3 className="text-white text-xl font-semibold font-poppins mb-2">
@@ -83,7 +83,7 @@ export default function AboutPage() {
               <div className="ml-4">
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                   <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 bg-[#101729] rounded-full"></div>
+                    <div className="w-4 h-4 bg-[#11295b] rounded-full"></div>
                   </div>
                 </div>
               </div>

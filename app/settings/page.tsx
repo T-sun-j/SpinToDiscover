@@ -106,8 +106,8 @@ export default function SettingsPage() {
 			/>
 			{/* 页面标题 */}
 			<div className="flex items-center justify-between px-6 py-4">
-				<h1 className="text-xl text-[#101729]">{t('settings.setupTitle')}</h1>
-				<button className="text-[#101729] hover:text-[#101729]" onClick={handleBack}>
+				<h1 className="text-xl text-[#11295b]">{t('settings.setupTitle')}</h1>
+				<button className="text-[#11295b] hover:text-[#11295b]" onClick={handleBack}>
 					<ChevronLeft className="h-7 w-7" />
 				</button>
 			</div>
@@ -177,7 +177,7 @@ export default function SettingsPage() {
 				{/* 提交按钮 */}
 				<Button
 					type="submit"
-					className="w-full bg-[#101729] text-white shadow-md rounded-lg font-nunito font-bold"
+					className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
 					size="lg"
 					disabled={isSubmitting}
 				>
