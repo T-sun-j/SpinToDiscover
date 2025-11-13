@@ -347,10 +347,23 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 	// 过滤掉空图片
 	const validImages = (post.images || []).filter(img => !!img && img.trim() !== "");
-	const displayedImages = showAllImages ? validImages : validImages.slice(0, 2);
+	const displayedImages = showAllImages ? validImages : validImages.slice(0, 1);
 
 	return (
 		<div className="min-h-screen bg-white">
+			{/* SVG 渐变定义 */}
+			<svg className="absolute w-0 h-0">
+				<defs>
+					<linearGradient id="bookmark-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor="#eab308" />
+						<stop offset="100%" stopColor="#f97316" />
+					</linearGradient>
+					<linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor="#f97316" />
+						<stop offset="100%" stopColor="#ec4899" />
+					</linearGradient>
+				</defs>
+			</svg>
 			<main className=" flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
@@ -454,7 +467,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							})}
 
 							{/* 展开/收起按钮 */}
-							{validImages.length > 2 && (
+							{validImages.length > 1 && (
 								<div className="flex justify-center">
 									<button
 										onClick={() => setShowAllImages(!showAllImages)}
@@ -507,34 +520,48 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 									</div>
 								</div>
 							)}
-							{post.brandInfo.customerService?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{post.brandInfo.customerService}</p>:null}
-							{post.brandInfo.workingHours?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.workingHours')}:{post.brandInfo.workingHours}</p>:null}
-							{post.brandInfo.email?<p className="text-[12px] text-gray-700 font-inter">{t('personalPage.email')}:{post.brandInfo.email}</p>:null}
+							{post.brandInfo.customerService?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.customerServiceHotline')}:{post.brandInfo.customerService}</p>:null}
+							{post.brandInfo.workingHours?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.workingHours')}:{post.brandInfo.workingHours}</p>:null}
+							{post.brandInfo.email?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.email')}:{post.brandInfo.email}</p>:null}
 
 						</div>
 					)}
 
 					{/* 互动按钮 */}
-					<div className="flex items-center justify-center gap-6 py-4 border-t border-b">
+					<div className="flex items-center justify-between px-10 border-t border-b">
 						<button
 							onClick={handleBookmark}
 							disabled={isInteracting || !isAuthenticated}
-							className={`flex items-center gap-2 transition-colors ${isBookmarked ? 'text-blue-600' : 'text-gray-600 hover:text-gray-800'
+							className={`flex items-center gap-2 transition-colors ${isBookmarked 
+								? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' 
+								: 'text-gray-600 hover:text-gray-800'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
 							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
-							<Bookmark className={`h-6 w-6 ${isBookmarked ? 'fill-current' : ''}`} />
-							<span className="text-sm font-nunito">{bookmarks.toLocaleString()}</span>
+							<Bookmark 
+								className="h-8 w-8" 
+								style={isBookmarked ? { fill: 'url(#bookmark-gradient)' } : {}}
+							/>
+							<span className={`text-sm font-nunito ${isBookmarked ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' : ''}`}>
+								{bookmarks.toLocaleString()}
+							</span>
 						</button>
 						<button
 							onClick={handleLike}
 							disabled={isInteracting || !isAuthenticated}
-							className={`flex items-center gap-2 transition-colors ${isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'
+							className={`flex items-center gap-2 transition-colors ${isLiked 
+								? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' 
+								: 'text-gray-600 hover:text-red-500'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
 							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
-							<Heart className={`h-6 w-6 ${isLiked ? 'fill-current' : ''}`} />
-							<span className="text-sm font-nunito">{likes.toLocaleString()}</span>
+							<Heart 
+								className="h-8 w-8" 
+								style={isLiked ? { fill: 'url(#heart-gradient)' } : {}}
+							/>
+							<span className={`text-sm font-nunito ${isLiked ? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' : ''}`}>
+								{likes.toLocaleString()}
+							</span>
 						</button>
 						<button
 							onClick={handleShare}
@@ -547,6 +574,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 					{/* 评论区域 */}
 					<div className="space-y-4">
+						<div className="" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
 						<div className="flex items-center gap-2">
 							<h3 className="text-lg font-nunito text-gray-900">{t('square.comments')}</h3>
 							<span className="text-sm text-gray-500 font-nunito">({(post.comments || []).length})</span>

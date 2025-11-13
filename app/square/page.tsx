@@ -337,6 +337,19 @@ export default function SquarePage() {
 
 	return (
 		<div className="min-h-screen bg-white">
+			{/* SVG 渐变定义 */}
+			<svg className="absolute w-0 h-0">
+				<defs>
+					<linearGradient id="bookmark-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor="#eab308" />
+						<stop offset="100%" stopColor="#f97316" />
+					</linearGradient>
+					<linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor="#f97316" />
+						<stop offset="100%" stopColor="#ec4899" />
+					</linearGradient>
+				</defs>
+			</svg>
 			<main className=" flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
@@ -529,26 +542,36 @@ export default function SquarePage() {
 											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 											className={`flex flex-col items-center gap-0.5 transition-colors ${
 												postInteractions[post.id]?.isCollect 
-													? 'text-blue-600' 
+													? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' 
 													: 'text-gray-500 hover:text-gray-700'
 											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 											title={!isAuthenticated ? '请先登录' : ''}
 										>
-											<Bookmark className={`h-4 w-4 ${postInteractions[post.id]?.isCollect ? 'fill-current' : ''}`} />
-											<span className="text-xs font-nunito">{postInteractions[post.id]?.bookmarks || post.collects || 0}</span>
+											<Bookmark 
+												className="h-4 w-4" 
+												style={postInteractions[post.id]?.isCollect ? { fill: 'url(#bookmark-gradient)' } : {}}
+											/>
+											<span className={`text-xs font-nunito ${postInteractions[post.id]?.isCollect ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' : ''}`}>
+												{postInteractions[post.id]?.bookmarks || post.collects || 0}
+											</span>
 										</button>
 										<button 
 											onClick={(e) => handleLike(post.id, e)}
 											disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 											className={`flex flex-col items-center gap-0.5 transition-colors ${
 												postInteractions[post.id]?.isLove 
-													? 'text-red-500' 
+													? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' 
 													: 'text-gray-500 hover:text-red-500'
 											} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 											title={!isAuthenticated ? '请先登录' : ''}
 										>
-											<Heart className={`h-4 w-4 ${postInteractions[post.id]?.isLove ? 'fill-current' : ''}`} />
-											<span className="text-xs font-nunito">{postInteractions[post.id]?.likes || post.likes || 0}</span>
+											<Heart 
+												className="h-4 w-4" 
+												style={postInteractions[post.id]?.isLove ? { fill: 'url(#heart-gradient)' } : {}}
+											/>
+											<span className={`text-xs font-nunito ${postInteractions[post.id]?.isLove ? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' : ''}`}>
+												{postInteractions[post.id]?.likes || post.likes || 0}
+											</span>
 										</button>
 										<button 
 											onClick={(e) => handleShare(post, e)}
