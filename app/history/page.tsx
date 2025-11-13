@@ -4,6 +4,7 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AuthGuard } from "../../components/AuthGuard";
+import { useAuth } from "../../contexts/AuthContext";
 import { ChevronLeft, Play, Loader2, AlertCircle, History } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ import { API_CONSTANTS } from "../../lib/constants";
 export default function HistoryPage() {
   const { t } = useLanguage();
   const router = useRouter();
+  const { authInfo } = useAuth();
   const [historyData, setHistoryData] = useState<BrowsingHistoryItem[]>([]);
   const hasLoaded = useRef(false);
 
@@ -45,8 +47,8 @@ export default function HistoryPage() {
   useEffect(() => {
     if (data && data.success) {
       // 如果API返回成功，但data为空或history为空数组，则设置为空数组
-      if (data.data?.history) {
-        setHistoryData(data.data.history);
+      if (data?.data) {
+        setHistoryData(data?.data as BrowsingHistoryItem[]);
       } else {
         setHistoryData([]);
       }
@@ -56,8 +58,21 @@ export default function HistoryPage() {
     }
   }, [data]);
 
+  // 处理点击跳转到详情页面
+  const handleItemClick = (itemId: string) => {
+    // 如果有认证信息，传递到详情页面
+    if (authInfo?.userId && authInfo?.token) {
+      router.push(`/square/${itemId}?userId=${authInfo.userId}&token=${authInfo.token}`);
+    } else {
+      router.push(`/square/${itemId}`);
+    }
+  };
+
   const HistoryItem = ({ item }: { item: BrowsingHistoryItem }) => (
-    <div className="mb-6">
+    <div 
+      className="mb-6 cursor-pointer hover:opacity-80 transition-opacity"
+      onClick={() => handleItemClick(item.id)}
+    >
       {/* Thumbnails */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         {item.images.slice(0, 3).map((image, index) => (
@@ -79,11 +94,11 @@ export default function HistoryPage() {
           </div>
         ))}
         {/* Fill remaining slots if less than 3 images */}
-        {item.images.length < 3 && Array.from({ length: 3 - item.images.length }).map((_, index) => (
+        {/* {item.images.length < 3 && Array.from({ length: 3 - item.images.length }).map((_, index) => (
           <div key={`placeholder-${index}`} className="w-full h-28 bg-gray-100 rounded-md flex items-center justify-center">
             <span className="text-gray-400 text-xs">{t("history.noImage")}</span>
           </div>
-        ))}
+        ))} */}
       </div>
 
       {/* Title & description */}
@@ -98,7 +113,7 @@ export default function HistoryPage() {
       <div className="flex justify-between text-xs text-[#11295b]/60">
         <span className="font-nunito">{item.location}</span>
         <span className="font-nunito">
-          {t("history.viewedOn")} {new Date(item.viewedAt).toLocaleDateString()}
+          {t("history.viewedOn")} {new Date(item.updatedAt).toLocaleDateString()}
         </span>
       </div>
     </div>
@@ -112,7 +127,7 @@ export default function HistoryPage() {
 
       {/* Page title & back */}
       <div className="flex justify-between items-center px-6 py-2">
-        <h1 className="text-xl text-[#11295b] font-poppins">
+        <h1 className="text-xl font-poppins text-[#11295b]">
           {t("personalCenter.menu.history")}
         </h1>
         <button

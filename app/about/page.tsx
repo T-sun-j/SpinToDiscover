@@ -16,15 +16,15 @@ export default function AboutPage() {
       <Header showLanguage showSearch showUser />
 
       {/* Page title & back - 根据设计稿调整布局 */}
-      <div className="flex items-center px-6 py-4">
+      <div className="flex items-center px-4 py-4">
         <button
           aria-label={t("about.back")}
           onClick={() => router.back()}
           className="text-[#11295b] hover:text-[#11295b] mr-4"
         >
-          <ChevronLeft className="h-8 w-8" />
+          <ChevronLeft className="h-7 w-7" />
         </button>
-        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
+        <h1 className="text-xl text-[#11295b] font-poppins">
           {t("about.title")}
         </h1>
       </div>
@@ -41,47 +41,47 @@ export default function AboutPage() {
         </div>
         <div className="space-y-6">
           {/* Introduction */}
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.introduction")}
           </p>
           
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.belief")}
           </p>
 
           {/* Mission */}
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.mission")}
           </p>
 
           {/* Values */}
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.values")}
           </p>
 
           {/* Experience */}
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.experience")}
           </p>
 
           {/* Motto */}
-          <p className="text-[15px] leading-6 text-[#11295b] font-nunito ">
+          <p className="text-l leading-7 text-[#11295b] font-inter">
             {t("about.motto")}
           </p>
 
           {/* Spin to Protect Section */}
-          <div className="bg-[#11295b] rounded-lg p-6 mt-8">
+          <div className="bg-[#11295b] rounded-lg p-4 mt-8" onClick={() => router.push('/protect')}>
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="text-white text-xl font-semibold font-poppins mb-2">
+                <h3 className="text-white text-2xl font-semibold font-poppins mb-2">
                   {t("about.protectTitle")}
                 </h3>
-                <p className="text-white/90 text-[10px] font-nunito">
+                <p className="text-white/90 text-[11px] font-inter">
                   {t("about.protectDescription")}
                 </p>
               </div>
-              <div className="ml-4">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+              <div className="">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center cursor-pointer" onClick={() => router.push('/protect')}>
                   <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                     <div className="w-4 h-4 bg-[#11295b] rounded-full"></div>
                   </div>

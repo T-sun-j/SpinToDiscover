@@ -326,8 +326,7 @@ export interface BrowsingHistoryItem {
 
 // 浏览历史列表响应类型
 export interface BrowsingListResponse {
-  history: BrowsingHistoryItem[];
-  pagination: Pagination;
+  data?: BrowsingHistoryItem[];
 }
 
 // 获取收藏列表请求参数类型

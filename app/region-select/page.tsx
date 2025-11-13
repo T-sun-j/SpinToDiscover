@@ -93,8 +93,9 @@ export default function RegionSelectPage() {
     // 选择地区
     const handleSelectRegion = (region: typeof regions[0]) => {
         setSelectedRegion(region.fullName);
-        // 这里可以添加保存选择的逻辑
-        console.log('Selected region:', region);
+        
+        // 跳转到页面顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     // 确认选择
@@ -141,8 +142,7 @@ export default function RegionSelectPage() {
                     'text-[#11295b]'
                 )}>
                     <h1 className={classNames(
-                        'text-xl font-bold',
-                        UI_CONSTANTS.COLORS.PRIMARY,
+                        'text-xl text-[#11295b]',
                         UI_CONSTANTS.FONTS.POPPINS
                     )}>{t('regionSelect.title')}</h1>
                     <button
@@ -185,9 +185,15 @@ export default function RegionSelectPage() {
                                     {/* 当前选择的地区 */}
                                     {selectedRegion && selectedRegion !== 'Shanghai' && (
                                         <div 
-                                            className="bg-gray-100 rounded-lg p-3 cursor-pointer hover:bg-gray-200 transition-colors"
+                                            className="bg-gray-100 rounded-lg p-3 flex items-center justify-between hover:bg-gray-200 transition-colors"
                                         >
                                             <span className="text-sm font-nunito text-[#11295b]">{selectedRegion}</span>
+                                            <Button
+                                                onClick={handleConfirm}
+                                                className="bg-[#11295b] text-white rounded-md font-nunito font-semibold px-3 ml-3 text-xs min-w-0 h-8"
+                                            >
+                                                {t('regionSelect.confirm')}
+                                            </Button>
                                         </div>
                                     )}
                                     
@@ -196,7 +202,7 @@ export default function RegionSelectPage() {
                                         searchResults.map((region, index) => (
                                             <div key={index}>
                                                 <div 
-                                                    className="p-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                                                    className="p-3 cursor-pointer hover:bg-gray-50 transition-colors max-h-12"
                                                     onClick={() => handleSelectRegion(region)}
                                                 >
                                                     <div className="flex flex-col">
@@ -236,12 +242,7 @@ export default function RegionSelectPage() {
 
                 {/* 确认按钮 */}
                 <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
-                    <Button
-                        onClick={handleConfirm}
-                        className="w-full bg-[#11295b] text-white rounded-lg font-nunito font-semibold py-3"
-                    >
-                        {t('regionSelect.confirm')}
-                    </Button>
+                    
                 </div>
 
                 {/* Footer */}

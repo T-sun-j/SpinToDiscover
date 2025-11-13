@@ -94,34 +94,15 @@ export interface Translations {
     footer: string;
   };
     square: {
-      title: string;
-      searchPlaceholder: string;
-      nearbyPlaces: string;
       recommend: string;
       following: string;
       nearby: string;
-      filter: string;
-      location: string;
-      titleContent: string;
-      description: string;
-      publisher: string;
-      collect: string;
-      like: string;
-      share: string;
       comments: string;
       inputComments: string;
       send: string;
       reply: string;
       showAll: string;
       collapse: string;
-      expand: string;
-      brandWebsite: string;
-      brandLogo: string;
-      brandIntro: string;
-      operatingHours: string;
-      customerService: string;
-      workingHours: string;
-      email: string;
       gettingLocation: string;
       loading: string;
       noContent: string;
@@ -132,23 +113,14 @@ export interface Translations {
       loadDetailFailed: string;
       loadDetailError: string;
       commentSubmitFailed: string;
-      commentSubmitError: string;
       operationFailed: string;
-      likeFailed: string;
-      collectFailed: string;
       linkCopied: string;
-      followFailed: string;
       contentNotExist: string;
       contentDeleted: string;
       loginRequiredForDetail: string;
       followed: string;
       follow: string;
       pleaseLoginFirst: string;
-      videoPlayError: string;
-      loadContentFailed: string;
-      loadContentError: string;
-      locationPermissionDenied: string;
-      locationError: string;
       clearFilter: string;
       noComments: string;
       submittingComment: string;
@@ -456,6 +428,8 @@ export interface Translations {
     locationUnavailable: string;
     locationTimeout: string;
     locationParseError: string;
+    brandRequired: string;
+    imageFormatNotSupported: string;
   };
 
   // 关注页面
@@ -472,9 +446,7 @@ export interface Translations {
   };
   regionSelect: {
     title: string;
-    currentLocation: string;
     searching: string;
-    popularRegions: string;
     confirm: string;
     searchHint: string;
     searchDescription: string;
@@ -492,7 +464,7 @@ export const translations: Record<Language, Translations> = {
       searchPlaceholder: 'Search...',
     },
     buttons: {
-      spinToDiscover: 'SpinLinX',
+      spinToDiscover: 'Explore',
       createAccount: 'Create a new account',
     },
     navigation: {
@@ -577,34 +549,15 @@ export const translations: Record<Language, Translations> = {
       footer: 'Discover amazing places around the world',
     },
     square: {
-      title: 'Square',
-      searchPlaceholder: 'Search places...',
-      nearbyPlaces: 'Nearby Places',
       recommend: 'Recommend',
       following: 'Following',
       nearby: 'Nearby',
-      filter: 'Filter',
-      location: 'Istanbul',
-      titleContent: 'Title or central idea content text',
-      description: 'This is an introduction text about some brand stories and features of this product, which is edited and uploaded to the system by each buyer, and published after being reviewed by the administrator.',
-      publisher: 'Miaham',
-      collect: 'Collect',
-      like: 'Like',
-      share: 'Share',
       comments: 'Comments',
       inputComments: 'Input your comments',
       send: 'Send',
       reply: 'Reply',
       showAll: 'Show All',
       collapse: 'Collapse',
-      expand: 'Expand',
-      brandWebsite: 'ii.loropiana.com/en/',
-      brandLogo: 'Loro Piana',
-      brandIntro: 'Brand Introduction',
-      operatingHours: 'Monday to Friday 9am to 8pm CET (excluding public holidays) Saturday and Sunday 10am to 7pm CET (excluding public holidays)',
-      customerService: 'Customer Service Hotline: 4008 568 580',
-      workingHours: 'Working hours: 9:00-22:00 (Spring Festival statutory holiday 10:00-16:00)',
-      email: 'E-mail customerservice.cn@loropiana.com',
       gettingLocation: 'Getting location...',
       loading: 'Loading...',
       noContent: 'No Content',
@@ -615,23 +568,14 @@ export const translations: Record<Language, Translations> = {
       loadDetailFailed: 'Failed to load details',
       loadDetailError: 'Error occurred while loading details',
       commentSubmitFailed: 'Failed to submit comment, please try again',
-      commentSubmitError: 'Failed to submit comment',
       operationFailed: 'Operation failed, please try again',
-      likeFailed: 'Failed to like',
-      collectFailed: 'Failed to collect',
       linkCopied: 'Link copied to clipboard',
-      followFailed: 'Failed to follow',
       contentNotExist: 'Content does not exist',
       contentDeleted: 'The content you are accessing may have been deleted or does not exist',
       loginRequiredForDetail: 'Please login to view content details',
       followed: 'Followed',
       follow: 'Follow',
       pleaseLoginFirst: 'Please login first',
-      videoPlayError: 'Video playback failed',
-      loadContentFailed: 'Failed to load content',
-      loadContentError: 'Error occurred while loading content',
-      locationPermissionDenied: 'Location permission denied',
-      locationError: 'Failed to get location',
       clearFilter: 'Clear filter',
       noComments: 'No comments yet',
       submittingComment: 'Sending...',
@@ -752,8 +696,8 @@ export const translations: Record<Language, Translations> = {
       show: 'Show',
       loading: 'Loading posts...',
       error: 'Failed to load posts',
-      noPosts: 'No Posts Found',
-      noPostsDescription: 'Start creating content to see your posts here.',
+      noPosts: 'No Posts Yet',
+      noPostsDescription: 'Share a moment, a story, or something you’ve discovered.',
       refresh: 'Refresh',
       deleting: 'Deleting...',
       processing: 'Processing...',
@@ -860,7 +804,7 @@ export const translations: Record<Language, Translations> = {
       valuesTitle: 'Our Values',
       values: 'Here, we value originality, craftsmanship, creativity, and authenticity. Every brand and artist that joins SpinLinX is chosen for their unique identity, meaningful vision, and cultural significance.',
       experience: 'By spinning the globe, you are not just exploring products or artworks - you are discovering stories, dreams, and the people behind them.',
-      motto: 'Spin. Discover. Connect. Because the world shines brighter when we share our light.',
+      motto: 'SpinLinX Because the world shines brighter when we share our light.',
       protectTitle: 'Together, let\'s protect what truly matters',
       protectDescription: 'Spin to Protect is the charitable initiative of SpinLinX',
     },
@@ -926,6 +870,7 @@ export const translations: Record<Language, Translations> = {
       authInfoMissing: 'User authentication information missing',
       invalidImageType: 'Please select a valid image file',
       imageTooLarge: 'Image file is too large (max 10MB)',
+      imageFormatNotSupported: 'Image format not supported. Please select a valid image file (JPG, PNG, etc.)',
       logoUploadFailed: 'Logo upload failed',
       uploading: 'Uploading...',
       logoUploaded: 'Logo uploaded successfully',
@@ -939,6 +884,7 @@ export const translations: Record<Language, Translations> = {
       locationUnavailable: 'Location information unavailable',
       locationTimeout: 'Location request timeout',
       locationParseError: 'Location obtained but address parsing failed',
+      brandRequired: 'Brand name is required',
     },
     followedPage: {
       following: 'Following',
@@ -953,9 +899,7 @@ export const translations: Record<Language, Translations> = {
     },
     regionSelect: {
       title: 'Region Select',
-      currentLocation: 'Current Location',
       searching: 'Searching...',
-      popularRegions: 'Popular Regions',
       confirm: 'Confirm',
       searchHint: 'Search for a city',
       searchDescription: 'Enter the name of a city to find and select it',
@@ -971,7 +915,7 @@ export const translations: Record<Language, Translations> = {
       searchPlaceholder: '搜索...',
     },
     buttons: {
-      spinToDiscover: '开始探索',
+      spinToDiscover: '立即探索',
       createAccount: '创建新账户',
     },
     navigation: {
@@ -1056,34 +1000,15 @@ export const translations: Record<Language, Translations> = {
       footer: '发现世界各地的精彩地点',
     },
     square: {
-      title: '广场',
-      searchPlaceholder: '搜索地点...',
-      nearbyPlaces: '附近地点',
       recommend: '推荐',
       following: '关注',
       nearby: '附近',
-      filter: '筛选',
-      location: '伊斯坦布尔',
-      titleContent: '标题或中心思想内容文本',
-      description: '这是一段关于某些品牌故事和产品特色的介绍文本，由每个买家编辑并上传到系统中，经管理员审核后发布。',
-      publisher: '米亚汉',
-      collect: '收藏',
-      like: '点赞',
-      share: '分享',
       comments: '评论',
       inputComments: '输入您的评论',
       send: '发送',
       reply: '回复',
       showAll: '显示全部',
       collapse: '收起',
-      expand: '展开',
-      brandWebsite: 'ii.loropiana.com/en/',
-      brandLogo: 'Loro Piana',
-      brandIntro: '品牌简介',
-      operatingHours: '周一至周五上午9点至晚上8点CET（公共假期除外）周六和周日上午10点至晚上7点CET（公共假期除外）',
-      customerService: '客服热线：4008 568 580',
-      workingHours: '工作时间：9:00-22:00（春节法定节假日10:00-16:00）',
-      email: '邮箱 customerservice.cn@loropiana.com',
       gettingLocation: '正在获取位置信息...',
       loading: '加载中...',
       noContent: '暂无内容',
@@ -1094,23 +1019,14 @@ export const translations: Record<Language, Translations> = {
       loadDetailFailed: '加载详情失败',
       loadDetailError: '加载详情时发生错误',
       commentSubmitFailed: '评论提交失败，请重试',
-      commentSubmitError: '评论提交失败',
       operationFailed: '操作失败，请重试',
-      likeFailed: '点赞失败',
-      collectFailed: '收藏失败',
       linkCopied: '链接已复制到剪贴板',
-      followFailed: '关注失败',
       contentNotExist: '内容不存在',
       contentDeleted: '您访问的内容可能已被删除或不存在',
       loginRequiredForDetail: '请先登录以查看内容详情',
       followed: '已关注',
       follow: '关注',
       pleaseLoginFirst: '请先登录',
-      videoPlayError: '视频播放失败',
-      loadContentFailed: '加载内容失败',
-      loadContentError: '加载内容时发生错误',
-      locationPermissionDenied: '用户拒绝了地理位置权限',
-      locationError: '获取地理位置失败',
       clearFilter: '清除筛选',
       noComments: '暂无评论',
       submittingComment: '发送中...',
@@ -1229,10 +1145,10 @@ export const translations: Record<Language, Translations> = {
       delete: '删除',
       hide: '隐藏',
       show: '显示',
-      loading: '加载帖子中...',
-      error: '加载帖子失败',
-      noPosts: '暂无帖子',
-      noPostsDescription: '开始创建内容，您的帖子将显示在这里。',
+      loading: '加载内容中...',
+      error: '加载内容失败',
+      noPosts: '暂无内容',
+      noPostsDescription: '分享此刻、故事，或你发现的美好。',
       refresh: '刷新',
       deleting: '删除中...',
       processing: '处理中...',
@@ -1339,7 +1255,7 @@ export const translations: Record<Language, Translations> = {
       valuesTitle: '我们的价值观',
       values: '在这里，我们重视原创性、工艺、创造力和真实性。每个加入 SpinLinX 的品牌和艺术家都因其独特的身份、有意义的愿景和文化意义而被选中。',
       experience: '通过旋转地球仪，您不仅仅是在探索产品或艺术品——您正在发现故事、梦想和背后的人们。',
-      motto: '旋转。发现。连接。因为当我们分享光明时，世界会更加明亮。',
+      motto: 'SpinLinX。因为当我们分享光明时，世界会更加明亮。',
       protectTitle: '让我们一起保护真正重要的东西',
       protectDescription: 'Spin to Protect 是 SpinLinX 的慈善倡议',
     },
@@ -1405,6 +1321,7 @@ export const translations: Record<Language, Translations> = {
       authInfoMissing: '用户认证信息缺失',
       invalidImageType: '请选择有效的图片文件',
       imageTooLarge: '图片文件过大（最大10MB）',
+      imageFormatNotSupported: '图片格式不支持，请选择有效的图片文件（JPG、PNG等）',
       logoUploadFailed: 'Logo上传失败',
       uploading: '上传中...',
       logoUploaded: 'Logo上传成功',
@@ -1418,6 +1335,7 @@ export const translations: Record<Language, Translations> = {
       locationUnavailable: '位置信息不可用',
       locationTimeout: '获取位置超时',
       locationParseError: '位置获取成功，但地址解析失败',
+      brandRequired: '品牌名称不能为空',
     },
     followedPage: {
       following: '关注',
@@ -1432,9 +1350,7 @@ export const translations: Record<Language, Translations> = {
     },
     regionSelect: {
       title: '地区选择',
-      currentLocation: '当前位置',
       searching: '搜索中...',
-      popularRegions: '热门地区',
       confirm: '确认',
       searchHint: '搜索城市',
       searchDescription: '输入城市名称来查找并选择',

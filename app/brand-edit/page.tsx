@@ -186,6 +186,11 @@ export default function BrandEditPage() {
                     ? uploadResponse.data 
                     : uploadResponse.data.img;
                 
+                // 检查返回的图片路径是否为错误标识（如 /err2, /err 等）
+                if (logoUrl && (logoUrl.startsWith('/err') || logoUrl.includes('error'))) {
+                    throw new Error(t('brandEditPage.imageFormatNotSupported'));
+                }
+                
                 if (logoUrl) {
                     setFormData(prev => ({
                         ...prev,
@@ -216,7 +221,7 @@ export default function BrandEditPage() {
 
         // 验证品牌名称必填
         if (!formData.brand.trim()) {
-            setError(t('brandEditPage.brandRequired') || '品牌名称不能为空');
+            setError(t('brandEditPage.brandRequired'));
             return;
         }
 
@@ -331,7 +336,7 @@ export default function BrandEditPage() {
                                         />
                                         {uploadingLogo && (
                                             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                                <div className="text-white text-xs">上传中...</div>
+                                                <div className="text-white text-xs">{t('brandEditPage.uploading')}</div>
                                             </div>
                                         )}
                                     </div>
@@ -356,7 +361,7 @@ export default function BrandEditPage() {
                         {/* Official Site */}
                         <div>
                             <input
-                                type="url"
+                                type="text"
                                 placeholder={t('brandEditPage.officialSite')}
                                 value={formData.officialsite}
                                 onChange={(e) => handleInputChange('officialsite', e.target.value)}

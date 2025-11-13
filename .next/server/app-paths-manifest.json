@@ -1,7 +1,4 @@
 {
-  "/followed/page": "app/followed/page.js",
-  "/personal-center/page": "app/personal-center/page.js",
-  "/square/page": "app/square/page.js",
-  "/favorite/page": "app/favorite/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/about/page": "app/about/page.js",
+  "/protect/page": "app/protect/page.js"
 }

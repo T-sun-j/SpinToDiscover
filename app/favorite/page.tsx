@@ -4,6 +4,7 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AuthGuard } from "../../components/AuthGuard";
+import { useAuth } from "../../contexts/AuthContext";
 import { ChevronLeft, Play, Heart, Loader2, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ import { API_CONSTANTS } from "../../lib/constants";
 export default function FavoritePage() {
   const { t } = useLanguage();
   const router = useRouter();
+  const { authInfo } = useAuth();
   const [collectData, setCollectData] = useState<CollectItem[]>([]);
   const hasLoaded = useRef(false);
 
@@ -49,7 +51,7 @@ export default function FavoritePage() {
 
     return apiData.map((item: any) => {
       // 从API响应中提取数据
-      const id = item._id?.$oid || item.proid || '';
+      const id = item.proid || '';
       const product = item.product?.[0] || {};
       const title = product.title || '';
       
@@ -128,8 +130,21 @@ export default function FavoritePage() {
     }
   }, [data]);
 
+  // 处理点击跳转到详情页面
+  const handleItemClick = (itemId: string) => {
+    // 如果有认证信息，传递到详情页面
+    if (authInfo?.userId && authInfo?.token) {
+      router.push(`/square/${itemId}?userId=${authInfo.userId}&token=${authInfo.token}`);
+    } else {
+      router.push(`/square/${itemId}`);
+    }
+  };
+
   const FavoriteItem = ({ item }: { item: CollectItem }) => (
-    <div className="mb-6">
+    <div 
+      className="mb-6 cursor-pointer hover:opacity-80 transition-opacity"
+      onClick={() => handleItemClick(item.id)}
+    >
       {/* Thumbnails */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         {item.images.slice(0, 3).map((image, index) => (
@@ -165,6 +180,10 @@ export default function FavoritePage() {
         </h3>
         <button
           aria-label={t("favoritePage.removeFromFavorites")}
+          onClick={(e) => {
+            e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
+            // TODO: 实现取消收藏功能
+          }}
           className="ml-2 p-1 text-red-500 hover:text-red-600 transition-colors"
         >
           <Heart className="h-5 w-5 fill-current" />
@@ -179,6 +198,7 @@ export default function FavoritePage() {
           {t("favoritePage.collectedOn")} {new Date(item.collectedAt).toLocaleDateString()}
         </span>
       </div>
+      <div className="" style={{marginTop: '10px', borderBottom: '1px solid #e5e7eb' }}></div>
     </div>
   );
 
@@ -202,7 +222,7 @@ export default function FavoritePage() {
 
       {/* Page title & back */}
       <div className="flex items-center justify-between px-6 py-2">
-        <h1 className="text-2xl text-[#11295b] font-poppins">
+        <h1 className="text-xl text-[#11295b] font-poppins">
           {t("favoritePage.title")}
         </h1>
         <button

@@ -17,101 +17,75 @@ export default function ProtectPage() {
       <Header showLanguage showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex items-center justify-between px-6 py-2">
-        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
-          {t("protect.title")}
-        </h1>
+      <div className="flex items-center px-3 py-4">
         <button
           aria-label={t("protect.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b]"
+          className="text-[#11295b] hover:text-[#11295b] mr-4"
         >
           <ChevronLeft className="h-7 w-7" />
         </button>
+        <h1 className="text-xl text-[#11295b] font-poppins">
+          {t("protect.title")}
+        </h1>
       </div>
 
       {/* Content */}
       <section className="px-6 pb-6 flex-1">
         <div className="space-y-6">
           {/* Main Title */}
-          <div className="text-center py-4">
-            <h2 className="text-[24px] font-bold text-[#11295b] font-poppins leading-tight">
+          <div className="text-center ">
+            <h2 className="text-3xl font-semibold text-[#11295b] font-poppins leading-tight text-left">
               {t("protect.mainTitle")}
             </h2>
           </div>
 
-          {/* Images Section */}
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Left Image */}
-              <div className="relative">
-                <Image
-                  src="/img/craft-hands.jpg"
-                  alt={t("protect.craftImageAlt")}
-                  width={200}
-                  height={150}
-                  className="w-full h-32 object-cover rounded-lg"
-                />
-              </div>
-              
-              {/* Right Image */}
-              <div className="relative">
-                <Image
-                  src="/img/artisan-woman.jpg"
-                  alt={t("protect.artisanImageAlt")}
-                  width={200}
-                  height={150}
-                  className="w-full h-32 object-cover rounded-lg"
-                />
-              </div>
-            </div>
+          {/* Project Image */}
+          <div className="relative w-full">
+            <Image
+              src="/img/project.png"
+              alt={t("protect.projectImageAlt") || "Project image"}
+              width={600}
+              height={400}
+              className="w-full h-auto object-cover mx-auto"
+            />  
           </div>
 
           {/* Content Sections */}
           <div className="space-y-6">
             {/* Introduction */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+              <p className="text-l  text-[#11295b] font-inter">
                 {t("protect.introduction")}
               </p>
             </div>
 
             {/* Mission */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+              <p className="text-l text-[#11295b] font-inter">
                 {t("protect.mission")}
               </p>
             </div>
 
             {/* Impact */}
             <div className="space-y-4">
-              <p className="text-[15px] leading-6 text-[#11295b] font-nunito">
+              <p className="text-l text-[#11295b] font-inter">
                 {t("protect.impact")}
               </p>
             </div>
 
             {/* Call to Action */}
-            <div className="text-center py-6">
+            <div className="flex justify-end py-6">
               <button
                 onClick={() => {
                   // Handle donation link
                   window.open('https://example.com/donate', '_blank');
                 }}
-                className="text-[#1e3a8a] text-[16px] font-semibold font-poppins underline hover:text-[#1e40af] transition-colors flex items-center justify-center gap-2 mx-auto"
+                className="text-[#11295b] text-[16px] font-semibold font-inter underline hover:text-[#11295b] transition-colors flex items-center gap-2"
               >
                 {t("protect.donateLink")}
                 <ExternalLink className="h-4 w-4" />
               </button>
-            </div>
-
-            {/* Additional Info */}
-            <div className="bg-gray-50 rounded-lg p-4 mt-6">
-              <h3 className="text-[16px] font-semibold text-[#11295b] font-poppins mb-2">
-                {t("protect.transparencyTitle")}
-              </h3>
-              <p className="text-[14px] leading-5 text-[#11295b]/80 font-nunito">
-                {t("protect.transparency")}
-              </p>
             </div>
           </div>
         </div>
