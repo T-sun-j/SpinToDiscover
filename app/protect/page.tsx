@@ -14,7 +14,7 @@ export default function ProtectPage() {
   return (
     <main className="flex min-h-dvh flex-col bg-white">
       {/* Header */}
-      <Header showLanguage showSearch showUser />
+      <Header showSearch showUser />
 
       {/* Page title & back */}
       <div className="flex items-center px-3 py-4">

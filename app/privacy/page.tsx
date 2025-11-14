@@ -13,7 +13,7 @@ export default function PrivacyPage() {
   return (
     <main className="flex min-h-dvh flex-col bg-white">
       {/* Header */}
-      <Header showLanguage showSearch showUser />
+      <Header showSearch showUser />
 
       {/* Page title & back - 根据设计稿调整布局 */}
       <div className="flex items-center px-6 py-4">

@@ -311,7 +311,6 @@ export default function ReleasePage() {
       <main className="container-page flex min-h-dvh flex-col bg-white">
         {/* Header */}
         <Header
-          showLanguage
           showSearch
           showUser
         />

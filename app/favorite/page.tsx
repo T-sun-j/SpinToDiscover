@@ -218,7 +218,7 @@ export default function FavoritePage() {
     <AuthGuard>
       <main className="flex min-h-dvh flex-col bg-white">
         {/* Header */}
-        <Header showLanguage showSearch showUser />
+        <Header showSearch showUser />
 
       {/* Page title & back */}
       <div className="flex items-center justify-between px-6 py-2">

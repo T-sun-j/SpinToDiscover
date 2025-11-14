@@ -101,9 +101,7 @@ export default function SettingsPage() {
 	return (
 		<AuthGuard>
 			<main className="flex min-h-dvh flex-col bg-white">
-				<Header
-				showLanguage
-			/>
+				<Header/>
 			{/* 页面标题 */}
 			<div className="flex items-center justify-between px-6 py-4">
 				<h1 className="text-xl text-[#11295b]">{t('settings.setupTitle')}</h1>

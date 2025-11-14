@@ -114,7 +114,6 @@ export default function ChangePasswordPage() {
 			<main className="w-full flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
-					showLanguage
 					showUser
 				/>
 

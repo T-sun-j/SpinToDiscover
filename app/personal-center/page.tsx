@@ -69,7 +69,6 @@ export default function PersonalCenterPage() {
             )}>
                 {/* Header with logo and language toggle */}
                 <Header
-                    showLanguage
                     logoLink="/square"
                 />
 

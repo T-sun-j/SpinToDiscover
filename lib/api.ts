@@ -168,9 +168,9 @@ export interface BrandInfo {
   logo: string;
   intro: string;
   operatingHours: string;
-  adress: string;
+  address: string;
   customerService: string;
-  workingHours: string;
+  workHour: string;
   tel: string;
   email: string;
 }
@@ -439,7 +439,7 @@ export interface UserInfoResponse {
   officialsite?: string | null;
   tel?: string;
   customerService?: string | null;
-  workingHours?: string | null;
+  workHour?: string | null;
   isFollow: boolean;
   userData: UserInfoResponse;
 }
@@ -474,6 +474,7 @@ export interface UpdateUserBrandRequest {
   tel?: string;
   address?: string;
   location?: string;
+  workHour?: string;
 }
 
 // 更新用户品牌信息响应类型

@@ -283,7 +283,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		return (
 			<div className="min-h-screen bg-white">
 				<main className="flex min-h-[100vh] flex-col">
-					<Header showLanguage showSearch showUser logoLink="/square" />
+					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
 						<LoadingSpinner size="lg" text={t('common.loading')} />
 					</div>
@@ -298,7 +298,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		return (
 			<div className="min-h-screen bg-white">
 				<main className="flex min-h-[100vh] flex-col">
-					<Header showLanguage showSearch showUser logoLink="/square" />
+					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
 						<ErrorState
 							error={error}
@@ -316,7 +316,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		return (
 			<div className="min-h-screen bg-white">
 				<main className="flex min-h-[100vh] flex-col">
-					<Header showLanguage showSearch showUser logoLink="/square" />
+					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
 						<EmptyState
 							title={t('square.contentNotExist')}
@@ -367,7 +367,6 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 			<main className=" flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
-					showLanguage
 					showSearch
 					showUser
 					logoLink="/square"
@@ -502,7 +501,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 										<OptimizedImage
 											src={`${SERVER_CONFIG.STATIC_URL}${post.brandInfo.logo}`}
 											alt="Brand Logo"
-											className="h-6 w-auto ml-2"
+											className="h-10 w-auto ml-2 min-w-12"
 										/>
 									)}
 								</div>
@@ -521,8 +520,9 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								</div>
 							)}
 							{post.brandInfo.customerService?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.customerServiceHotline')}:{post.brandInfo.customerService}</p>:null}
-							{post.brandInfo.workingHours?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.workingHours')}:{post.brandInfo.workingHours}</p>:null}
+							{post.brandInfo.workHour?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.workHour')}:{post.brandInfo.workHour}</p>:null}
 							{post.brandInfo.email?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.email')}:{post.brandInfo.email}</p>:null}
+							{post.brandInfo.address?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.address')}:{post.brandInfo.address}</p>:null}
 
 						</div>
 					)}

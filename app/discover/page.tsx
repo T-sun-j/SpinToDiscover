@@ -13,9 +13,7 @@ export default function DiscoverPage() {
 		<AuthGuard>
 			<main className="container-page flex min-h-dvh flex-col">
 				{/* 使用公共头部组件，启用搜索功能 */}
-				<Header 
-					
-				/>
+				<Header />
 
 			{/* 地图区域 */}
 			<section className="flex-1 mb-4">

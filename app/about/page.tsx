@@ -13,7 +13,7 @@ export default function AboutPage() {
   return (
     <main className="flex min-h-dvh flex-col bg-white">
       {/* Header */}
-      <Header showLanguage showSearch showUser />
+      <Header showSearch showUser />
 
       {/* Page title & back - 根据设计稿调整布局 */}
       <div className="flex items-center px-4 py-4">

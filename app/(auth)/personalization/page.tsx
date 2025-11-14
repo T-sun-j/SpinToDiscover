@@ -275,9 +275,7 @@ export default function PersonalizationPage() {
         <div className="min-h-screen w-full flex items-center justify-center bg-white">
             <main className="w-full flex min-h-[100vh] flex-col">
                 {/* 使用公共头部组件 */}
-                <Header
-                    showLanguage
-                />
+                <Header/>
 
                 {/* 页面标题和返回按钮 */}
                 <div className="flex items-center justify-between px-2 py-4">

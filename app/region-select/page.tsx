@@ -128,7 +128,6 @@ export default function RegionSelectPage() {
             <main className="flex min-h-[100vh] flex-col">
                 {/* Header */}
                 <Header
-                    showLanguage
                     showSearch
                     showUser
                     userLink="/personal-center"

@@ -21,7 +21,7 @@ export default function BrandEditPage() {
     const router = useRouter();
     const { getEmail } = useAuth();
     const { userParams } = useUserParams();
-    
+
     // 表单状态
     const [formData, setFormData] = useState({
         brand: '',
@@ -30,9 +30,11 @@ export default function BrandEditPage() {
         officialsite: '',
         tel: '',
         address: '',
-        location: ''
+        location: '',
+        workHour: '',
+        email: ''
     });
-    
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -77,7 +79,9 @@ export default function BrandEditPage() {
                         officialsite: userInfo.officialsite || '',
                         tel: userInfo.tel || '',
                         address: userInfo.address || '',
-                        location: userInfo.location || 'Istanbul'
+                        location: userInfo.location || '',
+                        workHour: userInfo.workHour || '',
+                        email: userInfo.email || ''
                     });
 
                     // 如果有logo，设置预览
@@ -107,7 +111,7 @@ export default function BrandEditPage() {
                 timeout: 10000,
                 maximumAge: 300000 // 5分钟缓存
             });
-            
+
             setFormData(prev => ({
                 ...prev,
                 location: locationString
@@ -115,7 +119,7 @@ export default function BrandEditPage() {
         } catch (error) {
             console.error('获取位置失败:', error);
             let errorMessage = t('brandEditPage.locationFailed');
-            
+
             // 根据错误类型设置不同的错误消息
             if (error && typeof error === 'object' && 'code' in error) {
                 switch (error.code) {
@@ -133,7 +137,7 @@ export default function BrandEditPage() {
                         break;
                 }
             }
-            
+
             setError(errorMessage);
         } finally {
             setIsGettingLocation(false);
@@ -180,17 +184,17 @@ export default function BrandEditPage() {
 
             // 上传图片
             const uploadResponse = await uploadAvatar(file);
-            
+
             if (uploadResponse.success && uploadResponse.data) {
-                const logoUrl = typeof uploadResponse.data === 'string' 
-                    ? uploadResponse.data 
+                const logoUrl = typeof uploadResponse.data === 'string'
+                    ? uploadResponse.data
                     : uploadResponse.data.img;
-                
+
                 // 检查返回的图片路径是否为错误标识（如 /err2, /err 等）
                 if (logoUrl && (logoUrl.startsWith('/err') || logoUrl.includes('error'))) {
                     throw new Error(t('brandEditPage.imageFormatNotSupported'));
                 }
-                
+
                 if (logoUrl) {
                     setFormData(prev => ({
                         ...prev,
@@ -235,7 +239,6 @@ export default function BrandEditPage() {
             }
 
             const response = await updateUserBrand({
-                email: getEmail()!,
                 userId: userParams.userId,
                 token: userParams.token,
                 brand: formData.brand,
@@ -244,7 +247,9 @@ export default function BrandEditPage() {
                 officialsite: formData.officialsite,
                 tel: formData.tel,
                 address: formData.address,
-                location: formData.location
+                location: formData.location,
+                workHour: formData.workHour,
+                email: formData.email
             });
 
             if (response.success) {
@@ -266,18 +271,16 @@ export default function BrandEditPage() {
         <AuthGuard>
             <main className="flex min-h-dvh flex-col bg-white">
                 {/* Header */}
-                <Header
-                    showLanguage
-                />
+                <Header />
 
                 {/* Back button and title */}
                 <div className="flex items-center justify-between px-6 py-4">
                     <h1 className="text-xl text-[#11295b] font-poppins">{t('brandEditPage.title')}</h1>
                     <button onClick={() => router.push('/personal')} className="text-[#11295b] hover:text-[#11295b]">
-                    <ChevronLeft className={classNames(
-                                    UI_CONSTANTS.SIZES.ICON_LG,
-                                    UI_CONSTANTS.COLORS.PRIMARY
-                                )} />
+                        <ChevronLeft className={classNames(
+                            UI_CONSTANTS.SIZES.ICON_LG,
+                            UI_CONSTANTS.COLORS.PRIMARY
+                        )} />
                     </button>
                 </div>
 
@@ -289,7 +292,7 @@ export default function BrandEditPage() {
                         </div>
                     </div>
                 ) : (
-                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="flex-1 px-6 py-4 space-y-6">
+                    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="flex-1 px-6 py-4 space-y-6">
                         {/* Brand Name */}
                         <div>
                             <input
@@ -315,9 +318,8 @@ export default function BrandEditPage() {
 
                         {/* Logo Upload */}
                         <div className="flex flex-col items-start">
-                            <label className={`w-20 h-20 flex flex-col items-center justify-center rounded-xl bg-gray-200 cursor-pointer relative overflow-hidden ${
-                                uploadingLogo ? 'opacity-50 pointer-events-none' : ''
-                            }`}>
+                            <label className={`w-20 h-20 flex flex-col items-center justify-center rounded-xl bg-gray-200 cursor-pointer relative overflow-hidden ${uploadingLogo ? 'opacity-50 pointer-events-none' : ''
+                                }`}>
                                 <input
                                     ref={fileInputRef}
                                     type="file"
@@ -326,12 +328,12 @@ export default function BrandEditPage() {
                                     className="hidden"
                                     disabled={uploadingLogo}
                                 />
-                                
+
                                 {logoPreview ? (
                                     <div className="w-full h-full relative">
-                                        <img 
-                                            src={logoPreview} 
-                                            alt="Logo preview" 
+                                        <img
+                                            src={logoPreview}
+                                            alt="Logo preview"
                                             className="w-full h-full object-cover rounded-xl"
                                         />
                                         {uploadingLogo && (
@@ -349,7 +351,7 @@ export default function BrandEditPage() {
                                     </div>
                                 )}
                             </label>
-                            
+
                             {/* Logo upload status */}
                             {logoFile && !uploadingLogo && formData.logo && (
                                 <div className="mt-2 text-xs text-green-600">
@@ -379,7 +381,26 @@ export default function BrandEditPage() {
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
                             />
                         </div>
-
+                        {/* email */}
+                        <div>
+                            <textarea
+                                placeholder={t('brandEditPage.workHour')}
+                                value={formData.workHour}
+                                onChange={(e) => handleInputChange('workHour', e.target.value)}
+                                rows={3}
+                                className="w-full rounded-lg bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                            />
+                        </div>
+                        {/* email */}
+                        <div>
+                            <textarea
+                                placeholder={t('brandEditPage.email')}
+                                value={formData.email}
+                                onChange={(e) => handleInputChange('email', e.target.value)}
+                                rows={3}
+                                className="w-full rounded-lg bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                            />
+                        </div>
                         {/* Address */}
                         <div>
                             <textarea
@@ -390,6 +411,7 @@ export default function BrandEditPage() {
                                 className="w-full rounded-lg bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
                             />
                         </div>
+
 
                         {/* Location */}
                         <div className="flex items-center justify-between">
@@ -438,14 +460,14 @@ export default function BrandEditPage() {
                             size="lg"
                             disabled={loading || !!success}
                         >
-                            {loading 
+                            {loading
                                 ? t('brandEditPage.submitting')
-                                : success 
+                                : success
                                     ? t('brandEditPage.submit')
                                     : t('brandEditPage.submit')
                             }
                         </Button>
-                </form>
+                    </form>
                 )}
 
                 <div className="mt-auto">

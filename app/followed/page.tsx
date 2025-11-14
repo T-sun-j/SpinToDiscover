@@ -126,7 +126,6 @@ export default function FollowedPage() {
       <main className="flex min-h-dvh flex-col bg-white">
         {/* Header */}
         <Header
-          showLanguage
           showSearch
           showUser
         />

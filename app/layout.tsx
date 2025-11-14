@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Suspense } from 'react';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import { AuthProvider } from '../contexts/AuthContext';
+import { Toaster } from 'sonner';
 
 export const metadata = {
   title: 'SpinLinX',
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Suspense fallback={<div className="p-4 text-gray-500">Loading...</div>}>
             <AuthProvider>
               {children}
+              <Toaster />
             </AuthProvider>
           </Suspense>
         </LanguageProvider>

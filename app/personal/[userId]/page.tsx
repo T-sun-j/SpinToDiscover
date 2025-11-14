@@ -28,6 +28,7 @@ import { UI_CONSTANTS, HISTORY_CONSTANTS, API_CONSTANTS, ANIMATION_CONSTANTS } f
 import { classNames } from '../../../lib/utils/classNames';
 import { useAuth } from '../../../contexts/AuthContext';
 import { AuthGuard } from '../../../components/AuthGuard';
+import { toast } from "sonner";
 
 interface PersonalPageProps {
     params: { userId: string };
@@ -52,8 +53,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
     const [isDeleting, setIsDeleting] = useState<string | null>(null); // 正在删除的作品ID
     const [isHiding, setIsHiding] = useState<string | null>(null); // 正在隐藏的作品ID
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [successMessage, setSuccessMessage] = useState<string>('');
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState<string | null>(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -229,8 +228,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         }
 
         setIsFollowLoading(true);
-        setErrorMessage('');
-        setSuccessMessage('');
 
         try {
             const response = await toggleFollowUser({
@@ -242,7 +239,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
             if (response.success) {
                 setIsFollowing(!isFollowing);
-                setSuccessMessage(isFollowing ? t('personalPage.unfollowSuccess') : t('personalPage.followSuccess'));
+                toast.success(isFollowing ? t('personalPage.unfollowSuccess') : t('personalPage.followSuccess'));
                 
                 // 关注/取消关注成功后，重新调用getOtherUserInfo接口刷新数据
                 if (targetUserId !== authInfo?.userId) {
@@ -284,20 +281,17 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         // 即使刷新失败，也不影响关注操作的成功
                     }
                 }
-                
-                // 3秒后清除成功消息
-                setTimeout(() => setSuccessMessage(''), 3000);
             } else {
                 // 处理API错误，如"用户不存在"
                 if (response.message && response.message.includes('用户不存在')) {
-                    setErrorMessage(t('personalPage.userNotFound') || '用户不存在');
+                    toast.error(t('personalPage.userNotFound') || '用户不存在');
                 } else {
-                    setErrorMessage(response.message || (isFollowing ? t('personalPage.unfollowError') : t('personalPage.followError')));
+                    toast.error(response.message || (isFollowing ? t('personalPage.unfollowError') : t('personalPage.followError')));
                 }
             }
         } catch (error) {
             console.error('关注操作失败:', error);
-            setErrorMessage(error instanceof Error ? error.message : (isFollowing ? t('personalPage.unfollowProcessError') : t('personalPage.followProcessError')));
+            toast.error(error instanceof Error ? error.message : (isFollowing ? t('personalPage.unfollowProcessError') : t('personalPage.followProcessError')));
         } finally {
             setIsFollowLoading(false);
         }
@@ -322,13 +316,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     // 确认删除作品
     const handleDeleteArticle = async () => {
         if (!authInfo || !articleToDelete) {
-            setErrorMessage(t('personalPage.authInfoMissing'));
+            toast.error(t('personalPage.authInfoMissing'));
             return;
         }
 
         setIsDeleting(articleToDelete);
-        setErrorMessage('');
-        setSuccessMessage('');
         setDeleteDialogOpen(false);
 
         try {
@@ -339,19 +331,17 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             });
 
             if (response.success) {
-                setSuccessMessage(t('personalPage.deleteSuccess'));
+                toast.success(t('personalPage.deleteSuccess'));
                 // 重新加载数据以获取最新状态 - 只有查看自己页面时才重新加载
                 if (targetUserId === authInfo?.userId) {
                     await loadPostsData();
                 }
-                // 3秒后清除成功消息
-                setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                setErrorMessage(response.message || t('personalPage.deleteError'));
+                toast.error(response.message || t('personalPage.deleteError'));
             }
         } catch (error) {
             console.error('删除作品失败:', error);
-            setErrorMessage(error instanceof Error ? error.message : t('personalPage.deleteProcessError'));
+            toast.error(error instanceof Error ? error.message : t('personalPage.deleteProcessError'));
         } finally {
             setIsDeleting(null);
             setArticleToDelete(null);
@@ -361,7 +351,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     // 隐藏/显示作品
     const handleHideArticle = async (articleId: string, currentStatus: number = 0) => {
         if (!authInfo) {
-            setErrorMessage(t('personalPage.authInfoMissing'));
+            toast.error(t('personalPage.authInfoMissing'));
             return;
         }
 
@@ -369,8 +359,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         const actionText = newStatus === 1 ? t('personalPage.hide') : t('personalPage.show');
         
         setIsHiding(articleId);
-        setErrorMessage('');
-        setSuccessMessage('');
 
         try {
             const response = await hideArticle({
@@ -381,19 +369,17 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             });
 
             if (response.success) {
-                setSuccessMessage(newStatus === 1 ? t('personalPage.hideSuccess') : t('personalPage.showSuccess'));
+                toast.success(newStatus === 1 ? t('personalPage.hideSuccess') : t('personalPage.showSuccess'));
                 // 重新加载数据以获取最新状态 - 只有查看自己页面时才重新加载
                 if (targetUserId === authInfo?.userId) {
                     await loadPostsData();
                 }
-                // 3秒后清除成功消息
-                setTimeout(() => setSuccessMessage(''), 3000);
             } else {
-                setErrorMessage(response.message || (newStatus === 1 ? t('personalPage.hideError') : t('personalPage.showError')));
+                toast.error(response.message || (newStatus === 1 ? t('personalPage.hideError') : t('personalPage.showError')));
             }
         } catch (error) {
             console.error(`${actionText}作品失败:`, error);
-            setErrorMessage(error instanceof Error ? error.message : (newStatus === 1 ? t('personalPage.hideProcessError') : t('personalPage.showProcessError')));
+            toast.error(error instanceof Error ? error.message : (newStatus === 1 ? t('personalPage.hideProcessError') : t('personalPage.showProcessError')));
         } finally {
             setIsHiding(null);
         }
@@ -406,9 +392,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
     return (
         <main className=" flex min-h-dvh flex-col bg-white">
                 {/* Header */}
-                <Header
-                    showLanguage
-                />
+                <Header/>
 
                 {/* User and Brand Info */}
                 <div className={"p-4"}>
@@ -483,7 +467,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                         alt="Brand Logo"
                                         width={32}
                                         height={32}
-                                        className="h-12 w-auto max-w-20 object-cover"
+                                        className="h-12 w-auto max-w-20 ml-4 object-cover"
                                     />
                                 )}
                             </div>
@@ -498,15 +482,16 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 </div>
                             </div>
                         )}
-                        {userInfo?.tel && userInfo?.address && userInfo?.email && ( <div className="ml-17">
-                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{userInfo.tel}</p>
-                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.workingHours')}:{userInfo.address}</p>
-                        <p className="text-sm text-gray-700 font-inter">{t('personalPage.email')}:{userInfo.email}</p>
-                    </div>)}
+                         <div className="ml-17">
+                        {userInfo?.tel && <p className="text-sm text-gray-700 font-inter">{t('personalPage.customerServiceHotline')}:{userInfo?.tel}</p>}
+                        {userInfo?.workHour && <p className="text-sm text-gray-700 font-inter">{t('personalPage.workHour')}:{userInfo?.workHour}</p>}
+                        {userInfo?.email && <p className="text-sm text-gray-700 font-inter">{t('personalPage.email')}:{userInfo?.email}</p>}
+                        {userInfo?.address && <p className="text-sm text-gray-700 font-inter">{t('personalPage.address')}:{userInfo?.address}</p>}
+                    </div>
 
                         {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
                         {targetUserId !== authInfo?.userId && (
-                            <div className="flex items-center justify-center gap-2" style={{ zIndex: 10 }}>
+                            <div className="flex items-center gap-2 ml-16" style={{ zIndex: 10 }}>
                                 <button
                                     onClick={handleFollowToggle}
                                     disabled={isFollowLoading}
@@ -550,25 +535,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     </div>
 
                 </div>
-                
-
-                {/* 错误和成功消息 */}
-                {errorMessage && (
-                    <div className="mx-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-red-600 text-base">
-                            <AlertCircle className="h-5 w-5" />
-                            <span>{errorMessage}</span>
-                        </div>
-                    </div>
-                )}
-                
-                {successMessage && (
-                    <div className="mx-4 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-green-600 text-base">
-                            <span>{successMessage}</span>
-                        </div>
-                    </div>
-                )}
 
                 {/* My Posts section */}
                 <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'h-[calc(72vh-130px)]')}>

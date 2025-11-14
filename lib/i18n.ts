@@ -230,8 +230,9 @@ export interface Translations {
       brand: string;
       brief: string;
       customerServiceHotline: string;
-      workingHours: string;
+      workHour: string;
       email: string;
+      address: string;
       myPosts: string;
       follow: string;
       followed: string;
@@ -407,6 +408,8 @@ export interface Translations {
     telMobile: string;
     address: string;
     location: string;
+    workHour: string;
+    email: string;
     submit: string;
     submitting: string;
     submitSuccess: string;
@@ -430,6 +433,8 @@ export interface Translations {
     locationParseError: string;
     brandRequired: string;
     imageFormatNotSupported: string;
+    workHourRequired: string;
+    emailRequired: string;
   };
 
   // 关注页面
@@ -685,7 +690,8 @@ export const translations: Record<Language, Translations> = {
       brand: 'Brand',
       brief: 'Brief',
       customerServiceHotline: 'Customer Service Hotline',
-      workingHours: 'Working Hours',
+      address: 'Address',
+      workHour: 'Working Hours',
       email: 'Email',
       myPosts: 'My Posts',
       follow: 'Follow',
@@ -860,7 +866,9 @@ export const translations: Record<Language, Translations> = {
       logo: 'Logo',
       officialSite: 'Official Site',
       telMobile: 'Tel/Mobile',
-      address: 'Work Hours',
+      address: 'Address',
+      workHour: 'Work Hours',
+      email: 'Email',
       location: 'Location',
       submit: 'Submit',
       submitting: 'Submitting...',
@@ -885,6 +893,8 @@ export const translations: Record<Language, Translations> = {
       locationTimeout: 'Location request timeout',
       locationParseError: 'Location obtained but address parsing failed',
       brandRequired: 'Brand name is required',
+      workHourRequired: 'Work hours are required',
+      emailRequired: 'Email is required',
     },
     followedPage: {
       following: 'Following',
@@ -1136,7 +1146,8 @@ export const translations: Record<Language, Translations> = {
       brand: '品牌',
       brief: '简介',
       customerServiceHotline: '客服热线',
-      workingHours: '工作时间',
+      workHour: '工作时间',
+      address: '地址',
       email: '邮箱',
       myPosts: '我的帖子',
       follow: '关注',
@@ -1311,7 +1322,9 @@ export const translations: Record<Language, Translations> = {
       logo: '标志',
       officialSite: '官方网站',
       telMobile: '电话/手机',
-      address: '工作时间',
+      workHour: '工作时间',
+      address: '地址',
+      email: '邮箱',
       location: '位置',
       submit: '提交',
       submitting: '提交中...',
@@ -1336,6 +1349,8 @@ export const translations: Record<Language, Translations> = {
       locationTimeout: '获取位置超时',
       locationParseError: '位置获取成功，但地址解析失败',
       brandRequired: '品牌名称不能为空',
+      workHourRequired: '工作时间不能为空',
+      emailRequired: '邮箱不能为空',
     },
     followedPage: {
       following: '关注',

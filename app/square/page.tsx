@@ -91,9 +91,9 @@ export default function SquarePage() {
 				}
 			}
 			
-			// 推荐页面不需要传递 token，其他页面需要
-			const shouldPassToken = currentTab !== 'recommend';
-			
+			// 推荐页面：如果已登录则传递 userId 和 token，未登录则不传递
+			// 其他页面：始终传递 userId 和 token（如果有的话）
+			const shouldPassToken = currentTab === 'recommend' ? (authInfo?.userId && authInfo?.token) : true;
 			const response = await getSquareContentList({
 				userId: shouldPassToken ? (authInfo?.userId || '') : '',
 				token: shouldPassToken ? (authInfo?.token || '') : '',
@@ -353,7 +353,6 @@ export default function SquarePage() {
 			<main className=" flex min-h-[100vh] flex-col">
 				{/* 使用公共头部组件 */}
 				<Header
-					showLanguage
 					showSearch
 					showUser
 					userLink="/personal-center"

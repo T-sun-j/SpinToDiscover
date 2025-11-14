@@ -252,6 +252,7 @@ export async function updateUserBrand(
       tel: brandData.tel || '',
       address: brandData.address || '',
       location: brandData.location || '',
+      workHour: brandData.workHour || '',
     });
     
     return response;
@@ -317,9 +318,6 @@ export async function postSquareContent(postData: PostSquareRequest): Promise<Ap
  */
 export async function getSquareContentList(listData: GetHomeListRequest): Promise<ApiResponse<SquareListResponse>> {
   try {
-    // 推荐页面不需要传递 userId 和 token
-    const isRecommendTab = listData.tab === 'recommend';
-
     const requestParams: any = {
       tab: listData.tab || '',
       page: listData.page || 1,
@@ -327,7 +325,9 @@ export async function getSquareContentList(listData: GetHomeListRequest): Promis
       location: listData.location,
     };
 
-    if (!isRecommendTab) {
+    // 如果传入了 userId 和 token，则添加到请求参数中
+    // 这样推荐页面在已登录时也可以传递用户信息
+    if (listData.userId && listData.token) {
       requestParams.userId = listData.userId;
       requestParams.token = listData.token;
     }

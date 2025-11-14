@@ -154,7 +154,6 @@ export default function SearchPage() {
         <div className="max-w-md mx-auto bg-white min-h-screen relative">
           {/* Header */}
           <Header 
-            showLanguage={true} 
             showUser={true} 
             logoLink="/"
           className="border-b border-gray-200"

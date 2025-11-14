@@ -2,8 +2,6 @@
 
 import { Button } from './ui/button';
 import { UserRound, Search } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { LanguageToggle } from './LanguageToggle';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -11,7 +9,6 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   showSearch?: boolean;
-  showLanguage?: boolean;
   showUser?: boolean;
   className?: string;
   transparent?: boolean;
@@ -21,14 +18,12 @@ interface HeaderProps {
 
 export function Header({
   showSearch = false,
-  showLanguage = false,
   showUser = false,
   className = '',
   transparent = false,
   logoLink = '/',
   userLink = '/login',
 }: HeaderProps) {
-  const { t } = useLanguage();
   const router = useRouter();
   const { authInfo } = useAuth();
 
@@ -45,7 +40,7 @@ export function Header({
 
   return (
     <header className={`flex items-center justify-between py-3 w-full  ${className}`}>
-      {/* 左侧：Logo 和语言切换 */}
+      {/* 左侧：Logo */}
       <div className="flex items-center gap-3">
         <Link href={logoLink} className="flex items-center gap-2 ml-2">
           <Image
@@ -57,7 +52,6 @@ export function Header({
             className="h-14 w-42"
           />
         </Link>  
-        {showLanguage ? <LanguageToggle transparent={transparent} /> : null}
       </div>
 
       {/* 右侧：搜索和用户图标 */}
