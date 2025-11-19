@@ -46,10 +46,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/brand-edit/page.js"
     ],
-    "/_not-found/page": [
+    "/search/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/search/page.js"
+    ],
+    "/region-select/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/region-select/page.js"
+    ],
+    "/release/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/release/page.js"
     ]
   }
 }
