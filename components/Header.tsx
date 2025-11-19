@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from './ui/button';
-import { UserRound, Search } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -39,27 +39,33 @@ export function Header({
   };
 
   return (
-    <header className={`flex items-center justify-between py-3 w-full  ${className}`}>
+    <header className={`flex items-center justify-between pt-3 px-1 w-full  ${className}`}>
       {/* 左侧：Logo */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <Link href={logoLink} className="flex items-center gap-2 ml-2">
           <Image
             src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
             alt="logo"
-            width={42}
-            height={14}
+            width={52}
+            height={22}
             priority
-            className="h-14 w-42"
+            className="h-16 w-auto"
           />
         </Link>  
       </div>
 
       {/* 右侧：搜索和用户图标 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Search className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#11295b]'}`} />
+              <Image
+                src="/img/search.png"
+                alt="search"
+                width={28}
+                height={28}
+                className="h-7 w-7"
+              />
             </Button>
           </Link>
         ) : null}
@@ -72,7 +78,13 @@ export function Header({
             onClick={handleUserClick}
             aria-label="account"
           >
-            <UserRound className={`h-7 w-7 ${transparent ? 'text-white' : 'text-[#11295b]'}`} />
+            <Image
+                src="/img/user.png"
+                alt="search"
+                width={28}
+                height={28}
+                className="h-7 w-7"
+              />
           </Button>
         ) : null}
       </div>

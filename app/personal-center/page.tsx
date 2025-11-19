@@ -75,8 +75,7 @@ export default function PersonalCenterPage() {
             {/* 页面标题和返回按钮 */}
             <div className={classNames(
                 HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
-                UI_CONSTANTS.SPACING.PX_6,
-                'py-4',
+                'px-4 py-4',
                 'text-[#11295b]'
             )}>
                 <h1 className={classNames(
@@ -95,7 +94,7 @@ export default function PersonalCenterPage() {
             </div>
 
             {/* User profile section */}
-            <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
+            <div className={classNames('px-4 py-4')}>
                 {loading && (
                     <div className={classNames(
                         HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
@@ -203,16 +202,16 @@ export default function PersonalCenterPage() {
             </div>
 
             {/* Menu items */}
-            <div className={classNames('flex-1', UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
+            <div className={classNames('flex-1 px-4 py-4')}>
                 <div className="space-y-4">
                     <Link href="/personal">
                         <Button
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#11295b] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-12 rounded-lg',
                                 UI_CONSTANTS.FONTS.NUNITO,
-                                'text-lg font-bold'
+                                'text-base font-bold'
                             )}
                         >
                             {t('personalCenter.menu.myPage')}
@@ -224,9 +223,9 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#11295b] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-12 rounded-lg',
                                 UI_CONSTANTS.FONTS.NUNITO,
-                                'text-lg font-bold'
+                                'text-base font-bold'
                             )}
                         >
                             {t('personalCenter.menu.followed')}
@@ -238,9 +237,9 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#11295b] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-12 rounded-lg',
                                 UI_CONSTANTS.FONTS.NUNITO,
-                                'text-lg font-bold'
+                                'text-base font-bold'
                             )}
                         >
                             {t('personalCenter.menu.history')}
@@ -252,9 +251,9 @@ export default function PersonalCenterPage() {
                             variant="ghost"
                             className={classNames(
                                 'w-full justify-start',
-                                'bg-[#11295b] text-white h-14 rounded-xl',
+                                'bg-[#11295b] text-white h-12 rounded-lg',
                                 UI_CONSTANTS.FONTS.NUNITO,
-                                'text-lg font-bold'
+                                'text-base font-bold'
                             )}
                         >
                             {t('personalCenter.menu.favorites')}

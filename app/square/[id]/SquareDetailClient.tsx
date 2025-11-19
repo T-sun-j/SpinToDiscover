@@ -4,14 +4,12 @@ import { Button } from '../../../components/ui/button';
 import {
 	Bookmark,
 	Heart,
-	Share2,
+	SquareArrowOutUpRight,
 	ArrowLeft,
-	MessageCircle,
-	ChevronDown,
-	Play,
 	Expand,
 	UserPlus,
-	MapPin
+	MapPin,
+	ChevronLeft
 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -20,6 +18,7 @@ import { Footer } from '../../../components/Footer';
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getSquareContentDetail, toggleLove, toggleCollect, toggleFollowUser, postComment, shareContent } from '../../../lib/auth';
 import { SquareContent, SERVER_CONFIG, buildAvatarUrl } from '../../../lib/api';
 import { LoadingSpinner, ErrorState, EmptyState } from '../../../components/ui/LoadingStates';
@@ -42,10 +41,15 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 	const [bookmarks, setBookmarks] = useState(0);
 	const [shares, setShares] = useState(0);
 	const [isInteracting, setIsInteracting] = useState(false);
-	const [expandedImage, setExpandedImage] = useState<number | null>(null);
 	const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 	const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 	const [replyingTo, setReplyingTo] = useState<{ id: string; nickname: string } | null>(null);
+
+	// 图片预览状态
+	const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+	const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+	const [previewImages, setPreviewImages] = useState<string[]>([]);
+	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 	// API相关状态
 	const [post, setPost] = useState<SquareContent | null>(null);
@@ -232,8 +236,35 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		}
 	};
 
-	const handleImageClick = (index: number) => {
-		setExpandedImage(expandedImage === index ? null : index);
+	// 图片预览功能
+	const handleImagePreview = (imageUrl: string, allImages: string[], index: number) => {
+		setPreviewImages(allImages);
+		setCurrentImageIndex(index);
+		setPreviewImageUrl(imageUrl);
+		setIsImagePreviewOpen(true);
+	};
+
+	const handleImagePreviewClose = () => {
+		setIsImagePreviewOpen(false);
+		setPreviewImageUrl(null);
+		setPreviewImages([]);
+		setCurrentImageIndex(0);
+	};
+
+	const handlePrevImage = () => {
+		if (currentImageIndex > 0) {
+			const newIndex = currentImageIndex - 1;
+			setCurrentImageIndex(newIndex);
+			setPreviewImageUrl(previewImages[newIndex]);
+		}
+	};
+
+	const handleNextImage = () => {
+		if (currentImageIndex < previewImages.length - 1) {
+			const newIndex = currentImageIndex + 1;
+			setCurrentImageIndex(newIndex);
+			setPreviewImageUrl(previewImages[newIndex]);
+		}
 	};
 
 	const handleVideoPlay = () => {
@@ -347,7 +378,9 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 	// 过滤掉空图片
 	const validImages = (post.images || []).filter(img => !!img && img.trim() !== "");
-	const displayedImages = showAllImages ? validImages : validImages.slice(0, 1);
+	// 如果没有视频，折叠状态下显示两张图片；否则显示一张
+	const imageCountToShow = !post.video && !showAllImages ? 2 : (showAllImages ? validImages.length : 1);
+	const displayedImages = showAllImages ? validImages : validImages.slice(0, imageCountToShow);
 
 	return (
 		<div className="min-h-screen bg-white">
@@ -359,8 +392,8 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						<stop offset="100%" stopColor="#f97316" />
 					</linearGradient>
 					<linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-						<stop offset="0%" stopColor="#f97316" />
-						<stop offset="100%" stopColor="#ec4899" />
+						<stop offset="0%" stopColor="#FD9507" />
+						<stop offset="100%" stopColor="#CE14B0" />
 					</linearGradient>
 				</defs>
 			</svg>
@@ -373,22 +406,20 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				/>
 
 				{/* 标题和返回按钮 */}
-				<div className="flex items-center justify-between px-6 py-4 border-b">
-					<h1 className="text-lg font-nunito text-[#11295b]">{post.title || 'Untitled'}</h1>
+				<div className="flex items-center justify-between px-4 py-4 border-b">
+					<h1 className="text-lg font-nunito font-semibold text-[#11295b]">{post.title || 'Untitled'}</h1>
 					<button
 						onClick={handleBack}
 						className="text-[#11295b] hover:text-[#11295b]"
 					>
-						<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-						</svg>
+						<ChevronLeft className='h-7 w-7' />
 					</button>
 				</div>
 
 				{/* 主要内容 */}
-				<div className="flex-1 px-6 py-4 space-y-5">
+				<div className="flex-1 px-4 space-y-5">
 					{/* 发布者信息 */}
-					<div className="flex items-center gap-3">
+					<div className="flex items-center ">
 						<button
 							onClick={handlePublisherClick}
 							className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -396,9 +427,9 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							<img
 								src={`${SERVER_CONFIG.STATIC_URL}${post.publisher?.avatar || ''}`}
 								alt={post.publisher?.nickname || 'User'}
-								className="w-8 h-8 rounded-full object-cover bg-gray-300"
+								className="w-9 h-9 rounded-full object-cover bg-gray-300"
 							/>
-							<span className="font-medium text-gray-900 font-nunito">{post.publisher?.nickname || 'Unknown User'}</span>
+							<span className="font-sm text-[#0F1728] font-nunito">{post.publisher?.nickname || 'Unknown User'}</span>
 						</button>
 
 						{/* 关注按钮 - 只有当前用户不是发布者时才显示 */}
@@ -423,11 +454,11 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					</div>
 
 					{/* 描述文本 */}
-					<p className="text-gray-700 leading-relaxed text-sm font-inter">{post.description || 'No description available'}</p>
+					<p className="text-[#20313B] leading-relaxed text-sm font-inter">{post.description}</p>
 
 					{/* 视频区域 */}
 					{post.video && (
-						<div className="relative w-full h-64 bg-gray-200 rounded-lg overflow-hidden cursor-pointer" onClick={handleVideoPlay}>
+						<div className="relative w-full h-64 bg-gray-200 rounded-sm overflow-hidden cursor-pointer" onClick={handleVideoPlay}>
 							<video
 								src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}
 								className="w-full h-full object-cover"
@@ -438,9 +469,15 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 									e.currentTarget.currentTime = 0.1;
 								}}
 							/>
-							<div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
-								<button className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all">
-									<Play className="w-6 h-6 text-gray-800 ml-1" />
+							<div className="absolute inset-0 flex items-center justify-center ">
+								<button className="w-12 h-12 rounded-full flex items-center justify-center  transition-all">
+									<Image
+										src="/img/play.png"
+										alt="Play"
+										width={50}
+										height={50}
+										className="w-12 h-12 ml-1"
+									/>
 								</button>
 							</div>
 						</div>
@@ -451,8 +488,21 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						<div className="space-y-4">
 							{displayedImages.map((image, index) => {
 								const imageUrl = `${SERVER_CONFIG.STATIC_URL}${image}`;
+								const allImages = validImages.map(img => `${SERVER_CONFIG.STATIC_URL}${img}`);
+								// 计算实际索引（displayedImages是从validImages中slice出来的，所以索引对应）
+								const actualIndex = index;
+								// 在折叠状态下，在最后一张显示的图片上显示覆盖层（表示还有更多图片）
+								const isLastDisplayedImage = index === displayedImages.length - 1;
+								const showOverlay = !showAllImages && validImages.length > displayedImages.length && isLastDisplayedImage;
 								return (
-									<div key={index} className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden group cursor-pointer" onClick={() => handleImageClick(index)}>
+									<div
+										key={index}
+										className="relative w-full h-64 rounded-sm bg-gray-200 overflow-hidden group cursor-pointer"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleImagePreview(imageUrl, allImages, actualIndex);
+										}}
+									>
 										<OptimizedImage
 											src={imageUrl}
 											alt={`Gallery image ${index + 1}`}
@@ -461,21 +511,29 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 												console.error(`Failed to load image: ${imageUrl}`);
 											}}
 										/>
+										{/* 折叠状态下的渐变透明白色覆盖层 */}
+										{showOverlay && (
+											<div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent pointer-events-none" />
+										)}
 									</div>
 								);
 							})}
 
 							{/* 展开/收起按钮 */}
-							{validImages.length > 1 && (
+							{/* 只有在有未显示的图片（折叠状态）或已展开状态时才显示按钮 */}
+							{(showAllImages || validImages.length > displayedImages.length) && (
 								<div className="flex justify-center">
 									<button
 										onClick={() => setShowAllImages(!showAllImages)}
 										className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
 									>
-										<ChevronDown className={`h-5 w-5 transition-transform ${showAllImages ? 'rotate-180' : ''}`} />
-										<span className="text-sm font-inter">
-											{showAllImages ? t('square.collapse') : t('square.showAll')}
-										</span>
+										<Image
+											src="/img/show.png"
+											alt="Show"
+											width={20}
+											height={20}
+											className={`h-9 w-9 transition-transform ${showAllImages ? 'rotate-180' : ''}`}
+										/>
 									</button>
 								</div>
 							)}
@@ -488,10 +546,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							{/* 品牌网站 */}
 							{post.brandInfo.website && (
 								<div className="flex items-center gap-3">
-									<img src="/img/Icon-website.svg" alt="Website" className="h-6 w-6" />
+									<img src="/img/Icon-website.svg" alt="Website" className="h-9 w-9" />
 									<a
 										href={post.brandInfo.website.startsWith('http') ? post.brandInfo.website : `https://${post.brandInfo.website}`}
-										className="text-[#11295b] hover:underline"
+										className="text-[#0F1728] hover:underline text-sm font-semibold font-poppins"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
@@ -508,76 +566,98 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							)}
 
 							{/* 品牌介绍 */}
-							{post.brandInfo.intro && (
+							{post.brandInfo && (
 								<div className="flex items-start gap-3">
-									<img src="/img/Icon-introduction.svg" alt="Introduction" className="h-6 w-6" />
+									<img src="/img/Icon-introduction.svg" alt="Introduction" className="h-9 w-9 pl-1" />
 									<div className="flex-1">
-										<p className="text-sm text-gray-700 font-nunito leading-relaxed">
+										{post.brandInfo.intro && <p className="text-xs text-[#0F1728] font-normal font-inter pt-1 leading-relaxed">
 											{post.brandInfo.intro}
-
-										</p>
+										</p>}
+										{post.brandInfo.customerService ? <p className="text-xs mt-6 text-[#0F1728] font-inter"><span className="font-semibold mr-1">{t('personalPage.customerServiceHotline')}:</span>{post.brandInfo.customerService}</p> : null}
+										{post.brandInfo.workHour ? <p className="text-xs text-[#0F1728] font-inter"><span className="font-semibold mr-1">{t('personalPage.workHour')}:</span>{post.brandInfo.workHour}</p> : null}
+										{post.brandInfo.email ? <p className="text-xs text-[#0F1728] font-inter"><span className="font-semibold mr-1">{t('personalPage.email')}:</span>{post.brandInfo.email}</p> : null}
+										{post.brandInfo.address ? <p className="text-xs text-[#0F1728] font-inter"><span className="font-semibold mr-1">{t('personalPage.address')}:</span>{post.brandInfo.address}</p> : null}
 									</div>
 								</div>
 							)}
-							{post.brandInfo.customerService?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.customerServiceHotline')}:{post.brandInfo.customerService}</p>:null}
-							{post.brandInfo.workHour?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.workHour')}:{post.brandInfo.workHour}</p>:null}
-							{post.brandInfo.email?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.email')}:{post.brandInfo.email}</p>:null}
-							{post.brandInfo.address?<p className="text-[12px] text-gray-700 font-inter ml-9">{t('personalPage.address')}:{post.brandInfo.address}</p>:null}
+
 
 						</div>
 					)}
 
 					{/* 互动按钮 */}
-					<div className="flex items-center justify-between px-10 border-t border-b">
+					<div className="flex items-center justify-center gap-8 px-10 border-t border-b">
 						<button
 							onClick={handleBookmark}
 							disabled={isInteracting || !isAuthenticated}
-							className={`flex items-center gap-2 transition-colors ${isBookmarked 
-								? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' 
-								: 'text-gray-600 hover:text-gray-800'
+							className={`flex items-center gap-2 transition-colors ${isBookmarked
+								? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
+								: 'text-[#0F1728] hover:text-gray-800'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
 							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
-							<Bookmark 
-								className="h-8 w-8" 
+							<Bookmark
+								className="h-6 w-6"
 								style={isBookmarked ? { fill: 'url(#bookmark-gradient)' } : {}}
 							/>
 							<span className={`text-sm font-nunito ${isBookmarked ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' : ''}`}>
 								{bookmarks.toLocaleString()}
 							</span>
 						</button>
+						{/* 分割线 */}
+						<div className="h-2 w-px bg-gray-600" />
 						<button
 							onClick={handleLike}
 							disabled={isInteracting || !isAuthenticated}
-							className={`flex items-center gap-2 transition-colors ${isLiked 
-								? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' 
-								: 'text-gray-600 hover:text-red-500'
+							className={`flex items-center gap-2 transition-colors ${isLiked
+								? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent'
+								: 'text-[#0F1728] hover:text-red-500'
 								} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
 							title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 						>
-							<Heart 
-								className="h-8 w-8" 
+							<Heart
+								className="h-6 w-6"
 								style={isLiked ? { fill: 'url(#heart-gradient)' } : {}}
 							/>
 							<span className={`text-sm font-nunito ${isLiked ? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent' : ''}`}>
 								{likes.toLocaleString()}
 							</span>
 						</button>
+						{/* 分割线 */}
+						<div className="h-2 w-px bg-gray-600" />
 						<button
 							onClick={handleShare}
-							className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+							className="flex items-center gap-2 text-[#0F1728] hover:text-gray-800 transition-colors"
 						>
-							<Share2 className="h-6 w-6" />
-							<span className="text-sm font-nunito">{shares.toLocaleString()}</span>
+							<SquareArrowOutUpRight className="h-6 w-6" />
+							<span className="text-sm font-nunito text-[#0F1728]">{shares || t('square.share')}</span>
 						</button>
 					</div>
 
 					{/* 评论区域 */}
 					<div className="space-y-4">
 						<div className="" style={{ borderBottom: '1px solid #e5e7eb' }}></div>
-						<div className="flex items-center gap-2">
-							<h3 className="text-lg font-nunito text-gray-900">{t('square.comments')}</h3>
-							<span className="text-sm text-gray-500 font-nunito">({(post.comments || []).length})</span>
+						<div className="flex items-center justify-between">
+							<div className="flex items-center gap-2">
+								<h3 className="text-sm font-nunito text-gray-900">{t('square.comments')}</h3>
+								<span className="text-sm text-gray-500 font-nunito">({(post.comments || []).length})</span>
+							</div>
+							<Image 
+								src="/img/chat.png" 
+								alt="Chat" 
+								width={24} 
+								height={24} 
+								className="h-5 w-5"
+								onClick={() => {
+									setReplyingTo(null);
+									setComment('');
+									// 滚动到输入框
+									setTimeout(() => {
+										const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+										input?.focus();
+									}, 100);
+								}}
+							/>
 						</div>
 
 						{/* 评论列表 */}
@@ -599,37 +679,45 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 												<OptimizedImage
 													src={buildAvatarUrl(authorAvatar || post.publisher?.avatar)}
 													alt="avatar"
-													className="w-8 h-8 rounded-full flex-shrink-0"
+													className="w-9 h-9 rounded-full flex-shrink-0"
 												/>
 												<div className="flex-1">
-													<div className="flex items-center gap-2 mb-1">
-														<span className="text-sm font-medium text-gray-900 font-inter">
-															{authorNickname}
-														</span>
-														{createdAt && (
-															<span className="text-xs text-gray-500 font-inter">
-																{createdAt}
+													<div className="flex items-center justify-between mb-1">
+														<div className="flex items-center gap-2">
+															<span className="text-sm font-medium text-gray-900 font-inter">
+																{authorNickname}
 															</span>
-														)}
+															{createdAt && (
+																<span className="text-xs text-gray-500 font-inter">
+																	{createdAt}
+																</span>
+															)}
+														</div>
+														<button
+															onClick={() => {
+																setReplyingTo({ id: commentId, nickname: authorNickname });
+																// 滚动到输入框
+																setTimeout(() => {
+																	const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+																	input?.focus();
+																}, 100);
+															}}
+															className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-xs"
+														>
+															<Image 
+																src="/img/chat.png" 
+																alt="Reply" 
+																width={16} 
+																height={16} 
+																className="h-5 w-5"
+															/>
+
+															{repliesCount > 0 && (
+																<span className="text-gray-400 font-inter">({repliesCount})</span>
+															)}
+														</button>
 													</div>
-													<p className="text-gray-700 mb-2 text-sm font-inter leading-relaxed">{commentContent}</p>
-													<button 
-														onClick={() => {
-															setReplyingTo({ id: commentId, nickname: authorNickname });
-															// 滚动到输入框
-															setTimeout(() => {
-																const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-																input?.focus();
-															}, 100);
-														}}
-														className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm"
-													>
-														<MessageCircle className="h-4 w-4" />
-														<span className="font-inter">{t('square.reply')}</span>
-														{repliesCount > 0 && (
-															<span className="text-gray-400 font-inter">({repliesCount})</span>
-														)}
-													</button>
+													<p className="text-gray-700 mb-2 text-xs font-inter leading-relaxed">{commentContent}</p>
 												</div>
 											</div>
 
@@ -648,18 +736,39 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 																<OptimizedImage
 																	src={buildAvatarUrl(replyAuthorAvatar || post.publisher?.avatar)}
 																	alt="avatar"
-																	className="w-6 h-6 rounded-full flex-shrink-0"
+																	className="w-9 h-9 rounded-full flex-shrink-0"
 																/>
 																<div className="flex-1">
-																	<div className="flex items-center gap-2 mb-1">
-																		<span className="text-xs font-medium text-gray-900 font-inter">
-																			{replyAuthorNickname}
-																		</span>
-																		{replyCreatedAt && (
-																			<span className="text-xs text-gray-500 font-inter">
-																				{replyCreatedAt}
+																	<div className="flex items-center justify-between mb-1">
+																		<div className="flex items-center gap-2">
+																			<span className="text-sm font-medium text-gray-900 font-inter">
+																				{replyAuthorNickname}
 																			</span>
-																		)}
+																			{replyCreatedAt && (
+																				<span className="text-xs text-gray-500 font-inter">
+																					{replyCreatedAt}
+																				</span>
+																			)}
+																		</div>
+																		<button
+																			onClick={() => {
+																				setReplyingTo({ id: replyId, nickname: replyAuthorNickname });
+																				// 滚动到输入框
+																				setTimeout(() => {
+																					const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+																					input?.focus();
+																				}, 100);
+																			}}
+																			className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-xs"
+																		>
+																			<Image 
+																				src="/img/chat.png" 
+																				alt="Reply" 
+																				width={16} 
+																				height={16} 
+																				className="h-5 w-5"
+																			/>
+																		</button>
 																	</div>
 																	<p className="text-gray-700 text-xs font-inter leading-relaxed">{replyContent}</p>
 																</div>
@@ -673,7 +782,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								})
 							) : (
 								<div className="text-center py-8">
-									<p className="text-gray-500 font-inter">{t('square.noComments')}</p>
+									<p className="text-gray-500 font-inter text-base">{t('square.noComments')}</p>
 								</div>
 							)}
 						</div>
@@ -681,7 +790,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						{/* 评论输入框 */}
 						<div className="pt-4 border-t">
 							{/* 回复提示 */}
-							{replyingTo && (
+							{/* {replyingTo && (
 								<div className="mb-2 flex items-center justify-between bg-blue-50 px-3 py-2 rounded-lg">
 									<span className="text-sm text-blue-700 font-inter">
 										{t('square.replyingTo')} {replyingTo.nickname}：
@@ -693,85 +802,86 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 										×
 									</button>
 								</div>
-							)}
+							)} */}
 							<div className="flex gap-3">
 								<div className="flex-1 flex gap-2">
-								<input
-									type="text"
-									value={replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：${comment}` : comment}
-									onChange={(e) => {
-										if (replyingTo) {
-											const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
-											// 如果输入值包含前缀，提取实际内容
-											if (e.target.value.startsWith(prefix)) {
-												setComment(e.target.value.slice(prefix.length));
-											} else if (e.target.value.length < prefix.length) {
-												// 如果用户尝试删除前缀，阻止删除
-												return;
+									<input
+										type="text"
+										value={replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：${comment}` : comment}
+										onChange={(e) => {
+											if (replyingTo) {
+												const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
+												// 如果输入值包含前缀，提取实际内容
+												if (e.target.value.startsWith(prefix)) {
+													setComment(e.target.value.slice(prefix.length));
+												} else if (e.target.value.length < prefix.length) {
+													// 如果用户尝试删除前缀，阻止删除
+													return;
+												} else {
+													// 如果前缀被修改，保持前缀不变，只更新后续内容
+													setComment(e.target.value.slice(prefix.length));
+												}
 											} else {
-												// 如果前缀被修改，保持前缀不变，只更新后续内容
-												setComment(e.target.value.slice(prefix.length));
+												setComment(e.target.value);
 											}
-										} else {
-											setComment(e.target.value);
-										}
-									}}
-									onKeyDown={(e) => {
-										if (replyingTo) {
-											const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
-											const input = e.currentTarget;
-											// 如果光标在前缀范围内，阻止删除
-											if (input.selectionStart !== null && input.selectionStart < prefix.length) {
-												if (e.key === 'Backspace' || e.key === 'Delete') {
-													e.preventDefault();
-													// 将光标移到前缀之后
-													setTimeout(() => {
-														input.setSelectionRange(prefix.length, prefix.length);
-													}, 0);
+										}}
+										onKeyDown={(e) => {
+											if (replyingTo) {
+												const prefix = `${t('square.replyingTo')} ${replyingTo.nickname}：`;
+												const input = e.currentTarget;
+												// 如果光标在前缀范围内，阻止删除
+												if (input.selectionStart !== null && input.selectionStart < prefix.length) {
+													if (e.key === 'Backspace' || e.key === 'Delete') {
+														e.preventDefault();
+														// 将光标移到前缀之后
+														setTimeout(() => {
+															input.setSelectionRange(prefix.length, prefix.length);
+														}, 0);
+													}
 												}
 											}
-										}
-									}}
-									placeholder={isAuthenticated ? (replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：` : t('square.inputComments')) : t('square.pleaseLoginFirst')}
-									disabled={!isAuthenticated || isSubmittingComment}
-									onKeyPress={(e) => {
-										if (e.key === 'Enter' && !e.shiftKey) {
-											e.preventDefault();
-											handleSubmitComment();
-										}
-									}}
-									className="flex-1 px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-white text-gray-900 placeholder-gray-500"
-									style={{
-										border: '1px solid #d1d5db',
-										backgroundColor: '#ffffff',
-										color: '#111827'
-									}}
-								/>
-								<button
-									onClick={handleSubmitComment}
-									disabled={!isAuthenticated || !comment.trim() || isSubmittingComment}
-									className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-1 ${(!isAuthenticated || !comment.trim() || isSubmittingComment)
-											? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-											: 'bg-blue-500 text-white hover:bg-blue-600'
-										}`}
-								>
-									{isSubmittingComment ? (
-										<>
-											<svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-												<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-												<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-											</svg>
-											{t('square.submittingComment')}
-										</>
-									) : (
-										<>
-											<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-											</svg>
-											{t('square.send')}
-										</>
-									)}
-								</button>
+										}}
+										placeholder={isAuthenticated ? (replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：` : t('square.inputComments')) : t('square.pleaseLoginFirst')}
+										disabled={!isAuthenticated || isSubmittingComment}
+										onKeyPress={(e) => {
+											if (e.key === 'Enter' && !e.shiftKey) {
+												e.preventDefault();
+												handleSubmitComment();
+											}
+										}}
+										className="flex-1 px-3 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 text-gray-900 placeholder-gray-500"
+										style={{
+											border: '1px solid #d1d5db',
+											backgroundColor: '#f3f4f6',
+											color: '#111827'
+										}}
+									/>
+									<button
+										onClick={handleSubmitComment}
+										disabled={!isAuthenticated || !comment.trim() || isSubmittingComment}
+										className={`flex items-center justify-center transition-opacity ${(!isAuthenticated || !comment.trim() || isSubmittingComment)
+											? 'opacity-50 cursor-not-allowed'
+											: 'hover:opacity-80'
+											}`}
+									>
+										{isSubmittingComment ? (
+											<>
+												<svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+													<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+													<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+												</svg>
+												<span className="ml-2">{t('square.submittingComment')}</span>
+											</>
+										) : (
+											<Image 
+												src="/img/send.png" 
+												alt="Send" 
+												width={24} 
+												height={24} 
+												className="h-6 w-6"
+											/>
+										)}
+									</button>
 								</div>
 							</div>
 						</div>
@@ -808,6 +918,75 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								handleVideoClose();
 							}}
 						/>
+					</div>
+				</div>
+			)}
+
+			{/* 图片预览弹窗 */}
+			{isImagePreviewOpen && previewImageUrl && (
+				<div
+					className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+					onClick={handleImagePreviewClose}
+				>
+					<div className="relative w-full h-full flex items-center justify-center">
+						{/* 关闭按钮 */}
+						<button
+							onClick={handleImagePreviewClose}
+							className="absolute top-4 right-4 z-10 w-10 h-10 bg-black bg-opacity-50 text-white rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all"
+						>
+							<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+
+						{/* 上一张按钮 */}
+						{currentImageIndex > 0 && (
+							<button
+								onClick={(e) => {
+									e.stopPropagation();
+									handlePrevImage();
+								}}
+								className="absolute left-4 z-10 w-10 h-10 bg-black bg-opacity-50 text-white rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all"
+							>
+								<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+								</svg>
+							</button>
+						)}
+
+						{/* 下一张按钮 */}
+						{currentImageIndex < previewImages.length - 1 && (
+							<button
+								onClick={(e) => {
+									e.stopPropagation();
+									handleNextImage();
+								}}
+								className="absolute right-4 z-10 w-10 h-10 bg-black bg-opacity-50 text-white rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all"
+							>
+								<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+								</svg>
+							</button>
+						)}
+
+						{/* 图片显示 */}
+						<div
+							className="max-w-full max-h-full flex items-center justify-center px-16"
+							onClick={(e) => e.stopPropagation()}
+						>
+							<img
+								src={previewImageUrl}
+								alt="Preview"
+								className="max-w-full max-h-full object-contain"
+							/>
+						</div>
+
+						{/* 图片索引指示器 */}
+						{previewImages.length > 1 && (
+							<div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full text-sm">
+								{currentImageIndex + 1} / {previewImages.length}
+							</div>
+						)}
 					</div>
 				</div>
 			)}

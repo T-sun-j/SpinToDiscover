@@ -125,6 +125,7 @@ export interface Translations {
       noComments: string;
       submittingComment: string;
       replyingTo: string;
+      share: string;
     };
   community: {
     onlineUsers: string;
@@ -585,6 +586,7 @@ export const translations: Record<Language, Translations> = {
       noComments: 'No comments yet',
       submittingComment: 'Sending...',
       replyingTo: 'Replying to',
+      share: 'Share',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -658,7 +660,7 @@ export const translations: Record<Language, Translations> = {
         about: 'About Us',
         privacy: 'Privacy Policy',
       },
-      copyright: '© 2025 SpinLinX',
+      copyright: '© 2025',
     },
     common: {
       loading: 'Loading...',
@@ -1041,6 +1043,7 @@ export const translations: Record<Language, Translations> = {
       noComments: '暂无评论',
       submittingComment: '发送中...',
       replyingTo: '回复',
+      share: '分享',
     },
     community: {
       onlineUsers: '在线用户',
@@ -1114,7 +1117,7 @@ export const translations: Record<Language, Translations> = {
         about: '关于我们',
         privacy: '隐私政策',
       },
-      copyright: '© 2025 SpinLinX',
+      copyright: '© 2025 ',
     },
     common: {
       loading: '加载中...',
