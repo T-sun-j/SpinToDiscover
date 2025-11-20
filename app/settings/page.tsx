@@ -103,10 +103,10 @@ export default function SettingsPage() {
 			<main className="flex min-h-dvh flex-col bg-white">
 				<Header/>
 			{/* 页面标题 */}
-			<div className="flex items-center justify-between px-6 py-4">
-				<h1 className="text-xl text-[#11295b]">{t('settings.setupTitle')}</h1>
-				<button className="text-[#11295b] hover:text-[#11295b]" onClick={handleBack}>
-					<ChevronLeft className="h-7 w-7" />
+			<div className="flex items-center justify-between px-6 py-4 z-100">
+				<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('settings.setupTitle')}</h1>
+				<button className="text-[#0F1728] hover:text-[#0F1728]" onClick={handleBack}>
+					<ChevronLeft className="h-7 w-7 z-10" />
 				</button>
 			</div>
 

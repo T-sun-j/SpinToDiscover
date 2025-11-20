@@ -16,15 +16,15 @@ export default function PrivacyPage() {
       <Header showSearch showUser />
 
       {/* Page title & back - 根据设计稿调整布局 */}
-      <div className="flex items-center px-6 py-4">
+      <div className="flex items-center px-6 py-4 z-100">
         <button
           aria-label={t("privacy.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b] mr-4"
+          className="text-[#0F1728] hover:text-[#0F1728] mr-4"
         >
-          <ChevronLeft className="h-8 w-8" />
+          <ChevronLeft className="h-7 w-7 z-10" />
         </button>
-        <h1 className="text-2xl font-semibold text-[#11295b] font-poppins">
+        <h1 className="text-2xl font-semibold text-[#0F1728] font-poppins">
           {t("privacy.title")}
         </h1>
       </div>

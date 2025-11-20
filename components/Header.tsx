@@ -44,7 +44,7 @@ export function Header({
       <div className="flex items-center gap-4">
         <Link href={logoLink} className="flex items-center gap-2 ml-2">
           <Image
-            src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
+            src={transparent ? "/img/logo-1.png" : "/img/logo-new-d.png"}
             alt="logo"
             width={52}
             height={22}
@@ -56,6 +56,7 @@ export function Header({
 
       {/* 右侧：搜索和用户图标 */}
       <div className="flex items-center">
+        <Image src="/img/bg.png" alt="bg" width={16} height={16} className='h-[14.5%] w-auto fixed top-0 right-0' />
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
@@ -64,7 +65,7 @@ export function Header({
                 alt="search"
                 width={28}
                 height={28}
-                className="h-7 w-7"
+                className="h-7 w-7 z-10"
               />
             </Button>
           </Link>
@@ -83,7 +84,7 @@ export function Header({
                 alt="search"
                 width={28}
                 height={28}
-                className="h-7 w-7"
+                className="h-7 w-7 z-10"
               />
           </Button>
         ) : null}

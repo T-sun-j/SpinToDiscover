@@ -145,9 +145,9 @@ export default function RegisterPage() {
 				<Header/>
 
 				{/* 页面标题 */}
-				<div className="flex items-center justify-between px-4 py-4">
-					<h1 className="text-xl font-poppins text-[#11295b]">{t('auth.createAccount')}</h1>
-					<button className="text-[#11295b] hover:text-[#11295b]">
+				<div className="flex items-center justify-between px-4 py-4 z-100">
+					<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('auth.createAccount')}</h1>
+					<button className="text-[#0F1728] hover:text-[#0F1728]">
 						<Link href="/">
 							<ChevronLeft className="h-7 w-7" />
 						</Link>

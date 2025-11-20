@@ -308,7 +308,7 @@ export default function ReleasePage() {
 
   return (
     <AuthGuard>
-      <main className="container-page flex min-h-dvh flex-col bg-white">
+      <main className=" flex min-h-dvh flex-col bg-white">
         {/* Header */}
         <Header
           showSearch
@@ -316,10 +316,10 @@ export default function ReleasePage() {
         />
 
         {/* Back button and title */}
-        <div className="flex items-center justify-between px-6 py-4">
-          <h1 className="text-xl text-[#11295b] font-poppins">{t('releasePage.title')}</h1>
-          <button onClick={handleBack} className="text-[#11295b] hover:text-[#11295b]">
-            <ChevronLeft className="h-7 w-7" />
+        <div className="flex items-center justify-between px-6 py-4 z-100">
+          <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('releasePage.title')}</h1>
+          <button onClick={handleBack} className="text-[#0F1728] hover:text-[#0F1728]">
+            <ChevronLeft className="h-7 w-7  z-10" />
           </button>
         </div>
 
@@ -433,7 +433,7 @@ export default function ReleasePage() {
           {/* Location */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-gray-500">
-              <MapPin className="h-4 w-4" />
+              <MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
               <span>{t('releasePage.location')}: {userLocation || t('releasePage.gettingLocation')}</span>
             </div>
             {!userLocation && !isGettingLocation && (
@@ -450,7 +450,7 @@ export default function ReleasePage() {
           {/* Advantage Info Section */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg text-[#11295b] font-poppins">{t('releasePage.advantageInfo')}</h2>
+              <h2 className="text-xl font-inter text-[#0F1728] font-semibold">{t('releasePage.advantageInfo')}</h2>
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -469,9 +469,9 @@ export default function ReleasePage() {
                       setUserBrandInfo(null);
                     }
                   }}
-                  className="form-checkbox h-4 w-4 rounded-sm border-gray-400 text-[#11295b] focus:ring-[#11295b]"
+                  className="form-checkbox h-4 w-4 rounded-sm border-gray-400 bg-transparent text-[#11295b] focus:ring-[#11295b] checked:bg-transparent"
                 />
-                <span className="text-sm text-gray-600">{t('releasePage.fillBrandInfo')}</span>
+                <span className="text-xs font-inter text-[#0F1728]">{t('releasePage.fillBrandInfo')}</span>
               </div>
             </div>
 

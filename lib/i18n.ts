@@ -234,6 +234,7 @@ export interface Translations {
       workHour: string;
       email: string;
       address: string;
+      online: string;
       myPosts: string;
       follow: string;
       followed: string;
@@ -324,6 +325,7 @@ export interface Translations {
     publishing: string;
     addMedia: string;
     mediaFiles: string;
+    shopUrl: string;
   };
   favoritePage: {
     title: string;
@@ -691,11 +693,12 @@ export const translations: Record<Language, Translations> = {
       title: 'Personal Page',
       brand: 'Brand',
       brief: 'Brief',
-      customerServiceHotline: 'Customer Service Hotline',
+      customerServiceHotline: 'Tel/Mobile',
       address: 'Address',
-      workHour: 'Working Hours',
-      email: 'Email',
-      myPosts: 'My Posts',
+      workHour: 'Work Hours',
+      email: 'E-mail',
+      online: 'Shop Now',
+      myPosts: 'Posts',
       follow: 'Follow',
       followed: 'Followed',
       editInfo: 'Edit Info',
@@ -746,14 +749,14 @@ export const translations: Record<Language, Translations> = {
       posts: 'posts',
     },
     releasePage: {
-      title: 'Release',
-      fieldTitle: 'Field Title',
-      fieldContent: 'Field Content',
+      title: 'Post',
+      fieldTitle: 'Write a clear title for your post',
+      fieldContent: 'Share your story, insight, or creation',
       location: 'Location',
       advantageInfo: 'Advantage Info.',
-      fillBrandInfo: 'Fill Brand Info',
-      brandProductionName: 'Brand Production Name',
-      briefDescription: 'Brief Description',
+      fillBrandInfo: 'Fill in with brand information',
+      brandProductionName: 'Product or collection name',
+      briefDescription: 'Highlight the unique featuresor craftsmanship',
       errorMessage: 'Error Message',
       allowingComments: 'Allowing Comments',
       releaseButton: 'Release',
@@ -785,6 +788,7 @@ export const translations: Record<Language, Translations> = {
       publishing: 'Publishing...',
       addMedia: 'Add Media',
       mediaFiles: 'media files',
+      shopUrl: 'Online shop',
     },
     favoritePage: {
       title: 'Favorite',
@@ -863,14 +867,14 @@ export const translations: Record<Language, Translations> = {
     },
     brandEditPage: {
       title: 'My page',
-      brand: 'Brand',
-      brief: 'Brief',
+      brand: 'Enter your brand or creator name',
+      brief: 'Describe your story, vision, or whatmakes your brand unique',
       logo: 'Logo',
-      officialSite: 'Official Site',
-      telMobile: 'Tel/Mobile',
-      address: 'Address',
-      workHour: 'Work Hours',
-      email: 'Email',
+      officialSite: 'Website link (optional)',
+      telMobile: 'Your contact number',
+      address: 'Store or office address',
+      workHour: 'Business hours (e.g.9:00-13:00)',
+      email: 'Business emall for inquiries',
       location: 'Location',
       submit: 'Submit',
       submitting: 'Submitting...',
@@ -1152,6 +1156,7 @@ export const translations: Record<Language, Translations> = {
       workHour: '工作时间',
       address: '地址',
       email: '邮箱',
+      online: '立即访问',
       myPosts: '我的帖子',
       follow: '关注',
       followed: '已关注',
@@ -1242,6 +1247,7 @@ export const translations: Record<Language, Translations> = {
       publishing: '发布中...',
       addMedia: '添加媒体',
       mediaFiles: '个媒体文件',
+      shopUrl: '在线商城',
     },
     favoritePage: {
       title: '我的收藏',
@@ -1320,14 +1326,14 @@ export const translations: Record<Language, Translations> = {
     },
     brandEditPage: {
       title: '我的页面',
-      brand: '品牌',
-      brief: '简介',
-      logo: '标志',
-      officialSite: '官方网站',
-      telMobile: '电话/手机',
-      workHour: '工作时间',
-      address: '地址',
-      email: '邮箱',
+      brand: '输入您的品牌或创作者名称',
+      brief: '描述您的故事、愿景或使您的品牌与众不同之处',
+      logo: 'Logo',
+      officialSite: '官方网站链接（可选）',
+      telMobile: '您的联系方式',
+      workHour: '营业时间（例如：9:00-13:00）',
+      address: '商店或办公室地址',
+      email: '业务电子邮件用于咨询',
       location: '位置',
       submit: '提交',
       submitting: '提交中...',

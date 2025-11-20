@@ -17,15 +17,15 @@ export default function ProtectPage() {
       <Header showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex items-center px-3 py-4">
+      <div className="flex items-center px-3 py-4 z-100">
         <button
           aria-label={t("protect.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b] mr-4"
+          className="text-[#0F1728] hover:text-[#0F1728] mr-4"
         >
-          <ChevronLeft className="h-7 w-7" />
+          <ChevronLeft className="h-7 w-7 z-10" />
         </button>
-        <h1 className="text-xl text-[#11295b] font-poppins">
+        <h1 className="text-xl text-[#0F1728] font-poppins font-semibold">
           {t("protect.title")}
         </h1>
       </div>
@@ -35,7 +35,7 @@ export default function ProtectPage() {
         <div className="space-y-6">
           {/* Main Title */}
           <div className="text-center ">
-            <h2 className="text-3xl font-semibold text-[#11295b] font-poppins leading-tight text-left">
+            <h2 className="text-3xl font-semibold text-[#0F1728] font-poppins leading-tight text-left">
               {t("protect.mainTitle")}
             </h2>
           </div>

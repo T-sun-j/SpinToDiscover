@@ -126,16 +126,16 @@ export default function HistoryPage() {
       <Header showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex justify-between items-center px-6 py-2">
-        <h1 className="text-xl font-poppins text-[#11295b]">
+      <div className="flex justify-between items-center px-6 py-2 z-100">
+        <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">
           {t("personalCenter.menu.history")}
         </h1>
         <button
           aria-label={t("history.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b]"
+          className="text-[#0F1728] hover:text-[#0F1728]"
         >
-          <ChevronLeft className="w-7 h-7" />
+          <ChevronLeft className="w-7 h-7 z-10" />
         </button>
       </div>
 

@@ -14,6 +14,7 @@ import { SquareContent, Publisher, Pagination, SERVER_CONFIG } from '../../lib/a
 import { LoadingSpinner, ErrorState } from '../../components/ui/LoadingStates';
 import { OptimizedImage } from '../../components/ui/OptimizedImage';
 import { getCurrentLocationString, checkGeolocationPermission } from '../../lib/utils/geolocation';
+import Image from 'next/image';
 
 export default function SquarePage() {
 	const { t } = useLanguage();
@@ -413,7 +414,7 @@ export default function SquarePage() {
 				/>
 
 				{/* 导航区域 - 一行显示 */}
-				<div className="flex items-center justify-between px-2 pt-3 pb-2 border-b">
+				<div className="flex items-center justify-between px-2 pt-3 pb-2 border-b z-100">
 					{/* 左侧：三个tab */}
 					<div className="flex space-x-2">
 						<button
@@ -425,7 +426,7 @@ export default function SquarePage() {
 							}}
 							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'recommend'
 								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
-								: 'font-semibold text-gray-600 hover:text-gray-800'
+								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
 						>
 							{t('square.recommend')}
@@ -444,7 +445,7 @@ export default function SquarePage() {
 							}}
 							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'following'
 								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
-								: 'font-semibold text-gray-600 hover:text-gray-800'
+								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
 						>
 							{t('square.following')}
@@ -466,7 +467,7 @@ export default function SquarePage() {
 							}}
 							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'nearby'
 								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
-								: 'font-semibold text-gray-600 hover:text-gray-800'
+								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
 						>
 							{t('square.nearby')}
@@ -481,7 +482,7 @@ export default function SquarePage() {
 							onClick={() => router.push(`/region-select?from=square&tab=${activeTab}`)}
 							className="text-gray-600 hover:text-gray-800 px-2 py-1"
 						>
-							<Filter className="h-5 w-5 font-semibold" />
+							<Image src="/img/Filter.png" alt="Filter" width={16} height={16} className='w-6 h-6' />
 						</Button>
 
 						{/* 显示当前选择的地区 - 只显示三个字加省略号 */}
@@ -564,7 +565,7 @@ export default function SquarePage() {
 
 
 										{/* 标题 */}
-										<h3 className=" text-[#12295B] text-[17px] leading-[34px] font-nunito font-semibold">{post.title}</h3>
+										<h3 className=" text-[#12295B] text-[17px] italic leading-[34px] font-nunito font-semibold">{post.title}</h3>
 
 										{/* 描述 */}
 										<p className="text-sm text-[#20313B]  leading-[17px] font-inter">{post.description}</p>
@@ -625,14 +626,14 @@ export default function SquarePage() {
 											{/* 位置和时间信息 */}
 											<div className="flex flex-col gap-1">
 												{post.updatedAt && (
-													<span className="text-xs text-gray-600">
+													<span className="text-xs text-gray-500">
 														{post.updatedAt}
 													</span>
 												)}
 												<div className="flex items-center gap-2 mt-2">
-													<MapPin className="h-4 w-4 text-gray-500 font-semibold" />
-													<span className="text-sm text-gray-600">{post.location}</span>
-												</div>
+													<MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
+													<span className="text-sm text-gray-500">{post.location}</span>
+												</div>	
 
 											</div>
 
@@ -644,7 +645,7 @@ export default function SquarePage() {
 													disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 													className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isCollect
 														? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
-														: 'text-gray-500 hover:text-gray-700'
+														: 'text-[#0F1728] hover:text-gray-700'
 														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 													title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 												>
@@ -661,7 +662,7 @@ export default function SquarePage() {
 													disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
 													className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isLove
 														? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent'
-														: 'text-gray-500 hover:text-red-500'
+														: 'text-[#0F1728] hover:text-red-500'
 														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
 													title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
 												>
@@ -675,7 +676,7 @@ export default function SquarePage() {
 												</button>
 												<button
 													onClick={(e) => handleShare(post, e)}
-													className="flex flex-col items-center gap-0.5 text-gray-500 hover:text-gray-700 transition-colors"
+													className="flex flex-col items-center gap-0.5 text-[#0F1728] hover:text-gray-700 transition-colors"
 												>
 													<SquareArrowOutUpRight className="h-6 w-6 font-semibold" />
 													<span className="text-xs font-nunito">{post.shares || t('square.share')}</span>

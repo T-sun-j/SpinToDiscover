@@ -130,13 +130,13 @@ export default function LoginPage() {
 				<Header/>
 
 				{/* 页面标题和返回按钮 */}
-				<div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl font-poppins text-[#11295b]">{t('auth.loginTitle')}</h1>
+				<div className="flex items-center justify-between px-6 py-4 z-100">
+					<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('auth.loginTitle')}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#11295b] hover:text-[#11295b]"
+						className="text-[#0F1728] hover:text-[#0F1728]"
 					>
-						<ChevronLeft className="h-7 w-7" />
+						<ChevronLeft className="h-7 w-7 z-100" />
 					</button>
 				</div>
 

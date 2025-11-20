@@ -278,13 +278,13 @@ export default function PersonalizationPage() {
                 <Header/>
 
                 {/* 页面标题和返回按钮 */}
-                <div className="flex items-center justify-between px-2 py-4">
-                    <h1 className="text-xl font-poppins text-[#11295b]">{t('personalization.title')}</h1>
+                <div className="flex items-center justify-between px-2 py-4 z-100">
+                    <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('personalization.title')}</h1>
                     <button
                         onClick={handleBack}
-                        className="text-[#11295b] hover:text-[#11295b]" 
+                        className="text-[#0F1728] hover:text-[#0F1728]" 
                     >
-                        <ChevronLeft className="w-7 h-7" />
+                        <ChevronLeft className="w-7 h-7 z-100" />
                     </button>
                 </div>
 

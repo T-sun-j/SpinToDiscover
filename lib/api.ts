@@ -135,6 +135,7 @@ export interface PostSquareRequest {
   operatingHours?: string;
   customerService?: string;
   workingHours?: string;
+  shopurl?: string;
 }
 
 // 获取广场内容列表请求参数类型
@@ -171,6 +172,7 @@ export interface BrandInfo {
   address: string;
   customerService: string;
   workHour: string;
+  brand: string;
   tel: string;
   email: string;
 }
@@ -187,6 +189,7 @@ export interface Interactions {
 export interface SquareContent {
   id: string;
   title: string;
+  brand: string;
   description: string;
   location: string;
   images: string[];
@@ -440,6 +443,7 @@ export interface UserInfoResponse {
   tel?: string;
   customerService?: string | null;
   workHour?: string | null;
+  shopurl?: string | null;
   isFollow: boolean;
   userData: UserInfoResponse;
 }
@@ -475,6 +479,7 @@ export interface UpdateUserBrandRequest {
   address?: string;
   location?: string;
   workHour?: string;
+  shopurl?: string;
 }
 
 // 更新用户品牌信息响应类型

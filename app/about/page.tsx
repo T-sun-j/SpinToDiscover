@@ -16,15 +16,15 @@ export default function AboutPage() {
       <Header showSearch showUser />
 
       {/* Page title & back - 根据设计稿调整布局 */}
-      <div className="flex items-center px-4 py-4">
+      <div className="flex items-center px-4 py-4 z-100">
         <button
           aria-label={t("about.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b] mr-4"
+          className="text-[#0F1728] hover:text-[#0F1728] mr-4"
         >
-          <ChevronLeft className="h-7 w-7" />
+          <ChevronLeft className="h-7 w-7 z-10" />
         </button>
-        <h1 className="text-xl text-[#11295b] font-poppins">
+        <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">
           {t("about.title")}
         </h1>
       </div>

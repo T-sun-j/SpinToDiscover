@@ -8,7 +8,7 @@ import { Button } from '../../components/ui/button';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthGuard } from '../../components/AuthGuard';
-import { ArrowLeft, Search, Trash2, ChevronDown, User, FileText } from 'lucide-react';
+import { ArrowLeft, Search, Trash2, ChevronDown, User, FileText, ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import { searchContent } from '../../lib/auth';
 import { UserSearchResult, ArticleSearchResult, buildAvatarUrl } from '../../lib/api';
@@ -160,15 +160,13 @@ export default function SearchPage() {
         />
 
         {/* 页面标题和返回按钮 */}
-        <div className="flex items-center justify-between px-6 py-4">
-					<h1 className="text-xl text-[#11295b] font-poppins">{t('search.title')}</h1>
+        <div className="flex items-center justify-between px-6 py-4 z-100">
+					<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('search.title')}</h1>
 					<button 
 						onClick={handleBack}
-						className="text-[#11295b] hover:text-[#11295b]"
+						className="text-[#0F1728] hover:text-[#0F1728]"
 					>
-						<svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-						</svg>
+						<ChevronLeft className="h-7 w-7 z-10" />
 					</button>
 				</div>
 

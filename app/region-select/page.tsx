@@ -138,20 +138,20 @@ export default function RegionSelectPage() {
                     HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
                     UI_CONSTANTS.SPACING.PX_6,
                     'py-4',
-                    'text-[#11295b]'
+                    'text-[#0F1728]',
+                    'z-100'
                 )}>
                     <h1 className={classNames(
-                        'text-xl text-[#11295b]',
-                        UI_CONSTANTS.FONTS.POPPINS
+                        'text-xl text-[#0F1728] font-poppins font-semibold',
                     )}>{t('regionSelect.title')}</h1>
                     <button
                         onClick={() => router.back()}
                         className={classNames(
-                            UI_CONSTANTS.COLORS.PRIMARY,
-                            'hover:text-[#11295b]'
+                            'text-[#0F1728]',
+                            'hover:text-[#0F1728]'
                         )}
                     >
-                        <ChevronLeft className={UI_CONSTANTS.SIZES.ICON_LG} />
+                        <ChevronLeft className='h-7 w-7 z-10' />
                     </button>
                 </div>
 

@@ -32,7 +32,8 @@ export default function BrandEditPage() {
         address: '',
         location: '',
         workHour: '',
-        email: ''
+        email: '',
+        shopurl: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -81,7 +82,8 @@ export default function BrandEditPage() {
                         address: userInfo.address || '',
                         location: userInfo.location || '',
                         workHour: userInfo.workHour || '',
-                        email: userInfo.email || ''
+                        email: userInfo.email || '',
+                        shopurl: (userInfo as any).shopurl || ''
                     });
 
                     // 如果有logo，设置预览
@@ -249,7 +251,8 @@ export default function BrandEditPage() {
                 address: formData.address,
                 location: formData.location,
                 workHour: formData.workHour,
-                email: formData.email
+                email: formData.email,
+                shopurl: formData.shopurl
             });
 
             if (response.success) {
@@ -274,13 +277,10 @@ export default function BrandEditPage() {
                 <Header />
 
                 {/* Back button and title */}
-                <div className="flex items-center justify-between px-6 py-4">
-                    <h1 className="text-xl text-[#11295b] font-poppins">{t('brandEditPage.title')}</h1>
-                    <button onClick={() => router.push('/personal')} className="text-[#11295b] hover:text-[#11295b]">
-                        <ChevronLeft className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_LG,
-                            UI_CONSTANTS.COLORS.PRIMARY
-                        )} />
+                <div className="flex items-center justify-between px-6 py-4 z-100">
+                    <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('brandEditPage.title')}</h1>
+                    <button onClick={() => router.push('/personal')} className="text-[#0F1728] hover:text-[#0F1728]">
+                        <ChevronLeft className="h-7 w-7 z-10" />
                     </button>
                 </div>
 
@@ -367,6 +367,17 @@ export default function BrandEditPage() {
                                 placeholder={t('brandEditPage.officialSite')}
                                 value={formData.officialsite}
                                 onChange={(e) => handleInputChange('officialsite', e.target.value)}
+                                className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                            />
+                        </div>
+
+                        {/* Shop URL */}
+                        <div>
+                            <input
+                                type="text"
+                                placeholder={t('releasePage.shopUrl') || 'Online shop'}
+                                value={formData.shopurl}
+                                onChange={(e) => handleInputChange('shopurl', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
                             />
                         </div>

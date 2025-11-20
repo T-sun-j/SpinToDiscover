@@ -253,6 +253,7 @@ export async function updateUserBrand(
       address: brandData.address || '',
       location: brandData.location || '',
       workHour: brandData.workHour || '',
+      shopurl: brandData.shopurl || '',
     });
     
     return response;

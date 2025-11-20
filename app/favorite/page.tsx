@@ -221,16 +221,16 @@ export default function FavoritePage() {
         <Header showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex items-center justify-between px-6 py-2">
-        <h1 className="text-xl text-[#11295b] font-poppins">
+      <div className="flex items-center justify-between px-6 py-2 z-100">
+        <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">
           {t("favoritePage.title")}
         </h1>
         <button
           aria-label={t("favoritePage.back")}
           onClick={() => router.back()}
-          className="text-[#11295b] hover:text-[#11295b]"
+          className="text-[#0F1728] hover:text-[#0F1728]"
         >
-          <ChevronLeft className="h-7 w-7" />
+          <ChevronLeft className="h-7 w-7 z-10" />
         </button>
       </div>
 

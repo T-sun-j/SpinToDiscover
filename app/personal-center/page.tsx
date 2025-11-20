@@ -65,229 +65,219 @@ export default function PersonalCenterPage() {
                 'flex',
                 HISTORY_CONSTANTS.LAYOUT.MIN_HEIGHT_DVH,
                 HISTORY_CONSTANTS.LAYOUT.FLEX_COL,
-                'bg-white'
+                'bg-white',
+                'font-semibold',
+                'text-xl',
+                'text-[#0F1728]'
+
             )}>
                 {/* Header with logo and language toggle */}
                 <Header
                     logoLink="/square"
                 />
 
-            {/* 页面标题和返回按钮 */}
-            <div className={classNames(
-                HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
-                'px-4 py-4',
-                'text-[#11295b]'
-            )}>
-                <h1 className={classNames(
-                    'text-xl',
-                    UI_CONSTANTS.COLORS.PRIMARY
-                )}>{t('personalCenter.title')}</h1>
-                <button
-                    onClick={() => router.push('/square')}
-                    className={classNames(
-                        UI_CONSTANTS.COLORS.PRIMARY,
-                        'hover:text-[#11295b]'
-                    )}
-                >
-                    <ChevronLeft className={UI_CONSTANTS.SIZES.ICON_LG} />
-                </button>
-            </div>
+                {/* 页面标题和返回按钮 */}
+                <div className={classNames(
+                    HISTORY_CONSTANTS.LAYOUT.FLEX_BETWEEN,
+                    'px-4 py-4 z-100',
+                    'text-[#0F1728]'
+                )}>
+                    <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('personalCenter.title')}</h1>
+                    <button
+                        onClick={() => router.push('/square')}
+                        className="text-[#0F1728] hover:text-[#0F1728]"
+                    >
+                        <ChevronLeft className='h-8 w-8 z-100' />
+                    </button>
+                </div>
 
-            {/* User profile section */}
-            <div className={classNames('px-4 py-4')}>
-                {loading && (
-                    <div className={classNames(
-                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                        'py-4'
-                    )}>
-                        <Loader2 className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_MD,
-                            ANIMATION_CONSTANTS.SPIN,
-                            UI_CONSTANTS.COLORS.PRIMARY
-                        )} />
-                        <span className={classNames(
-                            'ml-2',
-                            UI_CONSTANTS.COLORS.PRIMARY,
-                            UI_CONSTANTS.FONTS.NUNITO
-                        )}>{t("userInfo.loading")}</span>
-                    </div>
-                )}
-
-                {error && (
-                    <div className={classNames(
-                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                        'py-4'
-                    )}>
-                        <AlertCircle className={classNames(
-                            UI_CONSTANTS.SIZES.ICON_MD,
-                            UI_CONSTANTS.COLORS.RED_500
-                        )} />
-                        <span className={classNames(
-                            'ml-2',
-                            UI_CONSTANTS.COLORS.RED_500,
-                            UI_CONSTANTS.FONTS.NUNITO
-                        )}>{t("userInfo.error")}</span>
-                        <button
-                            onClick={() => execute()}
-                            className={classNames(
-                                'ml-2 p-1',
-                                UI_CONSTANTS.COLORS.PRIMARY,
-                                'hover:text-[#11295b]/80'
-                            )}
-                        >
-                            <RefreshCw className={classNames(
-                                UI_CONSTANTS.SIZES.ICON_SM
+                {/* User profile section */}
+                <div className={classNames('px-4')}>
+                    {loading && (
+                        <div className={classNames(
+                            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                            'py-4'
+                        )}>
+                            <Loader2 className={classNames(
+                                UI_CONSTANTS.SIZES.ICON_MD,
+                                ANIMATION_CONSTANTS.SPIN,
+                                UI_CONSTANTS.COLORS.PRIMARY
                             )} />
-                        </button>
-                    </div>
-                )}
-
-                {!loading && !error && (
-                    <div className={classNames('flex items-center', UI_CONSTANTS.SPACING.GAP_4)}>
-                        {/* Profile picture */}
-                        <div className="relative">
-                            <Image
-                                src={buildAvatarUrl(userData?.avatar)}
-                                alt="Profile"
-                                width={12}
-                                height={12}
-                                className={classNames(
-                                    UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                    'h-12 w-12 object-cover'
-                                )}
-                            />
+                            <span className={classNames(
+                                'ml-2',
+                                UI_CONSTANTS.COLORS.PRIMARY,
+                                UI_CONSTANTS.FONTS.NUNITO
+                            )}>{t("userInfo.loading")}</span>
                         </div>
+                    )}
 
-                        {/* Username and user info */}
-                        <div className="flex-1 flex items-center text-[#11295b]">
-                            <div className="flex-1">
-                                <h2 className={classNames(
-                                    'text-xl',
+                    {error && (
+                        <div className={classNames(
+                            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                            'py-4'
+                        )}>
+                            <AlertCircle className={classNames(
+                                UI_CONSTANTS.SIZES.ICON_MD,
+                                UI_CONSTANTS.COLORS.RED_500
+                            )} />
+                            <span className={classNames(
+                                'ml-2',
+                                UI_CONSTANTS.COLORS.RED_500,
+                                UI_CONSTANTS.FONTS.NUNITO
+                            )}>{t("userInfo.error")}</span>
+                            <button
+                                onClick={() => execute()}
+                                className={classNames(
+                                    'ml-2 p-1',
                                     UI_CONSTANTS.COLORS.PRIMARY,
-                                    UI_CONSTANTS.FONTS.POPPINS,
-                                    'flex items-center gap-1'
-                                )}>
-                                    {userData?.nickname || userData?.email || 'User'}
-                                    <Link href="/personalization">
-                                        <Button variant="ghost" size="icon" className={classNames(
-                                            UI_CONSTANTS.COLORS.PRIMARY,
-                                            'p-1 h-7 w-7'
-                                        )}>
-                                            <RotateCcw className="h-5 w-5" />
-                                        </Button>
-                                    </Link>
-                                </h2>
+                                    'hover:text-[#11295b]/80'
+                                )}
+                            >
+                                <RefreshCw className={classNames(
+                                    UI_CONSTANTS.SIZES.ICON_SM
+                                )} />
+                            </button>
+                        </div>
+                    )}
+
+                    {!loading && !error && (
+                        <div className={classNames('flex items-center', UI_CONSTANTS.SPACING.GAP_4)}>
+                            {/* Profile picture */}
+                            <div className="relative">
+                                <Image
+                                    src={buildAvatarUrl(userData?.avatar)}
+                                    alt="Profile"
+                                    width={12}
+                                    height={12}
+                                    className={classNames(
+                                        UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
+                                        'h-9 w-9 object-cover'
+                                    )}
+                                />
+                            </div>
+
+                            {/* Username and user info */}
+                            <div className="flex-1 flex items-center text-[#11295b]">
+                                <div className="flex-1">
+                                    <h2 className='text-sm text-[#0F1728] flex items-center gap-1 font-inter'>
+                                        {userData?.nickname || userData?.email || 'User'}
+                                        <Link href="/personalization">
+                                            <Button variant="ghost" size="icon">
+                                                <Image src="/img/RotateCcw.png" alt="rotate" width={16} height={16} className='h-4 w-auto z-10' />
+                                            </Button>
+                                        </Link>
+                                    </h2>
+                                </div>
+                            </div>
+
+                            {/* Edit and Settings buttons */}
+                            <div className={classNames('flex items-center', 'text-[#11295b]', UI_CONSTANTS.SPACING.GAP_2)}>
+                                <Link href="/settings">
+                                    <Button variant="ghost" size="icon" className={UI_CONSTANTS.COLORS.PRIMARY}>
+                                        <Image src="/img/set.png" alt="settings" width={16} height={16} className='h-8 w-8' />
+                                    </Button>
+                                </Link>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className={UI_CONSTANTS.COLORS.PRIMARY}
+                                    onClick={handleLogout}
+                                    title={t('personalCenter.logout')}
+                                >
+                                    <LogOut className='h-8 w-8' />
+                                </Button>
                             </div>
                         </div>
+                    )}
+                </div>
 
-                        {/* Edit and Settings buttons */}
-                        <div className={classNames('flex items-center', 'text-[#11295b]',UI_CONSTANTS.SPACING.GAP_2)}>
-                            <Link href="/settings">
-                                <Button variant="ghost" size="icon" className={UI_CONSTANTS.COLORS.PRIMARY}>
-                                    <Settings className={UI_CONSTANTS.SIZES.ICON_LG} />
-                                </Button>
-                            </Link>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className={UI_CONSTANTS.COLORS.PRIMARY}
-                                onClick={handleLogout}
-                                title={t('personalCenter.logout')}
+                {/* Menu items */}
+                <div className={classNames('flex-1 px-4 py-4')}>
+                    <div className="space-y-4">
+                        <Link href="/personal">
+                            <Button
+                                variant="ghost"
+                                className={classNames(
+                                    'w-full justify-start',
+                                    'bg-[#11295b] text-white h-13 rounded-lg',
+                                    'font-poppins',
+                                    'text-[17px] font-semibold'
+                                )}
                             >
-                                <LogOut className={UI_CONSTANTS.SIZES.ICON_LG} />
+                                {t('personalCenter.menu.myPage')}
                             </Button>
-                        </div>
+                        </Link>
+                        <div className="h-2" />
+                        <Link href="/followed">
+                            <Button
+                                variant="ghost"
+                                className={classNames(
+                                    'w-full justify-start',
+                                    'bg-[#11295b] text-white h-13 rounded-lg',
+                                    'font-poppins',
+                                    'text-[17px] font-semibold'
+                                )}
+                            >
+                                {t('personalCenter.menu.followed')}
+                            </Button>
+                        </Link>
+                        <div className="h-2" />
+                        <Link href="/history">
+                            <Button
+                                variant="ghost"
+                                className={classNames(
+                                    'w-full justify-start',
+                                    'bg-[#11295b] text-white h-13 rounded-lg',
+                                    'font-poppins',
+                                    'text-[17px] font-semibold'
+                                )}
+                            >
+                                {t('personalCenter.menu.history')}
+                            </Button>
+                        </Link>
+                        <div className="h-2" />
+                        <Link href="/favorite">
+                            <Button
+                                variant="ghost"
+                                className={classNames(
+                                    'w-full justify-start',
+                                    'bg-[#11295b] text-white h-13 rounded-lg',
+                                    'font-poppins',
+                                    'text-[17px] font-semibold'
+                                )}
+                            >
+                                {t('personalCenter.menu.favorites')}
+                            </Button>
+                        </Link>
                     </div>
-                )}
-            </div>
-
-            {/* Menu items */}
-            <div className={classNames('flex-1 px-4 py-4')}>
-                <div className="space-y-4">
-                    <Link href="/personal">
-                        <Button
-                            variant="ghost"
-                            className={classNames(
-                                'w-full justify-start',
-                                'bg-[#11295b] text-white h-12 rounded-lg',
-                                UI_CONSTANTS.FONTS.NUNITO,
-                                'text-base font-bold'
-                            )}
-                        >
-                            {t('personalCenter.menu.myPage')}
-                        </Button>
-                    </Link>
-                    <div className="h-2" />
-                    <Link href="/followed">
-                        <Button
-                            variant="ghost"
-                            className={classNames(
-                                'w-full justify-start',
-                                'bg-[#11295b] text-white h-12 rounded-lg',
-                                UI_CONSTANTS.FONTS.NUNITO,
-                                'text-base font-bold'
-                            )}
-                        >
-                            {t('personalCenter.menu.followed')}
-                        </Button>
-                    </Link>
-                    <div className="h-2" />
-                    <Link href="/history">
-                        <Button
-                            variant="ghost"
-                            className={classNames(
-                                'w-full justify-start',
-                                'bg-[#11295b] text-white h-12 rounded-lg',
-                                UI_CONSTANTS.FONTS.NUNITO,
-                                'text-base font-bold'
-                            )}
-                        >
-                            {t('personalCenter.menu.history')}
-                        </Button>
-                    </Link>
-                    <div className="h-2" />
-                    <Link href="/favorite">
-                        <Button
-                            variant="ghost"
-                            className={classNames(
-                                'w-full justify-start',
-                                'bg-[#11295b] text-white h-12 rounded-lg',
-                                UI_CONSTANTS.FONTS.NUNITO,
-                                'text-base font-bold'
-                            )}
-                        >
-                            {t('personalCenter.menu.favorites')}
-                        </Button>
-                    </Link>
                 </div>
-            </div>
 
-            {/* Post button and notifications */}
-            <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
-                <div className={classNames(
-                    HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                    UI_CONSTANTS.SPACING.GAP_4
-                )}>
-                    {/* Post button */}
-                    <Link href="/release">
-                        <Button
-                            className={classNames(
-                                'bg-white rounded-full h-16 w-16 flex flex-col items-center justify-center gap-1 text-[#11295b]',
-                                UI_CONSTANTS.COLORS.PRIMARY,
-                                UI_CONSTANTS.FONTS.NUNITO,
-                                'text-lg font-bold'
-                            )}
-                            size="lg"
-                        >
-                            <CirclePlus className="h-48 w-48 ,'text-[#11295b]'," />
-                            <span className={classNames(
-                                'text-xs','text-[#11295b]',
-                                UI_CONSTANTS.FONT_WEIGHTS.SEMIBOLD
-                            )}>{t('personalCenter.post.button')}</span>
-                        </Button>
-                    </Link>
+                {/* Post button and notifications */}
+                <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4')}>
+                    <div className={classNames(
+                        HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
+                        UI_CONSTANTS.SPACING.GAP_4
+                    )}>
+                        {/* Post button */}
+                        <Link href="/release">
+                            <Button
+                                className={classNames(
+                                    'bg-white rounded-full  flex flex-col items-center justify-center gap-1 text-[#11295b]',
+                                    UI_CONSTANTS.COLORS.PRIMARY,
+                                    UI_CONSTANTS.FONTS.NUNITO,
+                                    'text-[17px] font-semibold'
+                                )}
+                                size="lg"
+                            >
+                                <Image src="/img/CirclePlus.png" alt="post" width={16} height={16} className='h-14 w-14' />
+                                <span className={classNames(
+                                    'text-sm', 'text-[#0F1728]','font-semibold font-poppins'
+                                    
+                                )}>{t('personalCenter.post.button')}</span>
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
 
                 {/* Footer */}
                 <div className="mt-auto">

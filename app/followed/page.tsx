@@ -132,23 +132,23 @@ export default function FollowedPage() {
 
 
       {/* Tabs for Following/Follower */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700">
+      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700 z-100">
         <div className="flex gap-2">
           <button
             onClick={() => handleTabChange('following')}
-            className={`text-lg font-semibold font-nunito px-6 py-2 rounded-full ${activeTab === 'following' ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' : 'text-gray-500'}`}
+            className={`text-lg font-semibold font-nunito px-6 rounded-full ${activeTab === 'following' ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' : 'text-gray-500'}`}
           >
             {t('followedPage.following')}
           </button>
           <button
             onClick={() => handleTabChange('follower')}
-            className={`text-lg font-semibold font-nunito px-4 py-2 rounded-full ${activeTab === 'follower' ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' : 'text-gray-500'}`}
+            className={`text-lg font-semibold font-nunito px-4 rounded-full ${activeTab === 'follower' ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-sm' : 'text-gray-500'}`}
           >
             {t('followedPage.follower')}
           </button>
         </div>
-        <button onClick={handleBack} className="text-[#11295b] hover:text-[#11295b] font-nunito">
-          <ChevronLeft className="h-7 w-7" />
+        <button onClick={handleBack} className="text-[#0F1728] hover:text-[#0F1728] font-nunito">
+          <ChevronLeft className="h-7 w-7 z-10" />
         </button>
       </div>
 

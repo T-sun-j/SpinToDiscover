@@ -407,12 +407,12 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 				{/* 标题和返回按钮 */}
 				<div className="flex items-center justify-between px-4 py-4 border-b">
-					<h1 className="text-lg font-nunito font-semibold text-[#11295b]">{post.title || 'Untitled'}</h1>
+					<h1 className="text-xl font-poppins text-[#12295B] italic font-semibold">{post.title || 'Untitled'}</h1>
 					<button
 						onClick={handleBack}
-						className="text-[#11295b] hover:text-[#11295b]"
+						className="text-[#0F1728] hover:text-[#0F1728]"
 					>
-						<ChevronLeft className='h-7 w-7' />
+						<ChevronLeft className='h-7 w-7 z-10' />
 					</button>
 				</div>
 
@@ -553,15 +553,8 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										{post.brandInfo.website}
+										{post.brandInfo.brand}
 									</a>
-									{post.brandInfo.logo && (
-										<OptimizedImage
-											src={`${SERVER_CONFIG.STATIC_URL}${post.brandInfo.logo}`}
-											alt="Brand Logo"
-											className="h-10 w-auto ml-2 min-w-12"
-										/>
-									)}
 								</div>
 							)}
 
