@@ -1,4 +1,7 @@
 {
-  "/square/[id]/page": "app/square/[id]/page.js",
-  "/search/page": "app/search/page.js"
+  "/search/page": "app/search/page.js",
+  "/personal/[userId]/page": "app/personal/[userId]/page.js",
+  "/page": "app/page.js",
+  "/square/page": "app/square/page.js",
+  "/square/[id]/page": "app/square/[id]/page.js"
 }
