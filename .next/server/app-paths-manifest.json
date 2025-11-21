@@ -1,4 +1,4 @@
 {
-  "/(auth)/personalization/page": "app/(auth)/personalization/page.js",
-  "/personal-center/page": "app/personal-center/page.js"
+  "/personal/[userId]/page": "app/personal/[userId]/page.js",
+  "/release/page": "app/release/page.js"
 }

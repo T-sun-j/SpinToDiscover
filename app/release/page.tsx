@@ -434,7 +434,7 @@ export default function ReleasePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-gray-500">
               <MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
-              <span>{t('releasePage.location')}: {userLocation || t('releasePage.gettingLocation')}</span>
+              <span>{userLocation || t('releasePage.gettingLocation')}</span>
             </div>
             {!userLocation && !isGettingLocation && (
               <button
@@ -452,25 +452,36 @@ export default function ReleasePage() {
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-inter text-[#0F1728] font-semibold">{t('releasePage.advantageInfo')}</h2>
               <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={brandInfoChecked}
-                  onChange={async (e) => {
-                    const isChecked = e.target.checked;
-                    setBrandInfoChecked(isChecked);
+                <label className="relative h-4 w-4 flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={brandInfoChecked}
+                    onChange={async (e) => {
+                      const isChecked = e.target.checked;
+                      setBrandInfoChecked(isChecked);
 
-                    // 如果勾选了品牌信息，则获取用户信息并填充
-                    if (isChecked) {
-                      await fetchUserInfo();
-                    } else {
-                      // 如果取消勾选，清空品牌信息
-                      setBrandName('');
-                      setBriefDescription('');
-                      setUserBrandInfo(null);
-                    }
-                  }}
-                  className="form-checkbox h-4 w-4 rounded-sm border-gray-400 bg-transparent text-[#11295b] focus:ring-[#11295b] checked:bg-transparent"
-                />
+                      // 如果勾选了品牌信息，则获取用户信息并填充
+                      if (isChecked) {
+                        await fetchUserInfo();
+                      } else {
+                        // 如果取消勾选，清空品牌信息
+                        setBrandName('');
+                        setBriefDescription('');
+                        setUserBrandInfo(null);
+                      }
+                    }}
+                    className="peer h-4 w-4 appearance-none border-1 rounded border-[#12295B] bg-white text-primary focus:ring-primary/60 checked:border-[#12295B] outline-none"
+                  />
+                  <span className={
+                    "pointer-events-none absolute left-0 top-0 h-4 w-4 flex items-center justify-center " +
+                    (brandInfoChecked ? "" : "hidden")
+                  }>
+                    {/* Checkmark SVG */}
+                    <svg className="h-3 w-3 text-[#12295B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                </label>
                 <span className="text-xs font-inter text-[#0F1728]">{t('releasePage.fillBrandInfo')}</span>
               </div>
             </div>
@@ -520,23 +531,30 @@ export default function ReleasePage() {
 
           {/* Allowing Comments Checkbox */}
           <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={allowingComments}
-              onChange={(e) => setAllowingComments(e.target.checked)}
-              className={`form-checkbox h-4 w-4 rounded-sm border-gray-400 ${
-                allowingComments
-                  ? 'bg-[#11295b] text-white border-[#11295b]'
-                  : 'bg-gray-200 text-[#11295b] border-gray-400'
-              } focus:ring-[#11295b] transition-colors`}
-            />
+            <label className="relative h-4 w-4 flex items-center">
+              <input
+                type="checkbox"
+                checked={allowingComments}
+                onChange={(e) => setAllowingComments(e.target.checked)}
+                className="peer h-4 w-4 appearance-none border-1 rounded border-[#12295B] bg-white text-primary focus:ring-primary/60 checked:border-[#12295B] outline-none"
+              />
+              <span className={
+                "pointer-events-none absolute left-0 top-0 h-4 w-4 flex items-center justify-center " +
+                (allowingComments ? "" : "hidden")
+              }>
+                {/* Checkmark SVG */}
+                <svg className="h-3 w-3 text-[#12295B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            </label>
             <span className="text-gray-700 text-sm">{t('releasePage.allowingComments')}</span>
           </div>
 
           {/* Release Button */}
           <Button
             type="submit"
-            className="w-full bg-[#11295b] text-white shadow-md rounded-lg"
+            className="w-full bg-[#11295b] text-white text-[17px] font-poppins font-semibold shadow-md rounded-lg"
             size="lg"
             disabled={isSubmitting || (!!successMessage && !errorMessage)}
           >

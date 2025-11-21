@@ -241,6 +241,9 @@
   }
 }
 @layer utilities {
+  .pointer-events-auto {
+    pointer-events: auto;
+  }
   .pointer-events-none {
     pointer-events: none;
   }
@@ -297,6 +300,9 @@
   }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
+  }
+  .bottom-1 {
+    bottom: calc(var(--spacing) * 1);
   }
   .bottom-2 {
     bottom: calc(var(--spacing) * 2);
@@ -854,6 +860,9 @@
   }
   .border-\[\#11295b\] {
     border-color: #11295b;
+  }
+  .border-\[\#12295B\] {
+    border-color: #12295B;
   }
   .border-blue-500 {
     border-color: var(--color-blue-500);
@@ -1463,6 +1472,11 @@
   .checked\:border-\[\#11295b\] {
     &:checked {
       border-color: #11295b;
+    }
+  }
+  .checked\:border-\[\#12295B\] {
+    &:checked {
+      border-color: #12295B;
     }
   }
   .checked\:bg-transparent {
