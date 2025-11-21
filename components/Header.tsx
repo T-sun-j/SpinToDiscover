@@ -44,7 +44,7 @@ export function Header({
       <div className="flex items-center gap-4">
         <Link href={logoLink} className="flex items-center gap-2 ml-2">
           <Image
-            src={transparent ? "/img/logo-1.png" : "/img/logo-new-d.png"}
+            src={transparent ? "/img/logo-new-w.png" : "/img/logo-new-d.png"}
             alt="logo"
             width={52}
             height={22}
@@ -80,11 +80,11 @@ export function Header({
             aria-label="account"
           >
             <Image
-                src="/img/user.png"
+                src={transparent ? "/img/user.png" : "/img/user-d.png"}
                 alt="search"
                 width={28}
                 height={28}
-                className="h-7 w-7 z-10"
+                className="h-8 w-8 z-10"
               />
           </Button>
         ) : null}

@@ -24,22 +24,22 @@ export function Footer({ transparent = false }: FooterProps) {
 				<div className="flex items-center gap-2 whitespace-nowrap">
 					<Link
 						href="/about"
-						className="text-[#0F1728] font-inter"
+						className={`${transparent ? 'text-white' : 'text-[#0F1728]'} font-inter`}
 					>
 						{t('footer.links.about')}
 					</Link>
 					<Link
 						href="/privacy"
-						className="text-[#0F1728] font-inter"
+						className={`${transparent ? 'text-white' : 'text-[#0F1728]'} font-inter`}
 					>
 						{t('footer.links.privacy')}
 					</Link>
-					<span className="text-[#0F1728] font-inter">{t('footer.copyright')}</span>
+					<span className={`${transparent ? 'text-white' : 'text-[#0F1728]'} font-inter`}>{t('footer.copyright')}</span>	
 					<Image
-						src="/img/logo-2.png"
+						src={transparent ? "/img/logo-1.png" : "/img/logo-2.png"}
 						alt="Language"
-						width={20}
-						height={20}
+						width={52}
+						height={22}
 						className="h-5 w-auto"
 					/>
 				</div>

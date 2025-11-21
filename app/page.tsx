@@ -37,15 +37,15 @@ export default function HomePage() {
 				{/* 核心文案与按钮 - 定位在下半部分 */}
 				<div className="flex items-end justify-center pb-[40%]">
 					<div className="w-full max-w-md space-y-4 text-center">
-						<h1 className="text-3xl font-bold tracking-tight text-white font-poppins mb-10">Spin. Discover. Connect.</h1>
+						<h1 className="text-3xl font-semibold tracking-tight text-white font-poppins mb-10">Spin. Discover. Connect.</h1>
 						<div className="px-10 flex flex-col gap-4">
 							<Link href="/square">
-								<Button className="w-full mx-auto btn-gradient text-white shadow-md h-10 text-lg font-nunito" size="lg">
+								<Button className="w-full mx-auto btn-gradient text-white shadow-md h-10 text-lg font-poppins text-[17px] font-semibold" size="lg">
 									{t('buttons.spinToDiscover')}
 								</Button>
 							</Link>
 							<Link href="/register">
-								<Button className="w-full h-10 font-nunito" variant="outline" size="lg">
+								<Button className="w-full h-10 font-poppins text-[17px] font-semibold" variant="outline" size="lg">
 									{t('buttons.createAccount')}
 								</Button>
 							</Link>

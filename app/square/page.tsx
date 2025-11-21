@@ -414,7 +414,7 @@ export default function SquarePage() {
 				/>
 
 				{/* 导航区域 - 一行显示 */}
-				<div className="flex items-center justify-between px-2 pt-3 pb-2 border-b z-100">
+				<div className="flex items-center justify-between px-2 pt-3 pb-2  z-100">
 					{/* 左侧：三个tab */}
 					<div className="flex space-x-2">
 						<button

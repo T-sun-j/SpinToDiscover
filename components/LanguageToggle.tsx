@@ -19,17 +19,17 @@ export function LanguageToggle({ transparent = false }: LanguageToggleProps) {
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center text-[#0F1728] hover:opacity-80 transition-opacity"
+      className={`flex items-center ${transparent ? 'text-white' : 'text-[#0F1728]'} hover:opacity-80 transition-opacity`}
       aria-label={`Switch to ${language === 'en' ? 'Chinese' : 'English'}`}
     >
       <Image 
-        src="/img/en.png" 
+        src={transparent ? "/img/lang.png" : "/img/lang-d.png"} 
         alt="Language" 
-        width={20} 
-        height={20} 
-        className="h-5 w-5"
+        width={24} 
+        height={24} 
+        className="h-4 w-4"
       />
-      <span className={`text-[10px] font-medium ml-1 ${transparent ? 'text-[#0F1728]' : 'text-[#0F1728]'}`}>
+      <span className={`text-[10px] font-medium ml-1 ${transparent ? 'text-white' : 'text-[#0F1728]'}`}>
         {displayLang}
       </span>
     </button>
