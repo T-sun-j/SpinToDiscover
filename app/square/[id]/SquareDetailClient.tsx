@@ -350,15 +350,15 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
 						<EmptyState
-							title={t('square.contentNotExist') as string}
-							description={isAuthenticated
-								? (t('square.contentDeleted') as string)
-								: (t('square.loginRequiredForDetail') as string)
-							}
+							title={''}
+							// description={isAuthenticated
+							// 	? (t('square.contentDeleted') as string)
+							// 	: (t('square.loginRequiredForDetail') as string)
+							// }
 							action={!isAuthenticated ? (
 								<Button
 									onClick={() => router.push('/login')}
-									className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600"
+									className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 text-[17px] font-poppins font-semibold"
 								>
 									{t('square.loginRequiredForDetail')}
 								</Button>
