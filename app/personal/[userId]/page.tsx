@@ -1074,7 +1074,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                     )}
                                     size="lg"
                                 >
-                                    <Image src="/img/CirclePlus.png" alt="post" width={16} height={16} className='h-14 w-14' />
+                                    <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
                                     <span className={classNames(
                                     'text-sm', 'text-[#0F1728]','font-semibold font-poppins'
 

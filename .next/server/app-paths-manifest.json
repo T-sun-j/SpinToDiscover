@@ -1,4 +1,9 @@
 {
-  "/personal/[userId]/page": "app/personal/[userId]/page.js",
-  "/release/page": "app/release/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/search/page": "app/search/page.js",
+  "/page": "app/page.js",
+  "/square/page": "app/square/page.js",
+  "/personal-center/page": "app/personal-center/page.js",
+  "/personal/page": "app/personal/page.js",
+  "/personal/[userId]/page": "app/personal/[userId]/page.js"
 }
