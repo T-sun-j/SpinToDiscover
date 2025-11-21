@@ -360,22 +360,43 @@ export interface Translations {
   privacy: {
     title: string;
     back: string;
-    purposeTitle: string;
-    purpose: string;
-    designTitle: string;
-    design: string;
-    findingsTitle: string;
-    findings: string;
-    trustTitle: string;
-    trust: string;
-    securityTitle: string;
-    security: string;
-    dataCollectionTitle: string;
-    dataCollection: string;
-    dataUsageTitle: string;
-    dataUsage: string;
-    contactTitle: string;
-    contact: string;
+    lastUpdated: string;
+    introduction: string;
+    section1Title: string;
+    section1Subtitle1: string;
+    section1Subtitle1Items: string[];
+    section1Subtitle2: string;
+    section1Subtitle2Items: string[];
+    section1Subtitle3: string;
+    section1Subtitle3Items: string[];
+    section2Title: string;
+    section2Items: string[];
+    section2Note: string;
+    section3Title: string;
+    section3Items: string[];
+    section3Note: string;
+    section4Title: string;
+    section4Items: string[];
+    section5Title: string;
+    section5Items: string[];
+    section6Title: string;
+    section6Content: string;
+    section7Title: string;
+    section7Content: string;
+    mediaLicenseTitle: string;
+    mediaLicenseIntro: string;
+    mediaLicenseSection1Title: string;
+    mediaLicenseSection1Content: string;
+    mediaLicenseSection1Items: string[];
+    mediaLicenseSection1Note: string;
+    mediaLicenseSection2Title: string;
+    mediaLicenseSection2Items: string[];
+    mediaLicenseSection3Title: string;
+    mediaLicenseSection3Items: string[];
+    mediaLicenseSection4Title: string;
+    mediaLicenseSection4Content: string;
+    mediaLicenseSection5Title: string;
+    mediaLicenseSection5Items: string[];
   };
   protect: {
     title: string;
@@ -821,24 +842,100 @@ export const translations: Record<Language, Translations> = {
       protectDescription: 'Spin to Protect is the charitable initiative of SpinLinX',
     },
     privacy: {
-      title: 'Privacy Policy',
+      title: 'SpinLinX Privacy Policy',
       back: 'Back',
-      purposeTitle: 'Purpose',
-      purpose: 'The purpose of this paper is to analyze the effect of privacy and perceived security on the level of trust shown by the consumer in the internet. It also aims to reveal and test the close relationship between the trust in a web site and the degree of loyalty to it.',
-      designTitle: 'Design/Methodology/Approach',
-      design: 'This study employs a comprehensive approach to examine the relationship between privacy, security, trust, and user loyalty in online platforms.',
-      findingsTitle: 'Findings',
-      findings: 'The research reveals that an individual\'s loyalty to a web site is closely linked to the levels of trust. Trust affects intention to buy, effective purchasing behavior, preference, cost and frequency of visits, and profitability.',
-      trustTitle: 'Trust and Loyalty',
-      trust: 'Trust in the internet is particularly influenced by the security perceived by consumers. When users feel secure about their personal information, they are more likely to engage with the platform and develop loyalty.',
-      securityTitle: 'Security Measures',
-      security: 'We implement industry-standard security measures to protect your personal information, including encryption, secure data transmission, and regular security audits.',
-      dataCollectionTitle: 'Data Collection',
-      dataCollection: 'We collect only the information necessary to provide our services and improve your experience. This includes account information, usage data, and preferences you choose to share.',
-      dataUsageTitle: 'Data Usage',
-      dataUsage: 'Your data is used to personalize your experience, provide customer support, and improve our services. We never sell your personal information to third parties.',
-      contactTitle: 'Contact Us',
-      contact: 'If you have any questions about this Privacy Policy, please contact us at privacy@spintodiscover.com',
+      lastUpdated: 'Last Updated: 2025',
+      introduction: 'SpinLinX ("The Orbit Tree Limited") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and safeguard your personal information.',
+      section1Title: '1. Information We Collect',
+      section1Subtitle1: '1.1 Information You Provide',
+      section1Subtitle1Items: [
+        'Name / Username',
+        'Profile photo',
+        'Brand information (brand name, brief, logo)',
+        'Text, photos, videos, comments you upload',
+        'Contact details (phone, email), address (with permission)',
+      ],
+      section1Subtitle2: '1.2 Automatically Collected Information',
+      section1Subtitle2Items: [
+        'Device type & OS version',
+        'IP address, security logs',
+        'Usage data: browsing, clicks, time on page',
+        'Location data (with permission)',
+      ],
+      section1Subtitle3: '1.3 Information from Third Parties',
+      section1Subtitle3Items: [
+        'Authorized data from third-party login providers',
+      ],
+      section2Title: '2. How We Use Your Information',
+      section2Items: [
+        'Provide, operate, and improve the SpinLinX platform',
+        'Personalize recommendations',
+        'Visualize global "Light Points Map" (no personal data revealed)',
+        'Display brand pages and user posts',
+        'Ensure account and platform security',
+        'Customer support',
+        'Comply with legal obligations',
+      ],
+      section2Note: 'We do NOT sell any personal data.',
+      section3Title: '3. Information Sharing',
+      section3Items: [
+        'You give explicit consent',
+        'Required by law or authorities',
+        'With service partners (cloud storage, moderation) to the minimum necessary extent',
+      ],
+      section3Note: 'Partners may not use your data for independent purposes.',
+      section4Title: '4. Data Storage & Security',
+      section4Items: [
+        'Encrypted data storage',
+        'Encrypted transmission (HTTPS/SSL/TLS)',
+        'Multi-layer access control',
+        'Mandatory user notification in case of a security incident',
+      ],
+      section5Title: '5. Your Rights',
+      section5Items: [
+        'Edit or delete your profile',
+        'Remove uploaded content',
+        'Withdraw permissions at any time',
+        'Request account deletion',
+        'Request data access or export (where applicable)',
+      ],
+      section6Title: '6. Protection of Minors',
+      section6Content: 'Users under 18 must use SpinLinX under guardian supervision.',
+      section7Title: '7. Policy Updates',
+      section7Content: 'We may update this policy as needed and notify users through the app.',
+      mediaLicenseTitle: 'Media Usage License Agreement',
+      mediaLicenseIntro: 'By uploading any content to SpinLinX, you understand and agree to this license.',
+      mediaLicenseSection1Title: '1. License Grant',
+      mediaLicenseSection1Content: 'You grant SpinLinX a: Worldwide, royalty-free, sublicensable, transferable, non-exclusive license for purposes including:',
+      mediaLicenseSection1Items: [
+        'Display within the platform',
+        'Recommendation modules, featured sections',
+        'Discover / Light Points visualization',
+        'Platform demonstrations, tutorials, and non-commercial promotion',
+        'Brand and content aggregation',
+      ],
+      mediaLicenseSection1Note: 'Any commercial use beyond this scope requires separate written consent.',
+      mediaLicenseSection2Title: '2. Ownership',
+      mediaLicenseSection2Items: [
+        'You retain full copyright to your creations',
+        'SpinLinX does not claim ownership',
+        'You guarantee your content does not infringe any rights',
+      ],
+      mediaLicenseSection3Title: '3. Duration',
+      mediaLicenseSection3Items: [
+        'Effective upon upload',
+        'Ends when you delete the content or close your account',
+        'Backup versions will be cleared within reasonable time',
+      ],
+      mediaLicenseSection4Title: '4. Revocation',
+      mediaLicenseSection4Content: 'Content deletion terminates the license. Account deletion terminates all licenses.',
+      mediaLicenseSection5Title: '5. Platform Commitments',
+      mediaLicenseSection5Items: [
+        'Alter or distort your content',
+        'Use it in commercial advertising without approval',
+        'Use it in harmful or inappropriate contexts',
+        'Violate copyright, privacy, or likeness rights',
+      ],
     },
     protect: {
       title: 'Spin to Protect',
@@ -1280,24 +1377,99 @@ export const translations: Record<Language, Translations> = {
       protectDescription: 'Spin to Protect 是 SpinLinX 的慈善倡议',
     },
     privacy: {
-      title: '隐私政策',
+      title: 'SpinLinX 隐私条款',
       back: '返回',
-      purposeTitle: '目的',
-      purpose: '本文的目的是分析隐私和感知安全对消费者在互联网上表现出的信任水平的影响。它还旨在揭示和测试网站信任度与忠诚度之间的密切关系。',
-      designTitle: '设计/方法/方法',
-      design: '本研究采用综合方法来检验在线平台中隐私、安全、信任和用户忠诚度之间的关系。',
-      findingsTitle: '发现',
-      findings: '研究显示，个人对网站的忠诚度与信任水平密切相关。信任影响购买意图、有效购买行为、偏好、访问成本和频率以及盈利能力。',
-      trustTitle: '信任与忠诚',
-      trust: '对互联网的信任特别受到消费者感知安全的影响。当用户对其个人信息感到安全时，他们更有可能与平台互动并发展忠诚度。',
-      securityTitle: '安全措施',
-      security: '我们实施行业标准的安全措施来保护您的个人信息，包括加密、安全数据传输和定期安全审计。',
-      dataCollectionTitle: '数据收集',
-      dataCollection: '我们只收集提供服务和改善您体验所需的信息。这包括账户信息、使用数据和您选择分享的偏好。',
-      dataUsageTitle: '数据使用',
-      dataUsage: '您的数据用于个性化您的体验、提供客户支持和改善我们的服务。我们从不向第三方出售您的个人信息。',
-      contactTitle: '联系我们',
-      contact: '如果您对此隐私政策有任何疑问，请通过 privacy@spintodiscover.com 联系我们',
+      lastUpdated: '最后更新：2025',
+      introduction: 'SpinLinX（"The Orbit Tree Limited"）致力于保护用户的隐私。本隐私条款说明我们如何收集、使用、存储及保护您的个人信息。',
+      section1Title: '一、我们收集的信息',
+      section1Subtitle1: '1. 您主动提供的信息',
+      section1Subtitle1Items: [
+        '姓名 / 用户名',
+        '头像',
+        '品牌信息（如品牌名、简介、联系方式）',
+        '您发布的文字、图片、视频、语音、评论',
+        '联系方式（电话、邮箱）、地址（在您授权后）',
+      ],
+      section1Subtitle2: '2. 系统自动收集的信息',
+      section1Subtitle2Items: [
+        '设备类型、系统版本',
+        'IP 地址、安全日志',
+        '使用数据：浏览、点击、停留时长',
+        '位置信息（经授权后）',
+      ],
+      section1Subtitle3: '3. 第三方来源信息',
+      section1Subtitle3Items: [
+        '第三方登录所提供的授权资料（如头像、昵称）',
+      ],
+      section2Title: '二、我们如何使用信息',
+      section2Items: [
+        '运营、维护及优化 SpinLinX 服务',
+        '个性化内容推荐',
+        '生成全球光点地图（光点展示不含个人隐私）',
+        '品牌主页展示与内容发布',
+        '账号安全、反作弊、风险监测',
+        '客服沟通与问题处理',
+        '依法依规履行法律义务',
+      ],
+      section2Note: '我们不会出售任何用户个人数据。',
+      section3Title: '三、我们如何共享信息',
+      section3Items: [
+        '在您授权或同意的情况下',
+        '为遵守法律、政府或执法机关要求',
+        '与协助服务运作的第三方合作方（如云存储、内容审核），限必要范围使用',
+      ],
+      section3Note: '合作方不得将信息用于任何独立或额外目的。',
+      section4Title: '四、信息的存储与保护',
+      section4Items: [
+        '数据使用加密技术存储',
+        '传输采用 HTTPS/SSL/TLS 加密',
+        '多层安全系统与权限控制',
+        '若发生数据安全事件，我们将依法通知用户',
+      ],
+      section5Title: '五、您的权利',
+      section5Items: [
+        '编辑、更新或删除您的个人资料',
+        '删除已发布内容',
+        '撤回授权（如位置信息、相册权限等）',
+        '申请注销账号',
+        '要求导出或访问您的数据（如适用）',
+      ],
+      section6Title: '六、未成年人的隐私',
+      section6Content: '未满18岁用户须在监护人指导下使用本平台。',
+      section7Title: '七、本条款的更新',
+      section7Content: '我们可能依据运营需要更新本隐私条款，更新内容将在应用内公告。',
+      mediaLicenseTitle: '图片 / 视频使用授权协议',
+      mediaLicenseIntro: '当您在 SpinLinX 上传任何内容，即表示您理解并同意本授权协议。',
+      mediaLicenseSection1Title: '一、授权范围',
+      mediaLicenseSection1Content: '您授予 SpinLinX：全球范围内、免版税、可再授权、可转让、非独占性的许可，用于以下用途：',
+      mediaLicenseSection1Items: [
+        '在平台内展示您的内容',
+        '用于推荐位、精选内容、光点地图',
+        '用于平台相关示例展示、教学、推广（非商业销售用途）',
+        '用于品牌信息聚合与内容展示',
+      ],
+      mediaLicenseSection1Note: '如需进行超出以上范围的商业用途，我们会另行取得您的书面授权。',
+      mediaLicenseSection2Title: '二、内容所有权',
+      mediaLicenseSection2Items: [
+        '您保留对所有原创内容的完整版权',
+        'SpinLinX 不主张内容所有权',
+        '您确认内容已获必要授权且不侵权、不违法',
+      ],
+      mediaLicenseSection3Title: '三、授权期限',
+      mediaLicenseSection3Items: [
+        '自您上传内容起生效',
+        '持续至您删除内容或注销账号',
+        '删除内容后，我们会在合理时间内清除缓存及备份副本',
+      ],
+      mediaLicenseSection4Title: '四、撤销授权',
+      mediaLicenseSection4Content: '您可以随时删除内容中止授权，或申请注销账户以终止全部授权。',
+      mediaLicenseSection5Title: '五、平台承诺',
+      mediaLicenseSection5Items: [
+        '不歪曲、不篡改您的内容',
+        '不在未经同意的情况下用于商业广告',
+        '不在破坏您品牌形象的环境中使用',
+        '不侵犯您的版权、隐私或肖像权',
+      ],
     },
     protect: {
       title: 'Spin to Protect',

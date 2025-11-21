@@ -6,7 +6,7 @@ import { Language, translations, defaultLanguage } from '../lib/i18n';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => string | string[];
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -27,7 +27,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  const t = (key: string): string => {
+  const t = (key: string): string | string[] => {
     const keys = key.split('.');
     let value: any = translations[language];
     
@@ -39,7 +39,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       }
     }
     
-    return typeof value === 'string' ? value : key;
+    // 返回实际值（可以是字符串或数组）
+    if (typeof value === 'string' || Array.isArray(value)) {
+      return value;
+    }
+    return key;
   };
 
   return (
