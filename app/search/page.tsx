@@ -165,9 +165,9 @@ export default function SearchPage() {
 
   const searchConditions = [
     { value: 'all', label: t('search.searchConditions.all') },
-    { value: 'articles', label: t('search.searchConditions.articles') },
+    { value: 'posts', label: t('search.searchConditions.articles') },
     { value: 'users', label: t('search.searchConditions.users') },
-    { value: 'brands', label: t('search.searchConditions.brands') },
+    // { value: 'brands', label: t('search.searchConditions.brands') },
   ];
 
   return (
@@ -195,7 +195,7 @@ export default function SearchPage() {
         <div className="px-4 mb-6">
           <div className="flex items-center gap-2">
             {/* Search Condition Dropdown */}
-            <div className="relative">
+            {/* <div className="relative">
               <Button
                 variant="outline"
                 onClick={() => setShowDropdown(!showDropdown)}
@@ -224,7 +224,7 @@ export default function SearchPage() {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Keyword Input */}
             <input
@@ -304,12 +304,12 @@ export default function SearchPage() {
                 <h2 className="text-[17px] text-[#0F1728] font-poppins font-semibold mb-3">
                   {t('search.articles')}
                 </h2>
-                <div className="space-y-3">
+                <div className="">
                   {articleResults.map((article) => (
                     <button
                       key={article.id}
                       onClick={() => handleArticleClick(article.id)}
-                      className="w-full text-left p-3 hover:bg-gray-50 transition-colors"
+                      className="w-full text-left  hover:bg-gray-50 transition-colors"
                     >
                       <h3 className="text-[17px] font-poppins font-semibold text-[#12295B] italic mb-1">
                         {article.title}
