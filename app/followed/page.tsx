@@ -132,7 +132,7 @@ export default function FollowedPage() {
 
 
       {/* Tabs for Following/Follower */}
-      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700 z-100">
+      <div className="flex items-center justify-between px-4 py-4 z-100">
         <div className="flex gap-2">
           <button
             onClick={() => handleTabChange('following')}
@@ -219,7 +219,7 @@ export default function FollowedPage() {
           <p className={classNames(
             UI_CONSTANTS.COLORS.PRIMARY_OPACITY_60,
             UI_CONSTANTS.FONTS.INTER,
-            'text-center text-[#11295b]'
+            'text-center text-[#11295b] px-4'
           )}>
             {activeTab === 'following' ? t('followedPage.noFollowingDescription') : t('followedPage.noFollowersDescription')}
           </p>

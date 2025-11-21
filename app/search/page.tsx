@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
 import { Button } from '../../components/ui/button';
+import { InputGroup, InputGroupInput, InputGroupAddon, InputGroupButton } from '../../components/ui/input-group';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '../../components/ui/dropdown-menu';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthGuard } from '../../components/AuthGuard';
@@ -20,7 +22,6 @@ export default function SearchPage() {
   const [searchCondition, setSearchCondition] = useState('all');
   const [keyword, setKeyword] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [userResults, setUserResults] = useState<UserSearchResult[]>([]);
   const [articleResults, setArticleResults] = useState<ArticleSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -156,7 +157,6 @@ export default function SearchPage() {
           <Header 
             showUser={true} 
             logoLink="/"
-          className="border-b border-gray-200"
         />
 
         {/* 页面标题和返回按钮 */}
@@ -172,57 +172,47 @@ export default function SearchPage() {
 
         {/* Search Bar */}
         <div className="px-4 mb-6">
-          <div className="flex items-center gap-2">
-            {/* Search Condition Dropdown */}
-            <div className="relative">
-              <Button
-                variant="outline"
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center gap-1 bg-gray-100 border-gray-300 text-gray-700 px-3 py-2 h-10 min-w-[80px]"
-              >
-                {searchConditions.find(condition => condition.value === searchCondition)?.label}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-              
-              {showDropdown && (
-                <div className="absolute top-full text-[#11295b] left-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+          <InputGroup className="[--radius:1rem]">
+            <InputGroupAddon align="inline-start">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <InputGroupButton className="!pr-1.5 text-xs">
+                    {searchConditions.find(condition => condition.value === searchCondition)?.label} <ChevronDown className="h-3 w-3" />
+                  </InputGroupButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="[--radius:0.95rem]">
                   {searchConditions.map((condition) => (
-                    <button
+                    <DropdownMenuItem
                       key={condition.value}
                       onClick={() => {
                         setSearchCondition(condition.value);
-                        setShowDropdown(false);
                         if (keyword.trim()) {
                           performSearch(keyword.trim(), condition.value);
                         }
                       }}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                     >
                       {condition.label}
-                    </button>
+                    </DropdownMenuItem>
                   ))}
-                </div>
-              )}
-            </div>
-
-            {/* Keyword Input */}
-            <input
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </InputGroupAddon>
+            <InputGroupInput
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={t('search.searchPlaceholder')}
-              className="flex-1 text-[#11295b] px-3 py-2 bg-gray-100 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-10"
             />
-
-            {/* Search Button */}
-            <Button
-              onClick={handleSearch}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 h-10"
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                onClick={handleSearch}
+                className="px-3 py-2 h-full"
+              >
+                <Search className="h-4 w-4" />
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
         </div>
 
         {/* Search Results */}
@@ -312,26 +302,30 @@ export default function SearchPage() {
           /* Search History */
           searchHistory.length > 0 && (
             <div className="px-4 mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-medium text-gray-900 font-poppins">{t('search.history')}</h2>
+              <div className="flex items-center justify-between ">
+                <h2 className=" text-[17px] text-[#0F1728] font-poppins font-semibold">{t('search.history')}</h2>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleDeleteHistory}
-                  className="text-gray-500 hover:text-gray-700 p-1"
+                  className="text-[#0F1728] hover:text-[#0F1728] p-1"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-6 w-6" />
                 </Button>
               </div>
               <div className="space-y-1">
                 {searchHistory.map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleHistoryClick(item)}
-                    className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors text-sm"
-                  >
-                    {item}
-                  </button>
+                  <div key={index}>
+                    <button
+                      onClick={() => handleHistoryClick(item)}
+                      className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md transition-colors text-sm"
+                    >
+                      {item}
+                    </button>
+                    {index !== searchHistory.length - 1 && (
+                      <div style={{ borderBottom: '1px solid #e5e7eb' }}></div>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>

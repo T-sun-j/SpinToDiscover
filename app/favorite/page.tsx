@@ -259,9 +259,9 @@ export default function FavoritePage() {
             {collectData.map((item, index) => (
               <div key={item.id}>
                 <FavoriteItem item={item} />
-                {index < collectData.length - 1 && (
-                  <div className="border-t border-gray-200 my-4" />
-                )}
+                {/* {index < collectData.length - 1 && (
+                  <div className=" my-4" />
+                )} */}
               </div>
             ))}
           </>

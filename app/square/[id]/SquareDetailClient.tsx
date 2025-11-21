@@ -406,7 +406,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				/>
 
 				{/* 标题和返回按钮 */}
-				<div className="flex items-center justify-between px-4 py-4 border-b">
+				<div className="flex items-center justify-between px-4 py-4">
 					<h1 className="text-xl font-poppins text-[#12295B] italic font-semibold">{post.title || 'Untitled'}</h1>
 					<button
 						onClick={handleBack}
@@ -579,7 +579,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					)}
 
 					{/* 互动按钮 */}
-					<div className="flex items-center justify-center gap-8 px-10 border-t border-b">
+					<div className="flex items-center justify-center gap-8 px-10 ">
 						<button
 							onClick={handleBookmark}
 							disabled={isInteracting || !isAuthenticated}
@@ -781,7 +781,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						</div>
 
 						{/* 评论输入框 */}
-						<div className="pt-4 border-t">
+						<div className="pt-4 ">
 							{/* 回复提示 */}
 							{/* {replyingTo && (
 								<div className="mb-2 flex items-center justify-between bg-blue-50 px-3 py-2 rounded-lg">
@@ -853,11 +853,11 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 										onClick={handleSubmitComment}
 										disabled={!isAuthenticated || !comment.trim() || isSubmittingComment}
 										className={`flex items-center justify-center transition-opacity ${(!isAuthenticated || !comment.trim() || isSubmittingComment)
-											? 'opacity-50 cursor-not-allowed'
-											: 'hover:opacity-80'
+											? 'cursor-not-allowed'
+											: ''
 											}`}
 									>
-										{isSubmittingComment ? (
+										{/* {isSubmittingComment ? (
 											<>
 												<svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
 													<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -865,7 +865,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 												</svg>
 												<span className="ml-2">{t('square.submittingComment')}</span>
 											</>
-										) : (
+										) : ( */}
 											<Image 
 												src="/img/send.png" 
 												alt="Send" 
@@ -873,7 +873,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 												height={24} 
 												className="h-6 w-6"
 											/>
-										)}
+										{/* )} */}
 									</button>
 								</div>
 							</div>
