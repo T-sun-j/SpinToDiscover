@@ -194,50 +194,47 @@ export default function SearchPage() {
         {/* Search Bar */}
         <div className="px-4 mb-6">
           <div className="flex items-center gap-2">
-            <InputGroup className="[--radius:1rem] flex-1">
-              <InputGroupAddon align="inline-start">
-                <div className="relative" data-dropdown-container>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowDropdown(!showDropdown);
-                    }}
-                    className="px-3 py-2 h-full flex items-center gap-1 text-xs text-gray-700 hover:bg-gray-200 transition-colors !pr-1.5 cursor-pointer"
-                  >
-                    {searchConditions.find(condition => condition.value === searchCondition)?.label} <ChevronDown className="h-3 w-3" />
-                  </button>
-                  {showDropdown && (
-                    <div className="absolute top-full left-0 mt-1 z-50 min-w-[8rem] overflow-hidden rounded-full bg-white text-[#12295B] shadow-lg">
-                      {searchConditions.map((condition) => (
-                        <button
-                          key={condition.value}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSearchCondition(condition.value);
-                            setShowDropdown(false);
-                            if (keyword.trim()) {
-                              performSearch(keyword.trim(), condition.value);
-                            }
-                          }}
-                          className="relative flex w-full cursor-pointer select-none items-center px-3 py-2 text-sm outline-none transition-colors hover:bg-gray-100 first:rounded-t-full last:rounded-b-full"
-                        >
-                          {condition.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+            {/* Search Condition Dropdown */}
+            <div className="relative">
+              <Button
+                variant="outline"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="flex items-center gap-1 bg-gray-100 border-gray-300 text-gray-700 px-3 py-2 h-10 min-w-[80px]"
+              >
+                {searchConditions.find(condition => condition.value === searchCondition)?.label}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+              
+              {showDropdown && (
+                <div className="absolute top-full text-[#11295b] left-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                  {searchConditions.map((condition) => (
+                    <button
+                      key={condition.value}
+                      onClick={() => {
+                        setSearchCondition(condition.value);
+                        setShowDropdown(false);
+                        if (keyword.trim()) {
+                          performSearch(keyword.trim(), condition.value);
+                        }
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
+                    >
+                      {condition.label}
+                    </button>
+                  ))}
                 </div>
-              </InputGroupAddon>
-              <InputGroupInput
-                type="text"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t('search.searchPlaceholder') as string}
-              />
-            </InputGroup>
+              )}
+            </div>
+
+            {/* Keyword Input */}
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={t('search.searchPlaceholder') as string}
+              className="flex-1 text-[#11295b] px-3 py-2 bg-gray-100 border-0 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 h-10"
+            />
             <Button
               variant="ghost"
               size="icon"
