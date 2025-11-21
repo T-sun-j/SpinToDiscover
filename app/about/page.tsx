@@ -31,14 +31,14 @@ export default function AboutPage() {
 
       {/* Content  */}
       <section className="px-6 pb-6 flex-1">
-        <div className="flex justify-end mb-6">
+        {/* <div className="flex justify-end mb-6">
           <img
             src="/img/logo-2.png"
             alt="Logo"
             className="h-14 w-auto"
             style={{ objectFit: "contain" }}
           />
-        </div>
+        </div> */}
         <div className="space-y-6">
           {/* Introduction */}
           <p className="text-l leading-7 text-[#11295b] font-inter">
@@ -70,8 +70,9 @@ export default function AboutPage() {
           </p>
 
           {/* Spin to Protect Section */}
-          <div className="bg-[#11295b] rounded-lg p-4 mt-8" onClick={() => router.push('/protect')}>
-            <div className="flex items-center justify-between">
+          {/* <div className="bg-[#11295b] rounded-lg p-4 mt-8" > */}
+          {/* <div className="bg-[#11295b] rounded-lg p-4 mt-8" onClick={() => router.push('/protect')}> */}
+            {/* <div className="flex items-center justify-between">
               <div className="flex-1">
                 <h3 className="text-white text-2xl font-semibold font-poppins mb-2">
                   {t("about.protectTitle")}
@@ -87,8 +88,8 @@ export default function AboutPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
         </div>
       </section>
 
