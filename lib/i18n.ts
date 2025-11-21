@@ -640,7 +640,7 @@ export const translations: Record<Language, Translations> = {
       back: 'Back',
       searchConditions: {
         all: 'All',
-        articles: 'Articles',
+        articles: 'Posts',
         users: 'Users',
         brands: 'Brands',
       },
@@ -649,7 +649,7 @@ export const translations: Record<Language, Translations> = {
       deleteHistory: 'Delete search history',
       searchResults: 'Search Results',
       users: 'Users',
-      articles: 'Articles',
+      articles: 'Posts',
       noResults: 'No results found',
       searchPlaceholder: 'Search...',
     },

@@ -13,23 +13,32 @@ const DropdownMenuContext = React.createContext<DropdownMenuContextValue | undef
 
 const DropdownMenu = ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   const [open, setOpen] = React.useState(false)
+  const containerRef = React.useRef<HTMLDivElement>(null)
   
   React.useEffect(() => {
     if (!open) return
     
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element
-      if (!target.closest('[data-dropdown-menu]')) {
+      if (containerRef.current && !containerRef.current.contains(target)) {
         setOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    
+    // 使用 setTimeout 确保在下一个事件循环中添加监听器，延迟足够长以避免立即关闭
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 200)
+    
+    return () => {
+      clearTimeout(timeoutId)
+      document.removeEventListener('click', handleClickOutside)
+    }
   }, [open])
 
   return (
     <DropdownMenuContext.Provider value={{ open, setOpen }}>
-      <div data-dropdown-menu className="relative" {...props}>
+      <div ref={containerRef} data-dropdown-menu className="relative" {...props}>
         {children}
       </div>
     </DropdownMenuContext.Provider>
@@ -46,21 +55,34 @@ const DropdownMenuTrigger = React.forwardRef<
   if (!context) throw new Error("DropdownMenuTrigger must be used within DropdownMenu")
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    context.setOpen(!context.open)
+    e.stopPropagation()
+    // 直接切换状态
+    const newOpen = !context.open
+    context.setOpen(newOpen)
     onClick?.(e)
   }
 
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement, {
-      ref,
-      onClick: handleClick,
+    const child = children as React.ReactElement<any>
+    const originalOnClick = child.props.onClick
+    
+    return React.cloneElement(child, {
+      ...child.props,
       ...props,
-    })
+      ref: ref,
+      onClick: (e: React.MouseEvent) => {
+        e.stopPropagation()
+        const newOpen = !context.open
+        context.setOpen(newOpen)
+        originalOnClick?.(e)
+      },
+    } as any)
   }
 
   return (
     <button
       ref={ref}
+      type="button"
       onClick={handleClick}
       className={className}
       {...props}

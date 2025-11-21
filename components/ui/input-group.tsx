@@ -69,8 +69,9 @@ const InputGroupButton = React.forwardRef<
   return (
     <button
       ref={ref}
+      type="button"
       className={classNames(
-        "px-3 py-2 h-full flex items-center gap-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors",
+        "px-3 py-2 h-full flex items-center gap-1 text-sm text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer",
         className
       )}
       {...props}
