@@ -165,7 +165,7 @@ export default function RegisterPage() {
 								value={formData.email}
 								onChange={(e) => setFormData({ ...formData, email: e.target.value })}
 								placeholder={t('auth.email')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 						</div>
@@ -180,7 +180,7 @@ export default function RegisterPage() {
 								value={formData.password}
 								onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 								placeholder={t('auth.password')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 							<button
@@ -202,7 +202,7 @@ export default function RegisterPage() {
 								value={formData.confirmPassword}
 								onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
 								placeholder={t('auth.confirmPassword')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 							<button
@@ -311,7 +311,7 @@ export default function RegisterPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className={`w-full shadow-md rounded-lg font-nunito font-bold ${
+						className={`w-full shadow-md rounded-lg text-[17px] font-poppins font-semibold ${
 							success 
 								? 'bg-green-500 text-white' 
 								: 'bg-[#11295b] text-white'
@@ -326,7 +326,7 @@ export default function RegisterPage() {
 
 					{/* 登录链接 */}
 					<div className="text-center">
-						<Link href="/login" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
+						<Link href="/login" className="text-sm text-[#0F1728] font-semibold font-poppins">
 							{t('auth.alreadyHaveAccount')}
 						</Link>
 					</div>

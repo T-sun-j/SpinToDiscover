@@ -151,7 +151,7 @@ export default function LoginPage() {
 								value={formData.email}
 								onChange={(e) => setFormData({...formData, email: e.target.value})}
 								placeholder={t('auth.email')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 						</div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
 								value={formData.password}
 								onChange={(e) => setFormData({...formData, password: e.target.value})}
 								placeholder={t('auth.password')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 							<button
@@ -190,7 +190,7 @@ export default function LoginPage() {
 					{/* 登录按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
+						className="w-full bg-[#11295b] text-white shadow-md rounded-lg text-[17px] font-poppins font-semibold"
 						size="lg"
 						disabled={isSubmitting}
 					>
@@ -199,14 +199,14 @@ export default function LoginPage() {
 
 					{/* 忘记密码链接 */}
 					<div className="text-center">
-						<Link href="/forgot-password" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
+						<Link href="/forgot-password" className="text-sm text-[#0F1728] font-semibold font-poppins">
 							{t('auth.forgetPassword')}
 						</Link>
 					</div>
 
 					{/* 创建新账户链接 */}
 					<div className="text-center">
-						<Link href="/register" className="text-sm text-gray-600 hover:text-gray-800 font-bold font-nunito">
+						<Link href="/register" className="text-sm text-[#0F1728] font-semibold font-poppins">
 							{t('auth.createAccount')}
 						</Link>
 					</div>

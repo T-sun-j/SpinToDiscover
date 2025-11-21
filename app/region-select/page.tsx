@@ -165,7 +165,7 @@ export default function RegionSelectPage() {
                             value={searchQuery}
                             onChange={(e) => handleSearch(e.target.value)}
                             placeholder={t('regionSelect.searchHint')}
-                            className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+                            className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
                         />
                     </div>
                 </div>

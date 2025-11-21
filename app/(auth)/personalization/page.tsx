@@ -272,13 +272,13 @@ export default function PersonalizationPage() {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-white">
+        <div className="min-h-screen w-full flex items-center justify-center bg-white ">
             <main className="w-full flex min-h-[100vh] flex-col">
                 {/* 使用公共头部组件 */}
                 <Header/>
 
                 {/* 页面标题和返回按钮 */}
-                <div className="flex items-center justify-between px-2 py-4 z-100">
+                <div className="flex items-center justify-between px-2 py-4 z-100 mx-2">
                     <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('personalization.title')}</h1>
                     <button
                         onClick={handleBack}
@@ -289,7 +289,7 @@ export default function PersonalizationPage() {
                 </div>
 
                 {/* 个人化表单 */}
-                <form onSubmit={handleSubmit} className="flex-1 space-y-6 px-2 font-inter">
+                <form onSubmit={handleSubmit} className="flex-1 space-y-6 px-2 font-inter mx-2">
                     {/* 头像上传区域 */}
                     <div className="flex flex-col items-center space-y-4">
                         <div
@@ -313,7 +313,7 @@ export default function PersonalizationPage() {
                             onChange={handleAvatarUpload}
                             className="hidden"
                         />
-                        <p className="text-md text-[#11295b] font-bold">{t('personalization.clickToUpload')}</p>
+                        <p className="text-[17px] text-[#0F1728] font-nunito">{t('personalization.clickToUpload')}</p>
                     </div>
 
                     {/* 昵称输入 */}
@@ -323,7 +323,7 @@ export default function PersonalizationPage() {
                             value={formData.nickname}
                             onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                             placeholder={t('personalization.nicknamePlaceholder')}
-                            className="w-full rounded-lg bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#11295b]/60"
+                            className="w-full rounded-full bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#11295b]/60"
                         />
                     </div>
 
@@ -354,7 +354,7 @@ export default function PersonalizationPage() {
                     {/* 提交按钮 */}
                     <Button
                         type="submit"
-                        className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
+                        className="w-full bg-[#11295b] text-white shadow-md rounded-lg text-[17px] font-poppins font-semibold"
                         size="lg"
                         disabled={isSubmitting || isUploadingAvatar || !!successMessage}
                     >
@@ -375,7 +375,7 @@ export default function PersonalizationPage() {
                                 type="button"
                                 onClick={handleSkip}
                                 disabled={isSubmitting || isUploadingAvatar || !!successMessage}
-                                className={`flex items-center text-md font-bold font-nunito ${
+                                className={`flex items-center text-[17px] font-semibold font-poppins ${
                                     isSubmitting || isUploadingAvatar || successMessage
                                         ? 'text-gray-400 cursor-not-allowed'
                                         : 'text-gray-600 hover:text-gray-800'

@@ -119,7 +119,7 @@ export default function SettingsPage() {
 							type="email"
 							value={formData.email}
 							placeholder={t('settings.currentEmail')}
-							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-not-allowed"
+							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-not-allowed"
 							readOnly
 							disabled
 						/>
@@ -135,7 +135,7 @@ export default function SettingsPage() {
 							value={formData.password}
 							onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 							placeholder={t('settings.newPassword')}
-							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
 					</div>
@@ -150,7 +150,7 @@ export default function SettingsPage() {
 							value={formData.confirmPassword}
 							onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
 							placeholder={t('settings.confirmPassword')}
-							className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
 					</div>

@@ -1,7 +1,4 @@
 {
-  "/square/page": "app/square/page.js",
-  "/personal-center/page": "app/personal-center/page.js",
-  "/personal/page": "app/personal/page.js",
-  "/personal/[userId]/page": "app/personal/[userId]/page.js",
-  "/release/page": "app/release/page.js"
+  "/(auth)/personalization/page": "app/(auth)/personalization/page.js",
+  "/personal-center/page": "app/personal-center/page.js"
 }

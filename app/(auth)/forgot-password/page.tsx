@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								placeholder={t('auth.email')}
-								className="w-full rounded-lg bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
+								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
 						</div>
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
 					{/* 提交按钮 */}
 					<Button
 						type="submit"
-						className="w-full bg-[#11295b] text-white shadow-md rounded-lg font-nunito font-bold"
+						className="w-full bg-[#11295b] text-white shadow-md rounded-lg text-[17px] font-poppins font-semibold"
 						size="lg"
 						disabled={isSubmitting || !!successMessage}
 					>
