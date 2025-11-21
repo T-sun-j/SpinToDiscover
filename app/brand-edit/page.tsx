@@ -140,7 +140,7 @@ export default function BrandEditPage() {
                 }
             }
 
-            setError(errorMessage);
+            setError(errorMessage as string);
         } finally {
             setIsGettingLocation(false);
         }
@@ -194,7 +194,7 @@ export default function BrandEditPage() {
 
                 // 检查返回的图片路径是否为错误标识（如 /err2, /err 等）
                 if (logoUrl && (logoUrl.startsWith('/err') || logoUrl.includes('error'))) {
-                    throw new Error(t('brandEditPage.imageFormatNotSupported'));
+                    throw new Error(t('brandEditPage.imageFormatNotSupported') as string);
                 }
 
                 if (logoUrl) {
@@ -206,11 +206,11 @@ export default function BrandEditPage() {
                     setLogoPreview(buildAvatarUrl(logoUrl));
                 }
             } else {
-                throw new Error(uploadResponse.message || t('brandEditPage.logoUploadFailed'));
+                throw new Error(uploadResponse.message || t('brandEditPage.logoUploadFailed') as string);
             }
         } catch (error) {
             console.error('Logo upload failed:', error);
-            setError(error instanceof Error ? error.message : t('brandEditPage.logoUploadFailed'));
+            setError(error instanceof Error ? error.message : t('brandEditPage.logoUploadFailed') as string);
             setLogoFile(null);
             setLogoPreview('');
         } finally {
@@ -221,13 +221,13 @@ export default function BrandEditPage() {
     // 提交表单
     const handleSubmit = async () => {
         if (!getEmail()) {
-            setError(t('brandEditPage.loginRequired') as string);
+            setError(t('brandEditPage.loginRequired') as string || '');
             return;
         }
 
         // 验证品牌名称必填
         if (!formData.brand.trim()) {
-            setError(t('brandEditPage.brandRequired') as string);
+            setError(t('brandEditPage.brandRequired') as string || '');
             return;
         }
 
@@ -236,7 +236,7 @@ export default function BrandEditPage() {
 
         try {
             if (!userParams) {
-                setError(t('brandEditPage.authInfoMissing') as string);
+                setError(t('brandEditPage.authInfoMissing') as string || '');
                 return;
             }
 
@@ -261,10 +261,10 @@ export default function BrandEditPage() {
                     router.push('/personal');
                 }, 2000);
             } else {
-                setError(response.message || t('brandEditPage.submitError'));
+                setError(response.message || t('brandEditPage.submitError') as string || '');
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : t('brandEditPage.submitError'));
+            setError(err instanceof Error ? err.message : t('brandEditPage.submitError') as string || '');
         } finally {
             setLoading(false);
         }

@@ -129,10 +129,10 @@ export default function RegisterPage() {
 					router.push('/personalization?from=register');
 				}, 2000);
 			} else {
-				setError(response.message || t('auth.registerErrorMessage'));
+				setError(response.message || t('auth.registerErrorMessage') as string);
 			}
 		} catch (error) {
-			setError(error instanceof Error ? error.message : t('auth.registerError'));
+			setError(error instanceof Error ? error.message : t('auth.registerError') as string);
 		} finally {
 			setIsLoading(false);
 		}
@@ -146,7 +146,7 @@ export default function RegisterPage() {
 
 				{/* 页面标题 */}
 				<div className="flex items-center justify-between px-4 py-4 z-100">
-					<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('auth.createAccount')}</h1>
+					<h1 className="text-xl font-poppins text-[#0F1728] font-semibold">{t('auth.createAccount') as string}</h1>
 					<button className="text-[#0F1728] hover:text-[#0F1728]">
 						<Link href="/">
 							<ChevronLeft className="h-7 w-7" />

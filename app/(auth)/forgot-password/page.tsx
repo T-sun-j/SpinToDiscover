@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
 
 		// 邮箱格式验证
 		if (!email || !validateEmail(email)) {
-			setErrorMessage(t('auth.emailValidation'));
+			setErrorMessage(t('auth.emailValidation') as string);
 			setIsSubmitting(false);
 			return;
 		}
@@ -41,14 +41,14 @@ export default function ForgotPasswordPage() {
 			const response = await forgotPassword(email);
 			
 			if (response.success) {
-				setSuccessMessage(t('auth.forgotPasswordSuccessMessage'));
+				setSuccessMessage(t('auth.forgotPasswordSuccessMessage') as string);
 				// 可以选择跳转到登录页面或显示成功信息
 				// router.push('/login');
 			} else {
-				setErrorMessage(response.message || t('auth.forgotPasswordErrorMessage'));
+				setErrorMessage(response.message || t('auth.forgotPasswordErrorMessage') as string);
 			}
 		} catch (error) {
-			setErrorMessage(error instanceof Error ? error.message : t('auth.forgotPasswordErrorMessage'));
+			setErrorMessage(error instanceof Error ? error.message : t('auth.forgotPasswordErrorMessage') as string);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -117,10 +117,10 @@ export default function ForgotPasswordPage() {
 						disabled={isSubmitting || !!successMessage}
 					>
 						{isSubmitting 
-							? t('auth.forgotPasswordSubmitting')
+							? t('auth.forgotPasswordSubmitting') as string
 							: successMessage 
-								? t('auth.forgotPasswordSuccess')
-								: t('auth.submit')
+								? t('auth.forgotPasswordSuccess') as string
+								: t('auth.submit') as string
 						}
 					</Button>
 				</form>

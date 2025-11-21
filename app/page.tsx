@@ -37,7 +37,7 @@ export default function HomePage() {
 				{/* 核心文案与按钮 - 定位在下半部分 */}
 				<div className="flex items-end justify-center pb-[30%]">
 					<div className="w-full max-w-md space-y-4 text-center">
-						<h1 className="text-3xl font-semibold tracking-tight text-white font-poppins mb-10">Spin. Discover. Connect.</h1>
+						<h1 className="text-[32px] font-semibold tracking-tight bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent font-poppins mb-10">Spin. Discover. Connect.</h1>
 						<div className="px-16 flex flex-col gap-4">
 							<Link href="/square">
 								<Button className="w-full mx-auto btn-gradient text-white shadow-md h-10 text-lg font-poppins text-[17px] font-semibold" size="lg">

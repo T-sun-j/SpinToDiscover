@@ -74,14 +74,14 @@ export default function LoginPage() {
 
 		// 验证邮箱格式
 		if (!formData.email || !formData.email.includes('@')) {
-			setErrorMessage(t('auth.loginErrorMessage'));
+			setErrorMessage(t('auth.loginErrorMessage') as string);
 			setIsSubmitting(false);
 			return;
 		}
 
 		// 验证密码
 		if (!formData.password || !validatePassword(formData.password)) {
-			setErrorMessage(t('auth.passwordRequirements'));
+			setErrorMessage(t('auth.passwordRequirements') as string);
 			setIsSubmitting(false);
 			return;
 		}
@@ -108,11 +108,11 @@ export default function LoginPage() {
 				// 跳转到重定向URL或广场页
 				router.push(redirectUrl);
 			} else {
-				setErrorMessage(response.message || response.error || t('auth.loginError'));
+				setErrorMessage(response.message || response.error || t('auth.loginError') as string);
 			}
 		} catch (error) {
 			console.error('Login error:', error);
-			setErrorMessage(error instanceof Error ? error.message : t('auth.loginError'));
+			setErrorMessage(error instanceof Error ? error.message : t('auth.loginError') as string);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -194,20 +194,20 @@ export default function LoginPage() {
 						size="lg"
 						disabled={isSubmitting}
 					>
-						{isSubmitting ? t('auth.loginSubmitting') : t('auth.login')}
+						{isSubmitting ? t('auth.loginSubmitting') as string : t('auth.login') as string}
 					</Button>
 
 					{/* 忘记密码链接 */}
 					<div className="text-center">
 						<Link href="/forgot-password" className="text-sm text-[#0F1728] font-semibold font-poppins">
-							{t('auth.forgetPassword')}
+							{t('auth.forgetPassword') as string}
 						</Link>
 					</div>
 
 					{/* 创建新账户链接 */}
 					<div className="text-center">
 						<Link href="/register" className="text-sm text-[#0F1728] font-semibold font-poppins">
-							{t('auth.createAccount')}
+							{t('auth.createAccount') as string}
 						</Link>
 					</div>
 				</form>

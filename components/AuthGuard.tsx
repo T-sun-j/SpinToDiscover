@@ -179,7 +179,7 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
     return fallback || (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <LoadingSpinner size="lg" text={t('common.verifying')} />
+          <LoadingSpinner size="lg" text={t('common.verifying') as string} />
         </div>
       </div>
     );

@@ -105,13 +105,13 @@ export default function PersonalizationPage() {
         if (file) {
             // 验证文件类型
             if (!file.type.startsWith('image/')) {
-                setErrorMessage(t('auth.fileTypeError'));
+                setErrorMessage(t('auth.fileTypeError') as string);
                 return;
             }
 
             // 验证文件大小 (5MB)
             if (file.size > 5 * 1024 * 1024) {
-                setErrorMessage(t('auth.fileSizeError'));
+                setErrorMessage(t('auth.fileSizeError') as string);
                 return;
             }
 
@@ -150,11 +150,11 @@ export default function PersonalizationPage() {
                         if (uploadResponse.success && uploadResponse.data?.img) {
                             finalAvatar = uploadResponse.data.img;
                         } else {
-                            setErrorMessage(t('auth.avatarUploadError'));
+                            setErrorMessage(t('auth.avatarUploadError') as string);
                             return;
                         }
                     } catch (uploadError) {
-                        setErrorMessage(t('auth.avatarUploadError'));
+                        setErrorMessage(t('auth.avatarUploadError') as string);
                         return;
                     } finally {
                         setIsUploadingAvatar(false);
@@ -171,20 +171,20 @@ export default function PersonalizationPage() {
                 );
 
                 if (response.success) {
-                    setSuccessMessage(t('auth.updateUserInfoSuccess'));
+                    setSuccessMessage(t('auth.updateUserInfoSuccess') as string);
                     // 成功后跳转到个人中心页面
                     setTimeout(() => {
                         router.push('/personal-center');
                     }, 2000);
                 } else {
-                    setErrorMessage(response.message || t('auth.updateUserInfoError'));
+                    setErrorMessage(response.message || t('auth.updateUserInfoError') as string);
                 }
             } else {
                 // 如果没有用户参数，显示错误信息
-                setErrorMessage(t('auth.noAuthInfo'));
+                setErrorMessage(t('auth.noAuthInfo') as string);
             }
         } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError'));
+            setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError') as string);
         } finally {
             setIsSubmitting(false);
         }
@@ -193,7 +193,7 @@ export default function PersonalizationPage() {
     // 处理跳过
     const handleSkip = async () => {
         if (!userParams.email || !userParams.userId || !userParams.token) {
-            setErrorMessage(t('auth.noAuthInfo'));
+            setErrorMessage(t('auth.noAuthInfo') as string);
             return;
         }
 
@@ -233,16 +233,16 @@ export default function PersonalizationPage() {
             );
 
             if (response.success) {
-                setSuccessMessage(t('auth.updateUserInfoSuccess'));
+                setSuccessMessage(t('auth.updateUserInfoSuccess') as string);
                 // 成功后跳转到个人中心页面
                 setTimeout(() => {
                     router.push('/personal-center');
                 }, 2000);
             } else {
-                setErrorMessage(response.message || t('auth.updateUserInfoError'));
+                setErrorMessage(response.message || t('auth.updateUserInfoError') as string);
             }
         } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError'));
+            setErrorMessage(error instanceof Error ? error.message : t('auth.updateUserInfoError') as string);
         } finally {
             setIsSubmitting(false);
         }

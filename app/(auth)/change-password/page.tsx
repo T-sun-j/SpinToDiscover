@@ -38,7 +38,7 @@ export default function ChangePasswordPage() {
 			setResetParams({ email, userId, token });
 		} else {
 			// 如果没有必要的参数，显示错误或跳转
-			setErrorMessage(t('auth.invalidResetLink'));
+			setErrorMessage(t('auth.invalidResetLink') as string);
 		}
 	}, [searchParams]);
 
@@ -60,21 +60,21 @@ export default function ChangePasswordPage() {
 
 		// 验证重置参数
 		if (!resetParams.email || !resetParams.userId || !resetParams.token) {
-			setErrorMessage(t('auth.invalidResetLink'));
+			setErrorMessage(t('auth.invalidResetLink') as string);
 			setIsSubmitting(false);
 			return;
 		}
 
 		// 验证新密码
 		if (!formData.newPassword || !validatePassword(formData.newPassword)) {
-			setErrorMessage(t('auth.passwordRequirements'));
+			setErrorMessage(t('auth.passwordRequirements') as string);
 			setIsSubmitting(false);
 			return;
 		}
 
 		// 验证确认密码
 		if (formData.newPassword !== formData.confirmPassword) {
-			setErrorMessage(t('auth.passwordsNotMatch'));
+			setErrorMessage(t('auth.passwordsNotMatch') as string);
 			setIsSubmitting(false);
 			return;
 		}
@@ -89,16 +89,16 @@ export default function ChangePasswordPage() {
 			);
 			
 			if (response.success) {
-				setSuccessMessage(t('auth.resetPasswordSuccessMessage'));
+				setSuccessMessage(t('auth.resetPasswordSuccessMessage') as string);
 				// 成功后跳转到登录页面
 				setTimeout(() => {
 					router.push('/login');
 				}, 2000);
 			} else {
-				setErrorMessage(response.message || t('auth.resetPasswordError'));
+				setErrorMessage(response.message || t('auth.resetPasswordError') as string);
 			}
 		} catch (error) {
-			setErrorMessage(error instanceof Error ? error.message : t('auth.resetPasswordError'));
+			setErrorMessage(error instanceof Error ? error.message : t('auth.resetPasswordError') as string);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -190,10 +190,10 @@ export default function ChangePasswordPage() {
 						disabled={isSubmitting || !!successMessage}
 					>
 						{isSubmitting 
-							? t('auth.resetPasswordSubmitting') 
+							? t('auth.resetPasswordSubmitting') as string 
 							: successMessage 
-								? t('auth.resetPasswordSuccess')
-								: t('auth.submit')
+								? t('auth.resetPasswordSuccess') as string
+								: t('auth.submit') as string
 						}
 					</Button>
 				</form>
