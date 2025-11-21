@@ -711,7 +711,7 @@ export default function SquarePage() {
 
 				{/* 全屏视频播放弹窗 */}
 				{isVideoPlaying && playingVideoUrl && (
-					<div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
+					<div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center z-200">
 						<div className="relative w-full h-full flex items-center justify-center">
 							{/* 关闭按钮 */}
 							<button
@@ -742,7 +742,7 @@ export default function SquarePage() {
 				{/* 图片预览弹窗 */}
 				{isImagePreviewOpen && previewImageUrl && (
 					<div 
-						className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+						className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center z-200"
 						onClick={handleImagePreviewClose}
 					>
 						<div className="relative w-full h-full flex items-center justify-center">
