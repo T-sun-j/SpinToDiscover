@@ -549,7 +549,7 @@ export interface SearchRequest {
 
 // 用户搜索结果项类型
 export interface UserSearchResult {
-  id: string;
+  userId: string;
   name?: string;
   avatar?: string;
   addtime: string;

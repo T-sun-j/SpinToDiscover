@@ -272,8 +272,8 @@ export default function SearchPage() {
                 <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                   {userResults.map((user) => (
                     <button
-                      key={user.id}
-                      onClick={() => handleUserClick(user.id)}
+                      key={user.userId}
+                      onClick={() => handleUserClick(user.userId)}
                       className="flex flex-col items-center gap-2 flex-shrink-0 hover:opacity-80 transition-opacity"
                     >
                       <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
