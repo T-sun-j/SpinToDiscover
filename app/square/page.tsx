@@ -422,9 +422,9 @@ export default function SquarePage() {
 								const newTab = 'recommend';
 								setActiveTab(newTab);
 								// 推荐页面使用筛选地址
-								loadSquareContent(filterLocation, newTab);
+								loadSquareContent('', newTab);
 							}}
-							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'recommend'
+							className={`text-sm  px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'recommend'
 								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
 								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
@@ -441,9 +441,9 @@ export default function SquarePage() {
 								const newTab = 'following';
 								setActiveTab(newTab);
 								// 关注页面使用筛选地址
-								loadSquareContent(filterLocation, newTab);
+								loadSquareContent('', newTab);
 							}}
-							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'following'
+							className={`text-sm  px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'following'
 								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
 								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
@@ -479,28 +479,28 @@ export default function SquarePage() {
 						<Button
 							variant="ghost"
 							size="sm"
-							onClick={() => router.push(`/region-select?from=square&tab=${activeTab}`)}
-							className="text-gray-600 hover:text-gray-800 px-2 py-1"
+							onClick={() => router.push(`/region-select?from=square&filterLocation=${filterLocation}`)}
+							className="text-gray-600 hover:text-gray-800 py-1"
 						>
 							<Image src="/img/Filter.png" alt="Filter" width={16} height={16} className='w-6 h-6' />
 						</Button>
 
 						{/* 显示当前选择的地区 - 只显示三个字加省略号 */}
-						{((activeTab === 'nearby' && userLocation) || (activeTab !== 'nearby' && filterLocation)) && (
-							<div className="flex items-center gap-1 text-xs text-gray-600 bg-gray-100 px-1 py-1 rounded-full max-w-20">
+						{/* {((activeTab === 'nearby' && userLocation) || (activeTab !== 'nearby' && filterLocation)) && (
+							<div className="flex items-center text-xs text-gray-600 bg-gray-100 py-1 rounded-full max-w-20">
 								<MapPin className="h-3 w-3 flex-shrink-0" />
 								<span className="font-nunito truncate">
 									{activeTab === 'nearby' ? userLocation : filterLocation}
 								</span>
 								<button
 									onClick={clearLocationFilter}
-									className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors flex-shrink-0"
+									className="hover:bg-gray-200 rounded-full p-0.5 transition-colors flex-shrink-0"
 									title={t('square.clearFilter') as string}
 								>
 									<X className="h-3 w-3" />
 								</button>
 							</div>
-						)}
+						)} */}
 					</div>
 				</div>
 
@@ -509,7 +509,7 @@ export default function SquarePage() {
 					<div className="flex-1 flex items-center justify-center">
 						<LoadingSpinner
 							size="lg"
-							text={isGettingLocation ? t('square.gettingLocation') : t('square.loading')}
+							text={isGettingLocation ? t('square.gettingLocation') as string : t('square.loading') as string}
 						/>
 					</div>
 				)}
@@ -647,7 +647,7 @@ export default function SquarePage() {
 														? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
 														: 'text-[#0F1728] hover:text-gray-700'
 														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-													title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
+													title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
 												>
 													<Bookmark
 														className="h-6 w-6 font-semibold"
@@ -664,7 +664,7 @@ export default function SquarePage() {
 														? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent'
 														: 'text-[#0F1728] hover:text-red-500'
 														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-													title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
+													title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
 												>
 													<Heart
 														className="h-6 w-6 font-semibold"
@@ -698,8 +698,8 @@ export default function SquarePage() {
 						{/* 分页信息 */}
 						{pagination && (
 							<div className="px-4 py-3 text-center text-xs text-gray-500">
-								{t('square.pagination')
-									.replace('{items}', pagination.totalItems.toString())
+								{(t('square.pagination') as string)
+									.replace('{items}', pagination.totalItems.toString() as string)
 								}
 							</div>
 						)}
