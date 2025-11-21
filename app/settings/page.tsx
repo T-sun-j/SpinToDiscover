@@ -39,14 +39,14 @@ export default function SettingsPage() {
 
 		// 验证密码匹配
 		if (formData.password !== formData.confirmPassword) {
-			setErrorMessage(t('auth.passwordsNotMatch'));
+			setErrorMessage(t('auth.passwordsNotMatch') as string);
 			setIsSubmitting(false);
 			return;
 		}
 
 		// 验证密码长度
 		if (formData.password.length < 6) {
-			setErrorMessage(t('settings.passwordTooShort'));
+			setErrorMessage(t('settings.passwordTooShort') as string);
 			setIsSubmitting(false);
 			return;
 		}
@@ -57,7 +57,7 @@ export default function SettingsPage() {
 		const email = getEmail();
 
 		if (!userId || !token || !email) {
-			setErrorMessage(t('settings.authError'));
+			setErrorMessage(t('settings.authError') as string);
 			setIsSubmitting(false);
 			return;
 		}
@@ -76,7 +76,7 @@ export default function SettingsPage() {
 			console.log('Reset password response:', response);
 			
 			if (response.success) {
-				setSuccessMessage(t('settings.resetSuccess'));
+				setSuccessMessage(t('settings.resetSuccess') as string);
 				// 清空表单
 				setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
 				// 3秒后跳转到个人中心
@@ -84,11 +84,11 @@ export default function SettingsPage() {
 					router.push('/personal-center');
 				}, 3000);
 			} else {
-				setErrorMessage(response.message || response.error || t('settings.resetError'));
+				setErrorMessage(response.message || response.error || t('settings.resetError') as string);
 			}
 		} catch (error) {
 			console.error('Reset password error:', error);
-			setErrorMessage(error instanceof Error ? error.message : t('settings.resetError'));
+			setErrorMessage(error instanceof Error ? error.message : t('settings.resetError') as string);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -118,7 +118,7 @@ export default function SettingsPage() {
 						<input
 							type="email"
 							value={formData.email}
-							placeholder={t('settings.currentEmail')}
+							placeholder={t('settings.currentEmail') as string}
 							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60 cursor-not-allowed"
 							readOnly
 							disabled
@@ -134,7 +134,7 @@ export default function SettingsPage() {
 							type="password"
 							value={formData.password}
 							onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-							placeholder={t('settings.newPassword')}
+							placeholder={t('settings.newPassword') as string}
 							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
 							type="password"
 							value={formData.confirmPassword}
 							onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-							placeholder={t('settings.confirmPassword')}
+							placeholder={t('settings.confirmPassword') as string}
 							className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 							required
 						/>

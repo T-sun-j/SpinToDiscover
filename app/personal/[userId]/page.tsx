@@ -118,11 +118,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             if (response.success && response.data) {
                 setData(response.data);
             } else {
-                setError(t('personalPage.loadPostsFailed'));
+                setError(t('personalPage.loadPostsFailed') as string);
             }
         } catch (error) {
             console.error('加载作品数据失败:', error);
-            setError(t('personalPage.loadPostsError'));
+            setError(t('personalPage.loadPostsError') as string);
         } finally {
             setLoading(false);
         }
@@ -153,7 +153,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 if (response.success && response.data) {
                     setUserInfoData(response);
                 } else {
-                    setUserInfoError(t('personalPage.loadUserInfoFailed'));
+                    setUserInfoError(t('personalPage.loadUserInfoFailed') as string);
                 }
             } else {
                 // 查看其他用户的页面，使用getOtherUserInfo接口
@@ -168,12 +168,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     setUserInfo(response.userData);
                     setIsFollowing(response.isFollow);
                 } else {
-                    setUserInfoError(t('personalPage.loadUserInfoFailed'));
+                    setUserInfoError(t('personalPage.loadUserInfoFailed') as string);
                 }
             }
         } catch (error) {
             console.error('加载用户信息失败:', error);
-            setUserInfoError(t('personalPage.loadUserInfoError'));
+            setUserInfoError(t('personalPage.loadUserInfoError') as string);
         } finally {
             setUserInfoLoading(false);
         }
@@ -954,7 +954,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
                                                             : 'text-[#0F1728] hover:text-[#0F1728]'
                                                             } ${(!authInfo?.userId || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                        title={!authInfo?.userId ? t('square.pleaseLoginFirst') : ''}
+                                                        title={!authInfo?.userId ? (t('square.pleaseLoginFirst') as string) : ''}
                                                     >
                                                         <Bookmark
                                                             className="h-6 w-6 font-semibold"
@@ -971,7 +971,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             ? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent'
                                                             : 'text-[#0F1728] hover:text-[#0F1728]'
                                                             } ${(!authInfo?.userId || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                                        title={!authInfo?.userId ? t('square.pleaseLoginFirst') : ''}
+                                                        title={!authInfo?.userId ? (t('square.pleaseLoginFirst') as string) : ''}
                                                     >
                                                         <Heart
                                                             className="h-6 w-6 font-semibold"

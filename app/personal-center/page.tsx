@@ -182,7 +182,7 @@ export default function PersonalCenterPage() {
                                     size="icon"
                                     className={UI_CONSTANTS.COLORS.PRIMARY}
                                     onClick={handleLogout}
-                                    title={t('personalCenter.logout')}
+                                    title={t('personalCenter.logout') as string}
                                 >
                                     <LogOut className='h-8 w-8' />
                                 </Button>

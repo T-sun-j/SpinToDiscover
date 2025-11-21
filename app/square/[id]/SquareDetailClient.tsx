@@ -87,10 +87,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				setIsLiked(response.data.interactions?.userLiked || false);
 				setIsBookmarked(response.data.interactions?.userCollected || false);
 			} else {
-				setError(t('square.loadDetailFailed'));
+				setError(t('square.loadDetailFailed') as string);
 			}
 		} catch (error) {
-			setError(t('square.loadDetailError'));
+			setError(t('square.loadDetailError') as string);
 		} finally {
 			setIsLoading(false);
 		}
@@ -316,7 +316,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				<main className="flex min-h-[100vh] flex-col">
 					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
-						<LoadingSpinner size="lg" text={t('common.loading')} />
+						<LoadingSpinner size="lg" text={t('common.loading') as string} />
 					</div>
 					<Footer />
 				</main>
@@ -350,10 +350,10 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					<Header showSearch showUser logoLink="/square" />
 					<div className="flex-1 flex items-center justify-center">
 						<EmptyState
-							title={t('square.contentNotExist')}
+							title={t('square.contentNotExist') as string}
 							description={isAuthenticated
-								? t('square.contentDeleted')
-								: t('square.loginRequiredForDetail')
+								? (t('square.contentDeleted') as string)
+								: (t('square.loginRequiredForDetail') as string)
 							}
 							action={!isAuthenticated ? (
 								<Button
@@ -583,7 +583,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
 							: 'text-[#0F1728] hover:text-gray-800'
 							} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
-						title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
+						title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
 					>
 						<Bookmark
 							className="h-6 w-6"
@@ -602,7 +602,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 							? 'bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent'
 							: 'text-[#0F1728] hover:text-red-500'
 							} ${(isInteracting || !isAuthenticated) ? 'opacity-50 cursor-not-allowed' : ''}`}
-						title={!isAuthenticated ? t('square.pleaseLoginFirst') : ''}
+						title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
 					>
 						<Heart
 							className="h-6 w-6"
@@ -712,7 +712,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 										{/* 回复列表 */}
 										{Array.isArray(replyList) && replyList.length > 0 && (
-											<div className="ml-11 space-y-3 border-l-2 border-gray-200 pl-4">
+											<div className="ml-11 space-y-3 pl-4">
 												{replyList.map((reply, replyIndex: number) => {
 													const replyId = reply.id || `reply-${index}-${replyIndex}`;
 													const replyAuthorNickname = reply.author?.nickname || 'Anonymous';
@@ -739,7 +739,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 																			</span>
 																		)}
 																	</div>
-																	<button
+																	{/* <button
 																		onClick={() => {
 																			setReplyingTo({ id: replyId, nickname: replyAuthorNickname });
 																			// 滚动到输入框
@@ -757,7 +757,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 																			height={16}
 																			className="h-5 w-5"
 																		/>
-																	</button>
+																	</button> */}
 																</div>
 																<p className="text-gray-700 text-xs font-inter leading-relaxed">{replyContent}</p>
 															</div>
@@ -830,7 +830,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 											}
 										}
 									}}
-									placeholder={isAuthenticated ? (replyingTo ? `${t('square.replyingTo')} ${replyingTo.nickname}：` : t('square.inputComments')) : t('square.pleaseLoginFirst')}
+									placeholder={isAuthenticated ? (replyingTo ? `${t('square.replyingTo') as string} ${replyingTo.nickname}：` : (t('square.inputComments') as string)) : (t('square.pleaseLoginFirst') as string)}
 									disabled={!isAuthenticated || isSubmittingComment}
 									onKeyPress={(e) => {
 										if (e.key === 'Enter' && !e.shiftKey) {

@@ -39,7 +39,7 @@ export default function ReleasePage() {
   // Get user location
   const getUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setErrorMessage(t('releasePage.locationError'));
+      setErrorMessage(t('releasePage.locationError') as string);
       return;
     }
 
@@ -76,7 +76,7 @@ export default function ReleasePage() {
           }
         } catch (error) {
           console.error('Failed to get address info:', error);
-          setUserLocation(t('releasePage.locationParseError'));
+          setUserLocation(t('releasePage.locationParseError') as string);
         } finally {
           setIsGettingLocation(false);
         }
@@ -95,7 +95,7 @@ export default function ReleasePage() {
             errorMessage = t('releasePage.locationTimeout');
             break;
         }
-        setErrorMessage(errorMessage);
+        setErrorMessage(errorMessage as string);
         setIsGettingLocation(false);
       },
       {
@@ -123,7 +123,7 @@ export default function ReleasePage() {
   // Get user info and populate brand fields
   const fetchUserInfo = useCallback(async () => {
     if (!authInfo) {
-      setErrorMessage(t('releasePage.authInfoMissing'));
+      setErrorMessage(t('releasePage.authInfoMissing') as string);
       return;
     }
 
@@ -149,14 +149,14 @@ export default function ReleasePage() {
       }
     } catch (error) {
       console.error('Failed to get user info:', error);
-      setErrorMessage(t('releasePage.getUserInfoFailed'));
+      setErrorMessage(t('releasePage.getUserInfoFailed') as string);
     }
   }, [authInfo]);
 
   // Validate form data
   const validateForm = useCallback(() => {
     if (!title.trim()) {
-      setErrorMessage(t('releasePage.titleRequired'));
+      setErrorMessage(t('releasePage.titleRequired') as string);
       return false;
     }
     // 内容字段不再必填，移除验证
@@ -184,7 +184,7 @@ export default function ReleasePage() {
       const file = event.target.files[0];
       // Check if video file already exists
       if (videoFile) {
-        setErrorMessage(t('releasePage.onlyOneVideoAllowed'));
+        setErrorMessage(t('releasePage.onlyOneVideoAllowed') as string);
         return;
       }
       setVideoFile(file);
@@ -226,7 +226,7 @@ export default function ReleasePage() {
 
       // Upload images first
       if (imageFiles.length > 0) {
-        setSuccessMessage(t('releasePage.uploadingImages'));
+        setSuccessMessage(t('releasePage.uploadingImages') as string);
         for (const imageFile of imageFiles) {
           try {
             const uploadResponse = await uploadAvatar(imageFile);
@@ -250,7 +250,7 @@ export default function ReleasePage() {
 
       // Then upload video
       if (videoFile) {
-        setSuccessMessage(t('releasePage.uploadingVideo'));
+        setSuccessMessage(t('releasePage.uploadingVideo') as string);
         try {
           const videoUploadResponse = await uploadVideo(videoFile);
           if (videoUploadResponse.success && videoUploadResponse.data?.code === 0) {
@@ -273,7 +273,7 @@ export default function ReleasePage() {
         token: authInfo!.token,
         title: title.trim(),
         description: content.trim(),
-        location: userLocation || t('releasePage.gettingLocation'),
+        location: userLocation || t('releasePage.gettingLocation') as string,
         images: uploadedImages.join(','),
         video: uploadedVideo ? '/' + uploadedVideo : '',
         intro: brandInfoChecked ? (userBrandInfo?.brief || briefDescription) : '',
@@ -283,23 +283,23 @@ export default function ReleasePage() {
         workingHours: brandInfoChecked ? (userBrandInfo?.address || '') : '',
       };
 
-      setSuccessMessage(t('releasePage.publishingContent'));
+      setSuccessMessage(t('releasePage.publishingContent') as string);
 
       // Call publish API
       const response = await postSquareContent(postData);
 
       if (response.success) {
-        setSuccessMessage(t('releasePage.publishSuccess'));
+        setSuccessMessage(t('releasePage.publishSuccess') as string);
         // Redirect to personal page after success
         setTimeout(() => {
           router.push('/personal');
         }, 2000);
       } else {
-        setErrorMessage(response.message || t('releasePage.publishError'));
+        setErrorMessage(response.message || t('releasePage.publishError') as string);
         setSuccessMessage(''); // Clear success message
       }
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : t('releasePage.publishProcessError'));
+      setErrorMessage(error instanceof Error ? error.message : t('releasePage.publishProcessError') as string);
       setSuccessMessage(''); // 清除成功消息
     } finally {
       setIsSubmitting(false);
@@ -328,7 +328,7 @@ export default function ReleasePage() {
           <div>
             <input
               type="text"
-              placeholder={t('releasePage.fieldTitle')}
+              placeholder={t('releasePage.fieldTitle') as string}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -339,7 +339,7 @@ export default function ReleasePage() {
           {/* Content Textarea */}
           <div>
             <textarea
-              placeholder={t('releasePage.fieldContent')}
+              placeholder={t('releasePage.fieldContent') as string}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={6}
@@ -404,7 +404,7 @@ export default function ReleasePage() {
                       } else if (file.type.startsWith('video/')) {
                         // Check if video file already exists
                         if (videoFile) {
-                          setErrorMessage(t('releasePage.onlyOneVideoAllowed'));
+                          setErrorMessage(t('releasePage.onlyOneVideoAllowed') as string);
                           e.target.value = ""; // 重置input
                           return;
                         }
@@ -492,7 +492,7 @@ export default function ReleasePage() {
               <div>
                 <input
                   type="text"
-                  placeholder={t('releasePage.brandProductionName')}
+                  placeholder={t('releasePage.brandProductionName') as string}
                   value={brandName}
                   onChange={(e) => setBrandName(e.target.value)}
                   className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -502,7 +502,7 @@ export default function ReleasePage() {
               {/* Brief Description */}
               <div>
                 <textarea
-                  placeholder={t('releasePage.briefDescription')}
+                  placeholder={t('releasePage.briefDescription') as string}
                   value={briefDescription}
                   onChange={(e) => setBriefDescription(e.target.value)}
                   rows={4}

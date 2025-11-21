@@ -72,7 +72,7 @@ export default function SearchPage() {
     }
 
     if (!authInfo) {
-      setError(t('square.loginRequired'));
+      setError(t('square.loginRequired') as string);
       return;
     }
 
@@ -102,7 +102,7 @@ export default function SearchPage() {
         }
         setHasSearched(true);
       } else {
-        setError(response.message || t('search.noResults'));
+        setError((response.message || t('search.noResults')) as string);
         setUserResults([]);
         setArticleResults([]);
         setHasSearched(true);
@@ -112,7 +112,7 @@ export default function SearchPage() {
       if (error instanceof Error && error.message === 'TOKEN_EXPIRED') {
         setError('登录已过期，请重新登录');
       } else {
-        setError(error instanceof Error ? error.message : t('search.noResults'));
+        setError((error instanceof Error ? error.message : t('search.noResults')) as string);
       }
       setUserResults([]);
       setArticleResults([]);
@@ -235,7 +235,7 @@ export default function SearchPage() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={t('search.searchPlaceholder')}
+                placeholder={t('search.searchPlaceholder') as string}
               />
             </InputGroup>
             <Button

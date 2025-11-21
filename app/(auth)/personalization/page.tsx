@@ -322,7 +322,7 @@ export default function PersonalizationPage() {
                             type="text"
                             value={formData.nickname}
                             onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
-                            placeholder={t('personalization.nicknamePlaceholder')}
+                            placeholder={t('personalization.nicknamePlaceholder') as string}
                             className="w-full rounded-full bg-gray-100 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#11295b]/60"
                         />
                     </div>

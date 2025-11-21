@@ -92,7 +92,7 @@ export default function RegisterPage() {
 		try {
 			// 验证密码匹配
 			if (formData.password !== formData.confirmPassword) {
-				setError(t('auth.passwordMismatch'));
+				setError(t('auth.passwordMismatch') as string);
 				setIsLoading(false);
 				return;
 			}
@@ -164,7 +164,7 @@ export default function RegisterPage() {
 								type="email"
 								value={formData.email}
 								onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-								placeholder={t('auth.email')}
+								placeholder={t('auth.email') as string}
 								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
@@ -179,7 +179,7 @@ export default function RegisterPage() {
 								type={showPassword ? "text" : "password"}
 								value={formData.password}
 								onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-								placeholder={t('auth.password')}
+								placeholder={t('auth.password') as string}
 								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
@@ -201,7 +201,7 @@ export default function RegisterPage() {
 								type={showConfirmPassword ? "text" : "password"}
 								value={formData.confirmPassword}
 								onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-								placeholder={t('auth.confirmPassword')}
+								placeholder={t('auth.confirmPassword') as string}
 								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>

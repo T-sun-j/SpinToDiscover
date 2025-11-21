@@ -135,10 +135,10 @@ export default function SquarePage() {
 				});
 				setPostInteractions(newInteractions);
 			} else {
-				setError(t('square.loadDetailFailed'));
+				setError(t('square.loadDetailFailed') as string);
 			}
 		} catch (error) {
-			setError(t('square.loadDetailError'));
+			setError(t('square.loadDetailError') as string);
 		} finally {
 			setIsLoading(false);
 		}
@@ -495,7 +495,7 @@ export default function SquarePage() {
 								<button
 									onClick={clearLocationFilter}
 									className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors flex-shrink-0"
-									title={t('square.clearFilter')}
+									title={t('square.clearFilter') as string}
 								>
 									<X className="h-3 w-3" />
 								</button>

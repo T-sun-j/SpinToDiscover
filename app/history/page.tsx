@@ -131,7 +131,7 @@ export default function HistoryPage() {
           {t("personalCenter.menu.history")}
         </h1>
         <button
-          aria-label={t("history.back")}
+          aria-label={t("history.back") as string}
           onClick={() => router.back()}
           className="text-[#0F1728] hover:text-[#0F1728]"
         >

@@ -93,7 +93,7 @@ export default function BrandEditPage() {
                 }
             } catch (error) {
                 console.error('获取用户信息失败:', error);
-                setError(t('brandEditPage.getUserInfoFailed'));
+                setError(t('brandEditPage.getUserInfoFailed') as string);
             } finally {
                 setIsLoadingUserInfo(false);
             }
@@ -161,14 +161,14 @@ export default function BrandEditPage() {
 
         // 检查文件类型
         if (!file.type.startsWith('image/')) {
-            setError(t('brandEditPage.invalidImageType'));
+            setError(t('brandEditPage.invalidImageType') as string);
             return;
         }
 
         // 检查文件大小 (10MB)
         const maxSize = 10 * 1024 * 1024;
         if (file.size > maxSize) {
-            setError(t('brandEditPage.imageTooLarge'));
+            setError(t('brandEditPage.imageTooLarge') as string);
             return;
         }
 
@@ -221,13 +221,13 @@ export default function BrandEditPage() {
     // 提交表单
     const handleSubmit = async () => {
         if (!getEmail()) {
-            setError(t('brandEditPage.loginRequired'));
+            setError(t('brandEditPage.loginRequired') as string);
             return;
         }
 
         // 验证品牌名称必填
         if (!formData.brand.trim()) {
-            setError(t('brandEditPage.brandRequired'));
+            setError(t('brandEditPage.brandRequired') as string);
             return;
         }
 
@@ -236,7 +236,7 @@ export default function BrandEditPage() {
 
         try {
             if (!userParams) {
-                setError(t('brandEditPage.authInfoMissing'));
+                setError(t('brandEditPage.authInfoMissing') as string);
                 return;
             }
 
@@ -297,7 +297,7 @@ export default function BrandEditPage() {
                         <div>
                             <input
                                 type="text"
-                                placeholder={t('brandEditPage.brand')}
+                                placeholder={t('brandEditPage.brand') as string}
                                 value={formData.brand}
                                 onChange={(e) => handleInputChange('brand', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -308,7 +308,7 @@ export default function BrandEditPage() {
                         {/* Brief */}
                         <div>
                             <textarea
-                                placeholder={t('brandEditPage.brief')}
+                                placeholder={t('brandEditPage.brief') as string}
                                 value={formData.brief}
                                 onChange={(e) => handleInputChange('brief', e.target.value)}
                                 rows={4}
@@ -364,7 +364,7 @@ export default function BrandEditPage() {
                         <div>
                             <input
                                 type="text"
-                                placeholder={t('brandEditPage.officialSite')}
+                                placeholder={t('brandEditPage.officialSite') as string}
                                 value={formData.officialsite}
                                 onChange={(e) => handleInputChange('officialsite', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -375,7 +375,7 @@ export default function BrandEditPage() {
                         <div>
                             <input
                                 type="text"
-                                placeholder={t('releasePage.shopUrl') || 'Online shop'}
+                                placeholder={(t('releasePage.shopUrl') as string) || 'Online shop'}
                                 value={formData.shopurl}
                                 onChange={(e) => handleInputChange('shopurl', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -386,7 +386,7 @@ export default function BrandEditPage() {
                         <div>
                             <input
                                 type="tel"
-                                placeholder={t('brandEditPage.telMobile')}
+                                placeholder={t('brandEditPage.telMobile') as string}
                                 value={formData.tel}
                                 onChange={(e) => handleInputChange('tel', e.target.value)}
                                 className="w-full rounded-full bg-gray-200 px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/60"
@@ -395,7 +395,7 @@ export default function BrandEditPage() {
                         {/* email */}
                         <div>
                             <textarea
-                                placeholder={t('brandEditPage.workHour')}
+                                placeholder={t('brandEditPage.workHour') as string}
                                 value={formData.workHour}
                                 onChange={(e) => handleInputChange('workHour', e.target.value)}
                                 rows={3}
@@ -405,7 +405,7 @@ export default function BrandEditPage() {
                         {/* email */}
                         <div>
                             <textarea
-                                placeholder={t('brandEditPage.email')}
+                                placeholder={t('brandEditPage.email') as string}
                                 value={formData.email}
                                 onChange={(e) => handleInputChange('email', e.target.value)}
                                 rows={3}
@@ -415,7 +415,7 @@ export default function BrandEditPage() {
                         {/* Address */}
                         <div>
                             <textarea
-                                placeholder={t('brandEditPage.address')}
+                                placeholder={t('brandEditPage.address') as string}
                                 value={formData.address}
                                 onChange={(e) => handleInputChange('address', e.target.value)}
                                 rows={3}

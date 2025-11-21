@@ -138,7 +138,7 @@ export default function ChangePasswordPage() {
 								type={showNewPassword ? "text" : "password"}
 								value={formData.newPassword}
 								onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
-								placeholder={t('auth.newPassword')}
+								placeholder={t('auth.newPassword') as string}
 								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-[#0F1728] focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>
@@ -160,7 +160,7 @@ export default function ChangePasswordPage() {
 								type={showConfirmPassword ? "text" : "password"}
 								value={formData.confirmPassword}
 								onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-								placeholder={t('auth.confirmNewPassword')}
+								placeholder={t('auth.confirmNewPassword') as string}
 								className="w-full rounded-full bg-gray-100 px-10 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/60"
 								required
 							/>

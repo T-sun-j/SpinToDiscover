@@ -18,7 +18,7 @@ export default function AboutPage() {
       {/* Page title & back - 根据设计稿调整布局 */}
       <div className="flex items-center px-4 py-4 z-100">
         <button
-          aria-label={t("about.back")}
+          aria-label={t("about.back") as string}
           onClick={() => router.back()}
           className="text-[#0F1728] hover:text-[#0F1728] mr-4"
         >

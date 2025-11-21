@@ -19,7 +19,7 @@ export default function ProtectPage() {
       {/* Page title & back */}
       <div className="flex items-center px-3 py-4 z-100">
         <button
-          aria-label={t("protect.back")}
+          aria-label={t("protect.back") as string}
           onClick={() => router.back()}
           className="text-[#0F1728] hover:text-[#0F1728] mr-4"
         >
@@ -44,7 +44,7 @@ export default function ProtectPage() {
           <div className="relative w-full">
             <Image
               src="/img/project.png"
-              alt={t("protect.projectImageAlt") || "Project image"}
+              alt={(t("protect.projectImageAlt") as string) || "Project image"}
               width={600}
               height={400}
               className="w-full h-auto object-cover mx-auto"

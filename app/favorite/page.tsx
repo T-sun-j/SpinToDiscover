@@ -179,7 +179,7 @@ export default function FavoritePage() {
           {item.title}
         </h3>
         <button
-          aria-label={t("favoritePage.removeFromFavorites")}
+          aria-label={t("favoritePage.removeFromFavorites") as string}
           onClick={(e) => {
             e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
             // TODO: 实现取消收藏功能
@@ -226,7 +226,7 @@ export default function FavoritePage() {
           {t("favoritePage.title")}
         </h1>
         <button
-          aria-label={t("favoritePage.back")}
+          aria-label={t("favoritePage.back") as string}
           onClick={() => router.back()}
           className="text-[#0F1728] hover:text-[#0F1728]"
         >
