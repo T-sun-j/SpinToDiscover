@@ -126,6 +126,7 @@ export interface Translations {
       submittingComment: string;
       replyingTo: string;
       share: string;
+      readMore: string;
     };
   community: {
     onlineUsers: string;
@@ -545,7 +546,7 @@ export const translations: Record<Language, Translations> = {
       registerSuccess: 'Registration successful! Redirecting...',
       passwordMismatch: 'Passwords do not match',
       termsAnd: 'and',
-      locationPermissionDenied: 'Location permission denied, using default location',
+      locationPermissionDenied: 'Location access is turned off. You cancontinue posting without it.',
       locationError: 'Failed to get location, using default location',
       gettingLocation: 'Getting location...',
       defaultLocation: 'Default Location',
@@ -610,6 +611,7 @@ export const translations: Record<Language, Translations> = {
       submittingComment: 'Sending...',
       replyingTo: 'Replying to',
       share: 'Share',
+      readMore: 'Read More >',
     },
     community: {
       onlineUsers: 'Online Users',
@@ -777,7 +779,7 @@ export const translations: Record<Language, Translations> = {
       advantageInfo: 'Advantage Info.',
       fillBrandInfo: 'Fill in with brand information',
       brandProductionName: 'Product or collection name',
-      briefDescription: 'Highlight the unique featuresor craftsmanship',
+      briefDescription: 'Highlight the unique features or craftsmanship',
       errorMessage: 'Error Message',
       allowingComments: 'Allowing Comments',
       releaseButton: 'Release',
@@ -794,7 +796,7 @@ export const translations: Record<Language, Translations> = {
       locationError: 'Your browser does not support geolocation',
       locationParseError: 'Location obtained but address parsing failed',
       locationFailed: 'Failed to get location',
-      locationPermissionDenied: 'User denied location request',
+      locationPermissionDenied: 'Location access is turned off. You cancontinue posting without it.',
       locationUnavailable: 'Location information unavailable',
       locationTimeout: 'Location request timeout',
       authInfoMissing: 'User authentication information missing',
@@ -971,7 +973,7 @@ export const translations: Record<Language, Translations> = {
       telMobile: 'Your contact number',
       address: 'Store or office address',
       workHour: 'Business hours (e.g.9:00-13:00)',
-      email: 'Business emall for inquiries',
+      email: 'Business email for inquiries',
       location: 'Location',
       submit: 'Submit',
       submitting: 'Submitting...',
@@ -991,7 +993,7 @@ export const translations: Record<Language, Translations> = {
       gettingLocation: 'Getting location...',
       locationError: 'Your browser does not support geolocation',
       locationFailed: 'Failed to get location',
-      locationPermissionDenied: 'User denied location request',
+      locationPermissionDenied: 'Location access is turned off. You cancontinue posting without it.',
       locationUnavailable: 'Location information unavailable',
       locationTimeout: 'Location request timeout',
       locationParseError: 'Location obtained but address parsing failed',
@@ -1145,6 +1147,7 @@ export const translations: Record<Language, Translations> = {
       submittingComment: '发送中...',
       replyingTo: '回复',
       share: '分享',
+      readMore: '阅读更多 >',
     },
     community: {
       onlineUsers: '在线用户',

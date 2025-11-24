@@ -565,10 +565,31 @@ export default function SquarePage() {
 
 
 										{/* 标题 */}
-										<h3 className=" text-[#12295B] text-[17px] italic leading-[34px] font-nunito font-semibold">{post.title}</h3>
+										<h3 className=" text-[#12295B] text-lg italic font-nunito font-semibold mb-1">{post.title}</h3>
 
-										{/* 描述 */}
-										<p className="text-sm text-[#20313B]  leading-[17px] font-inter">{post.description}</p>
+										{/* 描述三行省略 + Read More 效果 */}
+										<div className="relative">
+											<p
+												className="text-base text-[#20313B] font-inter line-clamp-3 break-words"
+											>
+												{post.description}
+											</p>
+											{/* 如果描述长度超过一定字符数，显示 Read More */}
+											{post.description && post.description.length > 80 && (
+												<div className="mt-1 flex justify-end">
+													<span
+														className="text-xs text-[#12295B] bg-white pl-2 cursor-pointer select-none font-inter"
+														onClick={(e) => {
+															e.stopPropagation();
+															// 可替换为弹窗等完整显示
+															alert(post.description);
+														}}
+													>
+														{t('square.readMore')}
+													</span>
+												</div>
+											)}
+										</div>
 										{/* 图片列表 */}
 										<div className="flex gap-2 overflow-x-auto my-2">
 											{/* 如果有视频，显示视频第一帧 */}

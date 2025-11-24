@@ -406,13 +406,14 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 				/>
 
 				{/* 标题和返回按钮 */}
-				<div className="flex items-center justify-between px-4 py-4">
-					<h1 className="text-xl font-poppins text-[#12295B] italic font-semibold">{post.title || 'Untitled'}</h1>
+				<div className="flex items-start justify-between px-4 py-4">
+					<h1 className="text-xl font-poppins text-[#12295B] italic font-semibold leading-tight">{post.title || 'Untitled'}</h1>
 					<button
 						onClick={handleBack}
-						className="text-[#0F1728] hover:text-[#0F1728]"
+						className="text-[#0F1728] hover:text-[#0F1728] mt-0"
+						style={{ alignSelf: 'flex-start' }}
 					>
-						<ChevronLeft className='h-7 w-7 z-10' />
+						<ChevronLeft className="h-7 w-7 z-10" />
 					</button>
 				</div>
 
@@ -454,7 +455,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 					</div>
 
 					{/* 描述文本 */}
-					<p className="text-[#20313B] leading-relaxed text-sm font-inter">{post.description}</p>
+					<p className="text-[#20313B] leading-relaxed text-base font-inter">{post.description}</p>
 
 					{/* 视频区域 */}
 					{post.video && (
@@ -557,7 +558,7 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 						{/* 品牌介绍 */}
 						{post.brandInfo && (
 							<div className="flex items-start gap-3">
-								<img src="/img/Icon-introduction.svg" alt="Introduction" className="h-9 w-9 pl-1" />
+								{post.brandInfo.intro && <img src="/img/Icon-introduction.svg" alt="Introduction" className="h-9 w-9 pl-1" />}
 								<div className="flex-1">
 									{post.brandInfo.intro && <p className="text-xs text-[#0F1728] font-normal font-inter pt-1 leading-relaxed">
 										{post.brandInfo.intro}
