@@ -579,11 +579,6 @@ export default function SquarePage() {
 												<div className="mt-1 flex justify-end">
 													<span
 														className="text-xs text-[#12295B] bg-white pl-2 cursor-pointer select-none font-inter"
-														onClick={(e) => {
-															e.stopPropagation();
-															// 可替换为弹窗等完整显示
-															alert(post.description);
-														}}
 													>
 														{t('square.readMore')}
 													</span>
