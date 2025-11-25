@@ -550,7 +550,7 @@ export default function SquarePage() {
 										className="bg-white px-4 pt-2 cursor-pointer hover:shadow-sm transition-shadow"
 										onClick={() => handlePostClick(post.id)}
 									>
-										<div className="flex items-center gap-2">
+										<div className="flex items-center gap-2 mb-6" >
 											{/* 发布者信息 */}
 											<div className="flex items-center gap-2">
 												<img
@@ -588,41 +588,41 @@ export default function SquarePage() {
 										{/* 图片列表 */}
 										<div className="flex gap-2 overflow-x-auto my-2">
 											{/* 如果有视频，显示视频第一帧 */}
-                                            {post.video && (
-                                                <div 
-                                                    className="relative w-34 h-24 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
-                                                        handleVideoPlay(`${SERVER_CONFIG.STATIC_URL}${post.video}`);
-                                                    }}
-                                                >
-                                                    <video
-                                                        src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}
-                                                        className="w-full h-full object-cover"
-                                                        muted
-                                                        preload="metadata"
-                                                        onLoadedMetadata={(e) => {
-                                                            // 设置到第一帧
-                                                            e.currentTarget.currentTime = 0.1;
-                                                        }}
-                                                    />
-                                                    {/* 视频播放图标覆盖层 */}
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
-                                                        <div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
-                                                            <svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M8 5v14l11-7z"/>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
+											{post.video && (
+												<div
+													className="relative w-34 h-48 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
+													onClick={(e) => {
+														e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
+														handleVideoPlay(`${SERVER_CONFIG.STATIC_URL}${post.video}`);
+													}}
+												>
+													<video
+														src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}
+														className="w-full h-full object-cover"
+														muted
+														preload="metadata"
+														onLoadedMetadata={(e) => {
+															// 设置到第一帧
+															e.currentTarget.currentTime = 0.1;
+														}}
+													/>
+													{/* 视频播放图标覆盖层 */}
+													<div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
+														<div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+															<svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+																<path d="M8 5v14l11-7z" />
+															</svg>
+														</div>
+													</div>
+												</div>
+											)}
 											{post.images.map((image, imageIndex) => {
 												const imageUrl = `${SERVER_CONFIG.STATIC_URL}${image}`;
 												const allImages = post.images.map(img => `${SERVER_CONFIG.STATIC_URL}${img}`);
 												return (
-													<div 
-														key={imageIndex} 
-														className="relative w-36 h-24 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
+													<div
+														key={imageIndex}
+														className="relative w-36 h-48 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
 														onClick={(e) => {
 															e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
 															handleImagePreview(imageUrl, allImages, imageIndex);
@@ -646,10 +646,10 @@ export default function SquarePage() {
 														{post.updatedAt}
 													</span>
 												)}
-												<div className="flex items-center gap-2 mt-2">
+												{post.location && (<div className="flex items-center gap-2 mt-2">
 													<MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
 													<span className="text-sm text-gray-500">{post.location}</span>
-												</div>	
+												</div>)}
 
 											</div>
 
@@ -703,7 +703,7 @@ export default function SquarePage() {
 									{/* 分隔线 */}
 									{index < posts.length - 1 && (
 										<div
-											className="mx-4 my-4"
+											className="mx-4 my-6"
 											style={{ borderBottom: '1px solid #e5e7eb' }}
 										></div>
 									)}
@@ -738,7 +738,7 @@ export default function SquarePage() {
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 								</svg>
 							</button>
-							
+
 							{/* 视频播放器 */}
 							<video
 								src={playingVideoUrl}
@@ -757,7 +757,7 @@ export default function SquarePage() {
 
 				{/* 图片预览弹窗 */}
 				{isImagePreviewOpen && previewImageUrl && (
-					<div 
+					<div
 						className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center z-200"
 						onClick={handleImagePreviewClose}
 					>
@@ -801,10 +801,10 @@ export default function SquarePage() {
 									</svg>
 								</button>
 							)}
-							
+
 							{/* 图片显示 */}
-							<div 
-								className="max-w-full max-h-full flex items-center justify-center px-16"
+							<div
+								className="max-w-full max-h-full flex items-center justify-center"
 								onClick={(e) => e.stopPropagation()}
 							>
 								<img

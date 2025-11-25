@@ -546,7 +546,7 @@ export const translations: Record<Language, Translations> = {
       registerSuccess: 'Registration successful! Redirecting...',
       passwordMismatch: 'Passwords do not match',
       termsAnd: 'and',
-      locationPermissionDenied: 'Location access is turned off. You cancontinue posting without it.',
+      locationPermissionDenied: 'Location access is turned off. You can continue posting without it.',
       locationError: 'Failed to get location, using default location',
       gettingLocation: 'Getting location...',
       defaultLocation: 'Default Location',

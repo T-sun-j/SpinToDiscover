@@ -151,7 +151,7 @@ export default function ReleasePage() {
       console.error('Failed to get user info:', error);
       setErrorMessage(t('releasePage.getUserInfoFailed') as string);
     }
-  }, [authInfo]);
+  }, [authInfo, t]);
 
   // Validate form data
   const validateForm = useCallback(() => {
@@ -273,7 +273,7 @@ export default function ReleasePage() {
         token: authInfo!.token,
         title: title.trim(),
         description: content.trim(),
-        location: userLocation || t('releasePage.gettingLocation') as string,
+        location: userLocation as string,
         images: uploadedImages.join(','),
         video: uploadedVideo ? '/' + uploadedVideo : '',
         intro: brandInfoChecked ? (userBrandInfo?.brief || briefDescription) : '',

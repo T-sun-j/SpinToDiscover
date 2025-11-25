@@ -628,7 +628,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             </svg>
             <main className=" flex min-h-dvh flex-col bg-white">
                 {/* Header */}
-                <Header />
+                <Header  NoShowbg/>
 
                 {/* User and Brand Info */}
                 <div className={"p-4"}>
@@ -709,14 +709,14 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     {/* 用户信息 */}
                     <div className="relative flex flex-col gap-3 mt-3">
                         {/* 品牌信息 */}
-                        <div className="flex items-center">
+                        {userInfo?.brand && (<div className="flex items-center">
                             <span className="text-sm text-[#0F1728] text-left font-nunito  flex-shrink-0">{t('personalPage.brand')}:</span>
-                            <div className="flex items-center gap-2 flex-1 pl-1">
+                            <div className="flex items-center gap-2 flex-1 pl-1 text-sm">
                                 {userInfo?.brand ? (
                                     userInfo?.officialsite ? (
                                         <a
                                             href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
-                                            className="text-[#0F1728] font-nunito underline font-semibold hover:opacity-80"
+                                            className="text-[#0F1728] text-sm font-nunito underline font-semibold hover:opacity-80"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
@@ -730,7 +730,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 )}
 
                             </div>
-                        </div>
+                        </div>)}
 
 
                         {/* 简介 */}
@@ -738,22 +738,31 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             <div className="flex items-start w-[70%]">
                                 <span className="text-sm text-[#0F1728] text-left font-nunito flex-shrink-0">{t('personalPage.brief')}:</span>
                                 <div className="flex-1 ml-3 w-full">
-                                    <p className="text-xs text-[#0F1728] font-inter w-full">{userInfo.brief}</p>
-                                    {userInfo?.tel && <p className="text-xs text-gray-700 font-inter pt-4 w-full"><span className="font-semibold mr-1">{t('personalPage.customerServiceHotline')}:</span>{userInfo?.tel}</p>}
-                                    {userInfo?.workHour && <p className="text-xs text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.workHour')}:</span>{userInfo?.workHour}</p>}
-                                    {userInfo?.email && <p className="text-xs text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.email')}:</span>{userInfo?.email}</p>}
-                                    {userInfo?.address && <p className="text-xs text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.address')}:</span>{userInfo?.address}</p>}
+                                    <p className="text-sm text-[#0F1728] font-inter w-full">{userInfo.brief}</p>
+                                    {userInfo?.tel && <p className="text-sm text-gray-700 font-inter pt-4 w-full"><span className="font-semibold mr-1">{t('personalPage.customerServiceHotline')}:</span>{userInfo?.tel}</p>}
+                                    {userInfo?.workHour && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.workHour')}:</span>{userInfo?.workHour}</p>}
+                                    {userInfo?.email && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.email')}:</span>{userInfo?.email}</p>}
+                                    {userInfo?.address && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.address')}:</span>{userInfo?.address}</p>}
                                 </div>
                             </div>
                         )}
-                        <div className="flex items-center ml-10" style={{ zIndex: 10 }}>
+                        {userInfo?.shopurl && (<div className="flex items-center ml-10" style={{ zIndex: 10 }}>
                             <button
-                                onClick={() => window.open(userInfo?.officialsite?.startsWith('http') ? userInfo?.officialsite : `https://${userInfo?.officialsite}`, '_blank')}
+                                onClick={() => window.open(userInfo?.shopurl?.startsWith('http') ? userInfo?.shopurl : `https://${userInfo?.shopurl}`, '_blank')}
                                 className="flex items-center bg-[#12295B] text-white px-2 w-32 h-6 rounded-lg text-sm transition-all duration-200"
                             >
                                 <span className="text-sm text-white font-poppins font-semibold text-center w-full">{t('personalPage.online')}</span>
                             </button>
-                        </div>
+                        </div>)}
+                        {targetUserId === authInfo?.userId && (
+                            <Link
+                                href="/brand-edit"
+                                className="ml-11 flex items-center hover:opacity-80"
+                                style={{ zIndex: 10 }}
+                            >
+                                <Image src="/img/edit.png" alt="Edit" width={5} height={5} className="h-5 w-5" />
+                            </Link>
+                        )}
                         {userInfo?.logo && (
                             <Image
                                 src={buildAvatarUrl(userInfo.logo)}
@@ -764,15 +773,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             />
                         )}
                         {/* Edit按钮布局到底部右下角 - 只有查看自己的页面时才显示 */}
-                        {targetUserId === authInfo?.userId && (
-                            <Link
-                                href="/brand-edit"
-                                className="absolute right-2 bottom-[30px] flex items-center hover:opacity-80"
-                                style={{ zIndex: 10 }}
-                            >
-                                <Image src="/img/edit.png" alt="Edit" width={5} height={5} className="h-5 w-5" />
-                            </Link>
-                        )}
+                        
                     </div>
 
                 </div>
@@ -939,10 +940,10 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             {post.updatedAt}
                                                         </span>
                                                     )}
-                                                    <div className="flex items-center  mt-2">
+                                                    {post.location && (<div className="flex items-center  mt-2">
                                                         <MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
                                                         <span className="text-sm text-[#0F1728] font-inter">{post.location}</span>
-                                                    </div>
+                                                    </div>)}
                                                 </div>
 
                                                 {/* 互动按钮 */}
@@ -1191,7 +1192,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                             {/* 图片显示 */}
                             <div
-                                className="max-w-full max-h-full flex items-center justify-center px-16"
+                                className="max-w-full max-h-full flex items-center justify-center"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <img

@@ -175,7 +175,7 @@ export default function FavoritePage() {
 
       {/* Title & description */}
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-[18px] text-[#11295b] font-poppins flex-1">
+        <h3 className=" text-[#12295B] text-lg italic font-nunito font-semibold mb-1">
           {item.title}
         </h3>
         <button
@@ -189,9 +189,9 @@ export default function FavoritePage() {
           <Heart className="h-5 w-5 fill-current" />
         </button>
       </div>
-      <p className="text-sm leading-6 text-[#11295b]/80 font-nunito mb-2">
+      {/* <p className="text-sm leading-6 text-[#11295b]/80 font-nunito mb-2">
         {item.description}
-      </p>
+      </p> */}
       <div className="flex justify-between text-xs text-[#11295b]/60">
         <span className="font-nunito">{item.author.nickname}</span>
         <span className="font-nunito">
