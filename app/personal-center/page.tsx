@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { ArrowLeft, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, AlertCircle, RefreshCw, LogOut } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, Earth, RefreshCw, LogOut } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
@@ -116,7 +116,7 @@ export default function PersonalCenterPage() {
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
                             'py-4'
                         )}>
-                            <AlertCircle className={classNames(
+                            <Earth className={classNames(
                                 UI_CONSTANTS.SIZES.ICON_MD,
                                 UI_CONSTANTS.COLORS.RED_500
                             )} />

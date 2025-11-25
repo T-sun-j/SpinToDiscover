@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from './ui/button';
-import { UserRound } from 'lucide-react';
+import { UserRound, Search } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -62,13 +62,7 @@ export function Header({
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
-              <Image
-                src="/img/search.png"
-                alt="search"
-                width={28}
-                height={28}
-                className="h-7 w-7 z-10"
-              />
+            <Search className={`h-7 w-7 z-10 ${transparent ? "text-white" : "text-[#0F1728]"}`}/>
             </Button>
           </Link>
         ) : null}
@@ -81,13 +75,7 @@ export function Header({
             onClick={handleUserClick}
             aria-label="account"
           >
-            <Image
-                src={transparent ? "/img/user.png" : "/img/user-d.png"}
-                alt="search"
-                width={28}
-                height={28}
-                className="h-8 w-8 z-10"
-              />
+            <UserRound className={`h-7 w-7 z-10 ${transparent ? "text-white" : "text-[#0F1728]"}`}/>
           </Button>
         ) : null}
       </div>

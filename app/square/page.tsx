@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { Search, MapPin, Bookmark, Heart, SquareArrowOutUpRight, Filter, FileX, X } from 'lucide-react';
+import { Search, MapPin, Bookmark, Heart, SquareArrowOutUpRight, Filter, FileX, X, Earth } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
@@ -169,6 +169,19 @@ export default function SquarePage() {
 		}
 	}, [searchParams]); // 只依赖searchParams
 
+	// 管理 body 滚动状态：当图片预览或视频播放时禁用滚动
+	useEffect(() => {
+		if (isImagePreviewOpen || isVideoPlaying) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		// 组件卸载时恢复滚动
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isImagePreviewOpen, isVideoPlaying]);
+
 	const handlePostClick = (postId: string) => {
 		// 如果有认证信息，传递到详情页面
 		if (authInfo?.userId && authInfo?.token) {
@@ -176,6 +189,16 @@ export default function SquarePage() {
 		} else {
 			router.push(`/square/${postId}`);
 		}
+	};
+
+	const handlePublisherClick = (publisherId: string) => {
+		if (authInfo?.userId && authInfo?.token) {
+			// 跳转到发布者个人页面
+			router.push(`/personal/${publisherId}`);
+		} else {
+			router.push(`/login`);
+		}
+
 	};
 
 	// 点赞功能
@@ -444,7 +467,7 @@ export default function SquarePage() {
 								loadSquareContent('', newTab);
 							}}
 							className={`text-sm  px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'following'
-								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
+								? 'w-32 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
 								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
 						>
@@ -466,7 +489,7 @@ export default function SquarePage() {
 								loadSquareContent(location, newTab);
 							}}
 							className={`text-sm font-medium px-3 py-1 rounded-full transition-all font-poppins ${activeTab === 'nearby'
-								? 'w-36 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
+								? 'w-28 h-7 bg-gradient-to-r from-[#FD9507] to-[#CE14B0] text-white shadow-sm font-semibold'
 								: 'font-semibold text-[#0F1728] hover:text-gray-800'
 								}`}
 						>
@@ -475,14 +498,14 @@ export default function SquarePage() {
 					</div>
 
 					{/* 右侧：筛选按钮和地址 */}
-					<div className="flex items-center">
+					<div className="flex">
 						<Button
 							variant="ghost"
 							size="sm"
 							onClick={() => router.push(`/region-select?from=square&filterLocation=${filterLocation}`)}
-							className="text-gray-600 hover:text-gray-800 py-1"
+							className="px-0"
 						>
-							<Image src="/img/Filter.png" alt="Filter" width={16} height={16} className='w-6 h-6' />
+							<Image src="/img/Filter.png" alt="Filter" width={6} height={6} className='w-6 h-6' />
 						</Button>
 
 						{/* 显示当前选择的地区 - 只显示三个字加省略号 */}
@@ -527,8 +550,8 @@ export default function SquarePage() {
 				{/* 无数据状态 */}
 				{!isLoading && !error && !isGettingLocation && posts.length === 0 && (
 					<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-						<FileX className="h-16 w-16 text-gray-300 mb-4" />
-						<h3 className="text-lg font-medium text-gray-900 mb-2">{t('square.noContent')}</h3>
+						<Earth className="h-16 w-16 text-[#11295B] opacity-60 mb-4" />
+						<h3 className="text-lg font-medium text-[#11295B] mb-2">{t('square.noContent')}</h3>
 						<p className="text-sm text-gray-500 text-center max-w-sm">
 							{activeTab === 'recommend'
 								? t('square.noRecommendContent')
@@ -548,11 +571,11 @@ export default function SquarePage() {
 								<div key={post.id}>
 									<div
 										className="bg-white px-4 pt-2 cursor-pointer hover:shadow-sm transition-shadow"
-										onClick={() => handlePostClick(post.id)}
+
 									>
 										<div className="flex items-center gap-2 mb-4" >
 											{/* 发布者信息 */}
-											<div className="flex items-center gap-2">
+											<div className="flex items-center gap-2" onClick={() => handlePublisherClick(post.publisher.id)}>
 												<img
 													src={`${SERVER_CONFIG.STATIC_URL}${post.publisher.avatar}`}
 													alt={post.publisher.nickname}
@@ -563,140 +586,141 @@ export default function SquarePage() {
 										</div>
 
 
+										<div onClick={() => handlePostClick(post.id)}>
+											{/* 标题 */}
+											<h3 className=" text-[#12295B] text-lg italic font-nunito font-semibold mb-1">{post.title}</h3>
 
-										{/* 标题 */}
-										<h3 className=" text-[#12295B] text-lg italic font-nunito font-semibold mb-1">{post.title}</h3>
-
-										{/* 描述三行省略 + Read More 效果 */}
-										<div className="relative">
-											<p
-												className="text-base text-[#20313B] font-inter line-clamp-3 break-words"
-											>
-												{post.description}
-											</p>
-											{/* 如果描述长度超过一定字符数，显示 Read More */}
-											{post.description && post.description.length > 80 && (
-												<div className="mt-1 flex justify-end">
-													<span
-														className="text-xs text-[#12295B] bg-white pl-2 cursor-pointer select-none font-inter"
-													>
-														{t('square.readMore')}
-													</span>
-												</div>
-											)}
-										</div>
-										{/* 图片列表 */}
-										<div className="flex gap-2 overflow-x-auto my-2">
-											{/* 如果有视频，显示视频第一帧 */}
-											{post.video && (
-												<div
-													className="relative w-34 h-48 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
-													onClick={(e) => {
-														e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
-														handleVideoPlay(`${SERVER_CONFIG.STATIC_URL}${post.video}`);
-													}}
+											{/* 描述三行省略 + Read More 效果 */}
+											<div className="relative">
+												<p
+													className="text-base text-[#20313B] font-inter line-clamp-3 break-words"
 												>
-													<video
-														src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}
-														className="w-full h-full object-cover"
-														muted
-														preload="metadata"
-														onLoadedMetadata={(e) => {
-															// 设置到第一帧
-															e.currentTarget.currentTime = 0.1;
-														}}
-													/>
-													{/* 视频播放图标覆盖层 */}
-													<div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
-														<div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
-															<svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-																<path d="M8 5v14l11-7z" />
-															</svg>
-														</div>
+													{post.description}
+												</p>
+												{/* 如果描述长度超过一定字符数，显示 Read More */}
+												{post.description && post.description.length > 80 && (
+													<div className="mt-1 flex justify-end">
+														<span
+															className="text-xs text-[#12295B] bg-white pl-2 cursor-pointer select-none font-inter"
+														>
+															{t('square.readMore')}
+														</span>
 													</div>
-												</div>
-											)}
-											{post.images.map((image, imageIndex) => {
-												const imageUrl = `${SERVER_CONFIG.STATIC_URL}${image}`;
-												const allImages = post.images.map(img => `${SERVER_CONFIG.STATIC_URL}${img}`);
-												return (
+												)}
+											</div>
+											{/* 图片列表 */}
+											<div className="flex gap-2 overflow-x-auto my-2">
+												{/* 如果有视频，显示视频第一帧 */}
+												{post.video && (
 													<div
-														key={imageIndex}
-														className="relative w-36 h-48 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
+														className="relative w-34 h-48 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
 														onClick={(e) => {
 															e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
-															handleImagePreview(imageUrl, allImages, imageIndex);
+															handleVideoPlay(`${SERVER_CONFIG.STATIC_URL}${post.video}`);
 														}}
 													>
-														<OptimizedImage
-															src={imageUrl}
-															alt={`Post ${post.id} image ${imageIndex + 1}`}
+														<video
+															src={`${SERVER_CONFIG.STATIC_URL}${post.video}`}
 															className="w-full h-full object-cover"
+															muted
+															preload="metadata"
+															onLoadedMetadata={(e) => {
+																// 设置到第一帧
+																e.currentTarget.currentTime = 0.1;
+															}}
 														/>
+														{/* 视频播放图标覆盖层 */}
+														<div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
+															<div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+																<svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+																	<path d="M8 5v14l11-7z" />
+																</svg>
+															</div>
+														</div>
 													</div>
-												);
-											})}
-										</div>
-										{/* 发布者信息和互动按钮 */}
-										<div className="flex items-center justify-between my-2">
-											{/* 位置和时间信息 */}
-											<div className="flex flex-col gap-1">
-												{post.updatedAt && (
-													<span className="text-xs text-gray-500">
-														{post.updatedAt}
-													</span>
 												)}
-												{post.location && (<div className="flex items-center gap-2 mt-2">
-													<MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
-													<span className="text-sm text-gray-500">{post.location}</span>
-												</div>)}
-
+												{post.images.map((image, imageIndex) => {
+													const imageUrl = `${SERVER_CONFIG.STATIC_URL}${image}`;
+													const allImages = post.images.map(img => `${SERVER_CONFIG.STATIC_URL}${img}`);
+													return (
+														<div
+															key={imageIndex}
+															className="relative w-36 h-48 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
+															onClick={(e) => {
+																e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
+																handleImagePreview(imageUrl, allImages, imageIndex);
+															}}
+														>
+															<OptimizedImage
+																src={imageUrl}
+																alt={`Post ${post.id} image ${imageIndex + 1}`}
+																className="w-full h-full object-cover"
+															/>
+														</div>
+													);
+												})}
 											</div>
+											{/* 发布者信息和互动按钮 */}
+											<div className="flex items-center justify-between my-2">
+												{/* 位置和时间信息 */}
+												<div className="flex flex-col gap-1">
+													{post.updatedAt && (
+														<span className="text-xs text-gray-500">
+															{post.updatedAt}
+														</span>
+													)}
+													{post.location && (<div className="flex items-center gap-2 mt-2">
+														<MapPin className="h-4 w-4 text-[#0F1728] font-semibold" />
+														<span className="text-sm text-gray-500">{post.location}</span>
+													</div>)}
 
-											{/* 互动按钮 */}
-											<div className="flex items-center gap-3 mt-2">
+												</div>
 
-												<button
-													onClick={(e) => handleBookmark(post.id, e)}
-													disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
-													className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isCollect
-														? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
-														: 'text-[#0F1728] hover:text-gray-700'
-														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-													title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
-												>
-													<Bookmark
-														className="h-6 w-6 font-semibold"
-														style={postInteractions[post.id]?.isCollect ? { fill: 'url(#bookmark-gradient)' } : {}}
-													/>
-													<span className={`text-xs font-nunito ${postInteractions[post.id]?.isCollect ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' : ''}`}>
-														{postInteractions[post.id]?.bookmarks || post.collects || 0}
-													</span>
-												</button>
-												<button
-													onClick={(e) => handleLike(post.id, e)}
-													disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
-													className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isLove
-														? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent'
-														: 'text-[#0F1728] hover:text-red-500'
-														} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
-													title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
-												>
-													<Heart
-														className="h-6 w-6 font-semibold"
-														style={postInteractions[post.id]?.isLove ? { fill: 'url(#heart-gradient)' } : {}}
-													/>
-													<span className={`text-xs font-nunito ${postInteractions[post.id]?.isLove ? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent' : ''}`}>
-														{postInteractions[post.id]?.likes || post.likes || 0}
-													</span>
-												</button>
-												<button
-													onClick={(e) => handleShare(post, e)}
-													className="flex flex-col items-center gap-0.5 text-[#0F1728] hover:text-gray-700 transition-colors"
-												>
-													<SquareArrowOutUpRight className="h-6 w-6 font-semibold" />
-													<span className="text-xs font-nunito">{post.shares || t('square.share')}</span>
-												</button>
+												{/* 互动按钮 */}
+												<div className="flex items-center gap-3 mt-2">
+
+													<button
+														onClick={(e) => handleBookmark(post.id, e)}
+														disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
+														className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isCollect
+															? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent'
+															: 'text-[#0F1728] hover:text-gray-700'
+															} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
+														title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
+													>
+														<Bookmark
+															className="h-6 w-6 font-semibold"
+															style={postInteractions[post.id]?.isCollect ? { fill: 'url(#bookmark-gradient)' } : {}}
+														/>
+														<span className={`text-xs font-nunito ${postInteractions[post.id]?.isCollect ? 'bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent' : ''}`}>
+															{postInteractions[post.id]?.bookmarks || post.collects || 0}
+														</span>
+													</button>
+													<button
+														onClick={(e) => handleLike(post.id, e)}
+														disabled={!isAuthenticated || postInteractions[post.id]?.isInteracting}
+														className={`flex flex-col items-center gap-0.5 transition-colors ${postInteractions[post.id]?.isLove
+															? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent'
+															: 'text-[#0F1728] hover:text-red-500'
+															} ${(!isAuthenticated || postInteractions[post.id]?.isInteracting) ? 'opacity-50 cursor-not-allowed' : ''}`}
+														title={!isAuthenticated ? (t('square.pleaseLoginFirst') as string) : ''}
+													>
+														<Heart
+															className="h-6 w-6 font-semibold"
+															style={postInteractions[post.id]?.isLove ? { fill: 'url(#heart-gradient)' } : {}}
+														/>
+														<span className={`text-xs font-nunito ${postInteractions[post.id]?.isLove ? 'bg-gradient-to-r from-[#FD9507] to-[#CE14B0] bg-clip-text text-transparent' : ''}`}>
+															{postInteractions[post.id]?.likes || post.likes || 0}
+														</span>
+													</button>
+													<button
+														onClick={(e) => handleShare(post, e)}
+														className="flex flex-col items-center gap-0.5 text-[#0F1728] hover:text-gray-700 transition-colors"
+													>
+														<SquareArrowOutUpRight className="h-6 w-6 font-semibold" />
+														<span className="text-xs font-nunito">{post.shares || t('square.share')}</span>
+													</button>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -727,7 +751,8 @@ export default function SquarePage() {
 
 				{/* 全屏视频播放弹窗 */}
 				{isVideoPlaying && playingVideoUrl && (
-					<div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center z-200">
+					<div className="fixed inset-0 z-[9998] bg-black bg-opacity-90 w-full h-full flex items-center justify-center overflow-hidden"
+						style={{ touchAction: 'none' }}>
 						<div className="relative w-full h-full flex items-center justify-center">
 							{/* 关闭按钮 */}
 							<button
@@ -758,8 +783,9 @@ export default function SquarePage() {
 				{/* 图片预览弹窗 */}
 				{isImagePreviewOpen && previewImageUrl && (
 					<div
-						className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center z-200"
+						className="fixed inset-0 z-[9999] bg-black bg-opacity-90 h-full w-full flex items-center justify-center overflow-hidden"
 						onClick={handleImagePreviewClose}
+						style={{ touchAction: 'none' }}
 					>
 						<div className="relative w-full h-full flex items-center justify-center">
 							{/* 关闭按钮 */}

@@ -5,7 +5,7 @@ import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AuthGuard } from "../../components/AuthGuard";
 import { useAuth } from "../../contexts/AuthContext";
-import { ChevronLeft, Play, Loader2, AlertCircle, History } from "lucide-react";
+import { ChevronLeft, Play, Loader2, Earth, History } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -102,20 +102,17 @@ export default function HistoryPage() {
       </div>
 
       {/* Title & description */}
-      <h3 className="text-[18px] font-semibold text-[#11295b] font-poppins mb-2">
+      <h3 className="text-[#12295B] text-lg italic font-nunito font-semibold mb-">
         {item.title}
       </h3>
-      <p className="text-sm leading-6 text-[#11295b]/80 font-nunito mb-2">
-        {item.description}
-      </p>
       
       {/* Location and viewed time */}
-      <div className="flex justify-between text-xs text-[#11295b]/60">
-        <span className="font-nunito">{item.location}</span>
-        <span className="font-nunito">
+      <div className="flex justify-end text-xs text-[#11295b]/60">
+        <span className="font-nunito mt-2">
           {t("history.viewedOn")} {new Date(item.updatedAt).toLocaleDateString()}
         </span>
       </div>
+      <div className="" style={{margin: '10px 0', borderBottom: '1px solid #e5e7eb' }}></div>
     </div>
   );
 
@@ -126,7 +123,7 @@ export default function HistoryPage() {
       <Header showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex justify-between items-center px-6 py-2 z-100">
+      <div className="flex justify-between items-center px-4 py-4 z-100">
         <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">
           {t("personalCenter.menu.history")}
         </h1>
@@ -140,7 +137,7 @@ export default function HistoryPage() {
       </div>
 
       {/* Content */}
-      <section className="px-6 pb-6">
+      <section className="px-4 pb-6">
         {loading && (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-[#11295b]" />
@@ -150,7 +147,7 @@ export default function HistoryPage() {
 
         {error && historyData.length > 0 && (
           <div className="flex items-center justify-center py-8">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <Earth className="w-5 h-5 text-red-500" />
             <span className="ml-2 text-red-500 font-nunito">{t("history.error")}</span>
           </div>
         )}
@@ -175,7 +172,7 @@ export default function HistoryPage() {
               <div key={item.id}>
                 <HistoryItem item={item} />
                 {index < historyData.length - 1 && (
-                  <div className="border-t border-gray-200 my-4" />
+                  <div className="" style={{marginTop: '10px', borderBottom: '1px solid #e5e7eb' }}></div>
                 )}
               </div>
             ))}

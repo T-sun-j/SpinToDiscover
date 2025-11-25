@@ -5,7 +5,7 @@ import { Footer } from "../../components/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AuthGuard } from "../../components/AuthGuard";
 import { useAuth } from "../../contexts/AuthContext";
-import { ChevronLeft, Play, Heart, Loader2, AlertCircle } from "lucide-react";
+import { ChevronLeft, Play, Heart, Loader2, Earth } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -221,7 +221,7 @@ export default function FavoritePage() {
         <Header showSearch showUser />
 
       {/* Page title & back */}
-      <div className="flex items-center justify-between px-6 py-2 z-100">
+      <div className="flex items-center justify-between px-4 py-4 z-100">
         <h1 className="text-xl font-poppins text-[#0F1728] font-semibold">
           {t("favoritePage.title")}
         </h1>
@@ -235,7 +235,7 @@ export default function FavoritePage() {
       </div>
 
       {/* Content */}
-      <section className="px-6 pb-6 flex-1">
+      <section className="px-4 pb-6 flex-1">
         {loading && (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-[#11295b]" />
@@ -245,7 +245,7 @@ export default function FavoritePage() {
 
         {error && collectData.length > 0 && (
           <div className="flex items-center justify-center py-8">
-            <AlertCircle className="w-5 h-5 text-red-500" />
+            <Earth className="w-5 h-5 text-red-500" />
             <span className="ml-2 text-red-500 font-nunito">{t("favoritePage.error")}</span>
           </div>
         )}

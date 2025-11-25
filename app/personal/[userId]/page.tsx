@@ -12,7 +12,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '../../../components/ui/alert-dialog';
-import { ArrowLeft, Edit, EyeOff, Eye, Trash2, MapPin, Star, Share2, ChevronLeft, Plus, CirclePlus, Loader2, AlertCircle, RefreshCw, Bookmark, Heart, SquareArrowOutUpRight } from 'lucide-react';
+import { ArrowLeft, Edit, EyeOff, Eye, Trash2, MapPin, Star, Share2, ChevronLeft, Plus, CirclePlus, Loader2, Bookmark, Heart, SquareArrowOutUpRight, Earth } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
@@ -628,7 +628,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             </svg>
             <main className=" flex min-h-dvh flex-col bg-white">
                 {/* Header */}
-                <Header  NoShowbg/>
+                <Header NoShowbg />
 
                 {/* User and Brand Info */}
                 <div className={"p-4"}>
@@ -773,7 +773,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             />
                         )}
                         {/* Edit按钮布局到底部右下角 - 只有查看自己的页面时才显示 */}
-                        
+
                     </div>
 
                 </div>
@@ -809,7 +809,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
                             UI_CONSTANTS.SPACING.PY_8
                         )}>
-                            <AlertCircle className={classNames(
+                            <Earth className={classNames(
                                 UI_CONSTANTS.SIZES.ICON_MD,
                                 UI_CONSTANTS.COLORS.RED_500
                             )} />
@@ -833,9 +833,9 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
                                 UI_CONSTANTS.SPACING.MB_4
                             )}>
-                                <AlertCircle className={classNames(
+                                <Earth className={classNames(
                                     UI_CONSTANTS.SIZES.ICON_XL,
-                                    UI_CONSTANTS.COLORS.GRAY_400
+                                    'text-[#11295B]'
                                 )} />
                             </div>
                             <h3 className={classNames(
@@ -858,7 +858,14 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     )}
 
                     {!loading && !error && postsData.length > 0 && (
-                        <div className="flex-1 overflow-y-auto h-[calc(72vh-230px)]">
+                        <div
+                            className={
+                                `flex-1 overflow-y-auto ` +
+                                (targetUserId === authInfo?.userId
+                                    ? 'h-[calc(72vh-230px)]'
+                                    : 'h-[calc(72vh-100px)]')
+                            }
+                        >
                             <div className="space-y-0">
                                 {postsData.map((post, index) => (
                                     <div key={post.id}>
@@ -869,17 +876,32 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
 
                                             {/* 标题 */}
-                                            <h3 className="text-[#12295B] text-[17px] leading-[34px] italic font-nunito font-semibold">{post.title}</h3>
+                                            <h3 className="text-[#12295B] text-lg italic font-nunito font-semibold mb-1">{post.title}</h3>
 
-                                            {/* 描述 */}
-                                            <p className="text-sm text-[#20313B] leading-[17px] font-inter">{post.description}</p>
-
+                                            {/* 描述三行省略 + Read More 效果 */}
+                                            <div className="relative">
+                                                <p
+                                                    className="text-base text-[#20313B] font-inter line-clamp-3 break-words"
+                                                >
+                                                    {post.description}
+                                                </p>
+                                                {/* 如果描述长度超过一定字符数，显示 Read More */}
+                                                {post.description && post.description.length > 80 && (
+                                                    <div className="mt-1 flex justify-end">
+                                                        <span
+                                                            className="text-xs text-[#12295B] bg-white pl-2 cursor-pointer select-none font-inter"
+                                                        >
+                                                            {t('square.readMore')}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
                                             {/* 图片列表 */}
                                             <div className="flex gap-2 overflow-x-auto my-2">
                                                 {/* 如果有视频，显示视频第一帧 */}
                                                 {post.video && (
                                                     <div
-                                                        className="relative w-34 h-24 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
+                                                        className="relative w-34 h-48 rounded flex-shrink-0 bg-gray-200 overflow-hidden cursor-pointer"
                                                         onClick={(e) => {
                                                             e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
                                                             handleVideoPlay(buildAvatarUrl(post.video));
@@ -896,12 +918,12 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                             }}
                                                         />
                                                         {/* 视频播放图标覆盖层 */}
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
-                                                        <div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
-                                                            <svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M8 5v14l11-7z" />
-                                                            </svg>
-                                                        </div>
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-opacity-30">
+                                                            <div className="w-8 h-8 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+                                                                <svg className="w-4 h-4 text-gray-800 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                                                    <path d="M8 5v14l11-7z" />
+                                                                </svg>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
@@ -915,7 +937,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                         return (
                                                             <div
                                                                 key={imageIndex}
-                                                                className="relative w-36 h-24 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
+                                                                className="relative w-36 h-48 rounded flex-shrink-0 bg-gray-100 overflow-hidden cursor-pointer"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation(); // 阻止事件冒泡，避免触发父元素的点击事件
                                                                     handleImagePreview(imageUrl, allImages, imageIndex);
@@ -1048,7 +1070,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                         {/* 分隔线 */}
                                         {index < postsData.length - 1 && (
                                             <div
-                                                className=" my-4"
+                                                className=" my-6"
                                                 style={{ borderBottom: '1px solid #e5e7eb' }}
                                             ></div>
                                         )}
@@ -1060,24 +1082,25 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 </div>
                 {/* Footer - 只有查看自己的页面时才显示发布按钮 */}
                 {targetUserId === authInfo?.userId && (
-                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'z-10')}>
+                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4 fixed bottom-14 left-0 right-0 z-10')}>
                         <div className={classNames(
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-
+                            UI_CONSTANTS.SPACING.GAP_4
                         )}>
                             {/* Post button */}
                             <Link href="/release">
                                 <Button
                                     className={classNames(
-                                        'bg-transparent rounded-full flex flex-col items-center justify-center gap-1 text-[#11295b]',
+                                        'bg-white rounded-full  flex flex-col items-center justify-center gap-1 text-[#11295b]',
+                                        UI_CONSTANTS.COLORS.PRIMARY,
                                         UI_CONSTANTS.FONTS.NUNITO,
-                                        'text-sm font-semibold'
+                                        'text-[17px] font-semibold'
                                     )}
                                     size="lg"
                                 >
                                     <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
                                     <span className={classNames(
-                                    'text-sm', 'text-[#0F1728]','font-semibold font-poppins'
+                                        'text-sm', 'text-[#0F1728]', 'font-semibold font-poppins'
 
                                     )}>{t('personalCenter.post.button')}</span>
                                 </Button>

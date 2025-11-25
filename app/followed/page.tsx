@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { ChevronLeft, Loader2, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Loader2, Earth } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
@@ -177,7 +177,7 @@ export default function FollowedPage() {
           'flex items-center justify-center',
           UI_CONSTANTS.SPACING.PY_8
         )}>
-          <AlertCircle className={classNames(
+          <Earth className={classNames(
             UI_CONSTANTS.SIZES.ICON_MD,
             UI_CONSTANTS.COLORS.RED_500
           )} />
@@ -202,7 +202,7 @@ export default function FollowedPage() {
             'flex items-center justify-center',
             UI_CONSTANTS.SPACING.MB_4
           )}>
-            <AlertCircle className={classNames(
+            <Earth className={classNames(
               UI_CONSTANTS.SIZES.ICON_XL,
               UI_CONSTANTS.COLORS.GRAY_400
             )} />
