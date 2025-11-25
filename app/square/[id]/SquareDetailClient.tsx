@@ -419,8 +419,9 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 
 				{/* 主要内容 */}
 				<div className="flex-1 px-4 space-y-5">
-					{/* 发布者信息 */}
-					<div className="flex items-center ">
+				{/* 发布者信息 */}
+				<div className="flex items-center justify-between">
+					<div className="flex items-center gap-3">
 						<button
 							onClick={handlePublisherClick}
 							className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -449,12 +450,15 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 								<span>{isFollowed ? t('square.followed') : t('square.follow')}</span>
 							</button>
 						)} */}
+					</div>
 
-						{post.location && (<div className="flex items-center gap-2 mt-2">
+					{post.location && (
+						<div className="flex items-center gap-2">
 							<MapPin className="h-4 w-4 text-gray-500" />
 							<span className="text-sm text-gray-600 font-nunito">{post.location}</span>
-						</div>)}
-					</div>
+						</div>
+					)}
+				</div>
 
 					{/* 描述文本 */}
 					<p className="text-[#20313B] leading-relaxed text-base font-inter">{post.description}</p>

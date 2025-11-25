@@ -550,7 +550,7 @@ export default function SquarePage() {
 										className="bg-white px-4 pt-2 cursor-pointer hover:shadow-sm transition-shadow"
 										onClick={() => handlePostClick(post.id)}
 									>
-										<div className="flex items-center gap-2 mb-6" >
+										<div className="flex items-center gap-2 mb-4" >
 											{/* 发布者信息 */}
 											<div className="flex items-center gap-2">
 												<img
