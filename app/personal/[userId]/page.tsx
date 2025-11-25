@@ -252,6 +252,19 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         }
     }, [postsData]);
 
+    // 管理 body 滚动状态：当图片预览或视频播放时禁用滚动
+    useEffect(() => {
+        if (isImagePreviewOpen || isVideoPlaying) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        // 组件卸载时恢复滚动
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isImagePreviewOpen, isVideoPlaying]);
+
     const handleBack = () => {
         router.back();
     };
@@ -781,7 +794,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 {/* My Posts section */}
                 <div className=" px-4">
                     <div
-                        className=" my-4"
+                        className=" mb-4 mt-2"
                         style={{ borderBottom: '1px solid #e5e7eb' }}
                     ></div>
                     <h2 className="text-[17px] text-[#0F1728] font-poppins font-semibold">{t("personalPage.myPosts")}</h2>
@@ -1138,7 +1151,8 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                 {/* 全屏视频播放弹窗 */}
                 {isVideoPlaying && playingVideoUrl && (
-                    <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
+                    <div className="fixed inset-0 z-[9998] bg-black bg-opacity-90 w-full h-full flex items-center justify-center overflow-hidden"
+                        style={{ touchAction: 'none' }}>
                         <div className="relative w-full h-full flex items-center justify-center">
                             {/* 关闭按钮 */}
                             <button
@@ -1169,8 +1183,9 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 {/* 图片预览弹窗 */}
                 {isImagePreviewOpen && previewImageUrl && (
                     <div
-                        className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+                        className="fixed inset-0 z-[9999] bg-black bg-opacity-90 h-full w-full flex items-center justify-center overflow-hidden"
                         onClick={handleImagePreviewClose}
+                        style={{ touchAction: 'none' }}
                     >
                         <div className="relative w-full h-full flex items-center justify-center">
                             {/* 关闭按钮 */}

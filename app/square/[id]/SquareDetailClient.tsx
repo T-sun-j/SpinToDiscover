@@ -101,6 +101,19 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 		loadSquareDetail(params.id);
 	}, [params.id, loadSquareDetail]);
 
+	// 管理 body 滚动状态：当图片预览或视频播放时禁用滚动
+	useEffect(() => {
+		if (isImagePreviewOpen || isVideoPlaying) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		// 组件卸载时恢复滚动
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isImagePreviewOpen, isVideoPlaying]);
+
 	const handleBack = () => {
 		router.back();
 	};
@@ -895,7 +908,8 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 			{/* 全屏视频播放弹窗 */}
 			{
 				isVideoPlaying && post.video && (
-					<div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
+					<div className="fixed inset-0 z-[9998] bg-black bg-opacity-90 w-full h-full flex items-center justify-center overflow-hidden"
+						style={{ touchAction: 'none' }}>
 						<div className="relative w-full h-full flex items-center justify-center">
 							{/* 关闭按钮 */}
 							<button
@@ -928,8 +942,9 @@ export default function SquareDetailClient({ params }: SquareDetailClientProps) 
 			{
 				isImagePreviewOpen && previewImageUrl && (
 					<div
-						className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+						className="fixed inset-0 z-[9999] bg-black bg-opacity-90 h-full w-full flex items-center justify-center overflow-hidden"
 						onClick={handleImagePreviewClose}
+						style={{ touchAction: 'none' }}
 					>
 						<div className="relative w-full h-full flex items-center justify-center">
 							{/* 关闭按钮 */}

@@ -280,7 +280,7 @@ export default function SearchPage() {
                         {user.avatar ? (
                           <Image
                             src={buildAvatarUrl(user.avatar)}
-                            alt={user.name || 'User'}
+                            alt={user.nickname || 'User'}
                             width={64}
                             height={64}
                             className="w-full h-full object-cover"
@@ -290,7 +290,7 @@ export default function SearchPage() {
                         )}
                       </div>
                       <div className="text-center">
-                        <p className="text-[#0F1728] text-sm font-medium">{user.name || 'User'}</p>
+                        <p className="text-[#0F1728] text-sm font-medium">{user.nickname || 'User'}</p>
                       </div>
                     </button>
                   ))}

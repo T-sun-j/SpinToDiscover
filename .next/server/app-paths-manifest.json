@@ -1,4 +1,6 @@
 {
-  "/square/page": "app/square/page.js",
-  "/personal-center/page": "app/personal-center/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/search/page": "app/search/page.js",
+  "/personal-center/page": "app/personal-center/page.js",
+  "/favorite/page": "app/favorite/page.js"
 }
