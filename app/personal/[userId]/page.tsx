@@ -641,7 +641,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             </svg>
             <main className=" flex min-h-dvh flex-col bg-white">
                 {/* Header */}
-                <Header NoShowbg />
+                <Header />
 
                 {/* User and Brand Info */}
                 <div className={"p-4"}>

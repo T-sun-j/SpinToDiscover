@@ -1,6 +1,7 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/search/page": "app/search/page.js",
-  "/personal-center/page": "app/personal-center/page.js",
-  "/favorite/page": "app/favorite/page.js"
+  "/square/page": "app/square/page.js",
+  "/square/[id]/page": "app/square/[id]/page.js",
+  "/region-select/page": "app/region-select/page.js",
+  "/personal-center/page": "app/personal-center/page.js"
 }

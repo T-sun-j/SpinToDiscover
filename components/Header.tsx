@@ -58,7 +58,7 @@ export function Header({
 
       {/* 右侧：搜索和用户图标 */}
       <div className="flex items-center">
-        {!NoShowbg && <Image src="/img/bg.png" alt="bg" width={16} height={16} className='h-[14.5%] w-auto fixed top-0 right-0' />}
+        {/* {!NoShowbg && <Image src="/img/bg.png" alt="bg" width={16} height={16} className='h-[14.5%] w-auto fixed top-0 right-0' />} */}
         {showSearch ? (
           <Link href="/search" aria-label="search">
             <Button variant="ghost" size="icon" className="text-foreground">
