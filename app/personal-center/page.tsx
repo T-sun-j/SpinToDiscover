@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { ArrowLeft, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, Earth, RefreshCw, LogOut } from 'lucide-react';
+import { ChevronRight, RotateCcw, Settings, CirclePlus, Bell, ChevronLeft, Loader2, Earth, RefreshCw, LogOut } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Header } from '../../components/Header';
 import { Footer } from '../../components/Footer';
@@ -140,7 +140,7 @@ export default function PersonalCenterPage() {
                         </div>
                     )}
 
-                    {!loading && !error && (
+                    {!loading && !error && (<div>
                         <div className={classNames('flex items-center', UI_CONSTANTS.SPACING.GAP_4)}>
                             {/* Profile picture */}
                             <div className="relative">
@@ -151,7 +151,7 @@ export default function PersonalCenterPage() {
                                     height={12}
                                     className={classNames(
                                         UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                        'h-9 w-9 object-cover'
+                                        'h-12 w-12 object-cover'
                                     )}
                                 />
                             </div>
@@ -159,11 +159,11 @@ export default function PersonalCenterPage() {
                             {/* Username and user info */}
                             <div className="flex-1 flex items-center text-[#11295b]">
                                 <div className="flex-1">
-                                    <h2 className='text-sm text-[#0F1728] flex items-center gap-1 font-inter'>
+                                    <h2 className='text-xl text-[#0F1728] flex items-center font-nunito font-semibold'>
                                         {userData?.nickname || userData?.email || 'User'}
                                         <Link href="/personalization">
                                             <Button variant="ghost" size="icon">
-                                                <Image src="/img/RotateCcw.png" alt="rotate" width={16} height={16} className='h-4 w-auto z-10' />
+                                                <Image src="/img/RotateCcw.png" alt="rotate" width={14} height={14} className='h-4 w-4 z-10' />
                                             </Button>
                                         </Link>
                                     </h2>
@@ -171,10 +171,10 @@ export default function PersonalCenterPage() {
                             </div>
 
                             {/* Edit and Settings buttons */}
-                            <div className={classNames('flex items-center', 'text-[#11295b]', UI_CONSTANTS.SPACING.GAP_2)}>
+                            <div className={classNames('flex items-center', 'text-[#11295b]')}>
                                 <Link href="/settings">
                                     <Button variant="ghost" size="icon" className={UI_CONSTANTS.COLORS.PRIMARY}>
-                                        <Image src="/img/set.png" alt="settings" width={16} height={16} className='h-8 w-8' />
+                                        <Image src="/img/settings.png" alt="settings" width={16} height={16} className='h-7 w-7' />
                                     </Button>
                                 </Link>
                                 <Button
@@ -184,71 +184,86 @@ export default function PersonalCenterPage() {
                                     onClick={handleLogout}
                                     title={t('personalCenter.logout') as string}
                                 >
-                                    <LogOut className='h-8 w-8' />
+                                    <LogOut className='h-7 w-7' />
                                 </Button>
                             </div>
                         </div>
-                    )}
+                        <p className='text-sm text-[#424C59] font-nunito font-normal mt-2 ml-1'>{t('personalCenter.profile.slogan')}</p>
+                    </div>)}
                 </div>
 
                 {/* Menu items */}
                 <div className={classNames('flex-1 px-4 py-4')}>
-                    <div className="space-y-4">
-                        <Link href="/personal">
-                            <Button
-                                variant="ghost"
-                                className={classNames(
-                                    'w-full justify-start',
-                                    'bg-[#11295b] text-white h-13 rounded-lg',
-                                    'font-poppins',
-                                    'text-[17px] font-semibold'
-                                )}
-                            >
-                                {t('personalCenter.menu.myPage')}
-                            </Button>
-                        </Link>
-                        <div className="h-2" />
-                        <Link href="/followed">
-                            <Button
-                                variant="ghost"
-                                className={classNames(
-                                    'w-full justify-start',
-                                    'bg-[#11295b] text-white h-13 rounded-lg',
-                                    'font-poppins',
-                                    'text-[17px] font-semibold'
-                                )}
-                            >
-                                {t('personalCenter.menu.followed')}
-                            </Button>
-                        </Link>
-                        <div className="h-2" />
-                        <Link href="/history">
-                            <Button
-                                variant="ghost"
-                                className={classNames(
-                                    'w-full justify-start',
-                                    'bg-[#11295b] text-white h-13 rounded-lg',
-                                    'font-poppins',
-                                    'text-[17px] font-semibold'
-                                )}
-                            >
-                                {t('personalCenter.menu.history')}
-                            </Button>
-                        </Link>
-                        <div className="h-2" />
-                        <Link href="/favorite">
-                            <Button
-                                variant="ghost"
-                                className={classNames(
-                                    'w-full justify-start',
-                                    'bg-[#11295b] text-white h-13 rounded-lg',
-                                    'font-poppins',
-                                    'text-[17px] font-semibold'
-                                )}
-                            >
-                                {t('personalCenter.menu.favorites')}
-                            </Button>
-                        </Link>
+                    <div className="bg-white rounded-lg ">
+                        {/* My Activity Section */}
+                        <div className="space-y-0 bg-[#F3F4F7] rounded-md p-2">
+                            <h3 className="text-[18px] font-poppins font-semibold text-[#0F1728] mb-4 pl-3.5">
+                                {t('personalCenter.menu.myActivity')}
+                            </h3>
+
+                            {/* My page */}
+                            <Link href="/personal" className="block">
+                                <div className="flex items-center justify-between py-2 pl-8 hover:opacity-80 transition-opacity">
+                                    <span className="text-[17px] font-poppins font-semibold text-[#0B285F]">
+                                        {t('personalCenter.menu.myPage')}
+                                    </span>
+                                    <ChevronRight className='h-6 w-6 text-[#909090] font-inner mr-4' />
+                                </div>
+                                <div
+                                    className=" mx-2 my-2"
+                                    style={{ borderBottom: '1px solid #e5e7eb' }}
+                                ></div>
+                            </Link>
+
+                            {/* Browsing history */}
+                            <Link href="/history" className="block">
+                                <div className="flex items-center justify-between py-2 pl-8 hover:opacity-80 transition-opacity">
+                                    <span className="text-[17px] font-poppins font-semibold text-[#0B285F]">
+                                        {t('personalCenter.menu.history')}
+                                    </span>
+                                    <ChevronRight className='h-6 w-6 text-[#909090] font-inner mr-4' />
+                                </div>
+                                <div
+                                    className=" mx-2 my-2"
+                                    style={{ borderBottom: '1px solid #e5e7eb' }}
+                                ></div>
+                            </Link>
+
+                            {/* Favorites */}
+                            <Link href="/favorite" className="block">
+                                <div className="flex items-center justify-between py-2 pl-8 hover:opacity-80 transition-opacity">
+                                    <span className="text-[17px] font-poppins font-semibold text-[#0B285F]">
+                                        {t('personalCenter.menu.favorites')}
+                                    </span>
+                                    <ChevronRight className='h-6 w-6 text-[#909090] font-inner mr-4' />
+                                </div>
+                                <div
+                                    className=" mx-2 my-2"
+                                    style={{ borderBottom: '1px solid #e5e7eb' }}
+                                ></div>
+                            </Link>
+                        </div>
+
+                        {/* Social Section */}
+                        <div className="space-y-0 pt-4 bg-[#F3F4F7] rounded-md p-2 mt-3.5">
+                            <h3 className="text-[18px] font-poppins font-semibold text-[#0F1728] mb-4 pl-3.5">
+                                {t('personalCenter.menu.social')}
+                            </h3>
+
+                            {/* Followed & Following */}
+                            <Link href="/followed" className="block">
+                                <div className="flex items-center justify-between py-2 pl-8 hover:opacity-80 transition-opacity">
+                                    <span className="text-[17px] font-poppins font-semibold text-[#0B285F]">
+                                        {t('personalCenter.menu.followed')}
+                                    </span>
+                                    <ChevronRight className='h-6 w-6 text-[#909090] font-inner mr-4' />
+                                </div>
+                                <div
+                                    className=" mx-2 my-2"
+                                    style={{ borderBottom: '1px solid #e5e7eb' }}
+                                ></div>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
@@ -271,8 +286,8 @@ export default function PersonalCenterPage() {
                             >
                                 <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
                                 <span className={classNames(
-                                    'text-sm', 'text-[#0F1728]','font-semibold font-poppins'
-                                    
+                                    'text-sm', 'text-[#0F1728]', 'font-semibold font-poppins'
+
                                 )}>{t('personalCenter.post.button')}</span>
                             </Button>
                         </Link>

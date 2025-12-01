@@ -364,6 +364,9 @@
   .order-last {
     order: 9999;
   }
+  .m-2 {
+    margin: calc(var(--spacing) * 2);
+  }
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
@@ -396,6 +399,9 @@
   }
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
+  }
+  .mt-3\.5 {
+    margin-top: calc(var(--spacing) * 3.5);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -947,8 +953,14 @@
   .border-gray-300 {
     border-color: var(--color-gray-300);
   }
+  .border-gray-800 {
+    border-color: var(--color-gray-800);
+  }
   .border-green-200 {
     border-color: var(--color-green-200);
+  }
+  .bg-\[\#\#F3F4F7\] {
+    background-color: ##F3F4F7;
   }
   .bg-\[\#11295b\] {
     background-color: #11295b;
@@ -958,6 +970,12 @@
   }
   .bg-\[\#12295B\] {
     background-color: #12295B;
+  }
+  .bg-\[\#F3F4F7\] {
+    background-color: #F3F4F7;
+  }
+  .bg-\[\#F5F5F5\] {
+    background-color: #F5F5F5;
   }
   .bg-background {
     background-color: var(--color-background);
@@ -1189,8 +1207,14 @@
   .pt-3 {
     padding-top: calc(var(--spacing) * 3);
   }
+  .pt-3\.5 {
+    padding-top: calc(var(--spacing) * 3.5);
+  }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
+  }
+  .pr-4 {
+    padding-right: calc(var(--spacing) * 4);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
@@ -1219,8 +1243,17 @@
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
   }
+  .pl-3\.5 {
+    padding-left: calc(var(--spacing) * 3.5);
+  }
   .pl-4 {
     padding-left: calc(var(--spacing) * 4);
+  }
+  .pl-5 {
+    padding-left: calc(var(--spacing) * 5);
+  }
+  .pl-8 {
+    padding-left: calc(var(--spacing) * 8);
   }
   .text-center {
     text-align: center;
@@ -1362,6 +1395,12 @@
   .whitespace-nowrap {
     white-space: nowrap;
   }
+  .text-\[\#\#0B285F\] {
+    color: ##0B285F;
+  }
+  .text-\[\#0B285F\] {
+    color: #0B285F;
+  }
   .text-\[\#0F1728\] {
     color: #0F1728;
   }
@@ -1373,6 +1412,9 @@
   }
   .text-\[\#8D99AE\] {
     color: #8D99AE;
+  }
+  .text-\[\#424C59\] {
+    color: #424C59;
   }
   .text-\[\#11295B\] {
     color: #11295B;
@@ -1392,6 +1434,9 @@
   .text-\[\#20313B\] {
     color: #20313B;
   }
+  .text-\[\#909090\] {
+    color: #909090;
+  }
   .text-blue-500 {
     color: var(--color-blue-500);
   }
@@ -1400,6 +1445,9 @@
   }
   .text-foreground {
     color: var(--color-foreground);
+  }
+  .text-gray-200 {
+    color: var(--color-gray-200);
   }
   .text-gray-300 {
     color: var(--color-gray-300);

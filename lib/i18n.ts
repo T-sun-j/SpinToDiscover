@@ -214,8 +214,11 @@ export interface Translations {
     profile: {
       edit: string;
       settings: string;
+      slogan: string;
     };
     menu: {
+      myActivity: string;
+      social: string;
       myPage: string;
       followed: string;
       history: string;
@@ -699,15 +702,18 @@ export const translations: Record<Language, Translations> = {
       profile: {
         edit: 'Edit',
         settings: 'Settings',
+        slogan: 'One Light, One World',
       },
       menu: {
+        myActivity: 'My Activity',
+        social: 'Social',
         myPage: 'My page',
         followed: 'Followed & Following',
         history: 'Browsing History',
         favorites: 'Favorite',
       },
       post: {
-        button: 'POST',
+        button: 'POST NOW',
         notifications: 'Notifications',
       },
       logout: 'Logout',
@@ -1235,15 +1241,18 @@ export const translations: Record<Language, Translations> = {
       profile: {
         edit: '修改',
         settings: '设置',
+        slogan: 'One Light, One World',
       },
       menu: {
+        myActivity: '我的活动',
+        social: '互动',
         myPage: '我的页面',
         followed: '关注与被关注',
         history: '浏览记录',
         favorites: '我的收藏',
       },
       post: {
-        button: '发布',
+        button: '立即发布',
         notifications: '通知',
       },
       logout: '退出登录',
