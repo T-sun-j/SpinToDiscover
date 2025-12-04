@@ -264,7 +264,7 @@ export default function RegisterPage() {
 							<svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z" />
 							</svg>
-							<span>{t('auth.defaultLocation')}: {userLocation}</span>
+							<span>{userLocation}</span>
 						</div>
 					)}
 					
