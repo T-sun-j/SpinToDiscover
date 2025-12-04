@@ -17,7 +17,7 @@ import { getCurrentLocationString, checkGeolocationPermission } from '../../lib/
 import Image from 'next/image';
 
 export default function SquarePage() {
-	const { t } = useLanguage();
+	const { t, language } = useLanguage();
 	const { authInfo, isAuthenticated } = useAuth();
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -54,6 +54,12 @@ export default function SquarePage() {
 
 	// 获取用户地理位置
 	const getUserLocation = useCallback(async () => {
+		if (!navigator.geolocation) {
+			console.warn('浏览器不支持地理位置功能');
+			setUserLocation('');
+			return '';
+		}
+
 		setIsGettingLocation(true);
 		try {
 			// 检查地理位置权限
@@ -62,21 +68,53 @@ export default function SquarePage() {
 			if (permission === 'denied') {
 				console.warn('用户拒绝了地理位置权限');
 				setUserLocation(''); // 使用默认位置
+				setIsGettingLocation(false);
 				return '';
 			}
 
-			// 获取当前位置
-			const location = await getCurrentLocationString();
-			setUserLocation(location);
-			return location;
-		} catch (error) {
+			// 使用 Promise 包装 navigator.geolocation.getCurrentPosition
+			const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition(
+					(position) => resolve(position),
+					(error) => reject(error),
+					{
+						enableHighAccuracy: true,
+						timeout: 10000,
+						maximumAge: 300000 // 5 minutes cache
+					}
+				);
+			});
+
+			const { latitude, longitude } = position.coords;
+
+			// 根据当前语言模式决定使用中文还是英文地址
+			const localityLanguage = 'en';
+
+			// Use reverse geocoding to get address information
+			const response = await fetch(
+				`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${localityLanguage}`
+			);
+
+			if (response.ok) {
+				const data = await response.json();
+				// 根据语言模式格式化地址：国家，省市
+				const locationString = `${data.countryName || ''}, ${data.city || data.locality || ''}`;
+				setUserLocation(locationString);
+				return locationString;
+			} else {
+				// 如果API失败，返回坐标
+				const fallbackLocation = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+				setUserLocation(fallbackLocation);
+				return fallbackLocation;
+			}
+		} catch (error: any) {
 			console.warn('获取地理位置失败:', error);
 			setUserLocation(''); // 使用默认位置
 			return '';
 		} finally {
 			setIsGettingLocation(false);
 		}
-	}, []);
+	}, [language]);
 
 	// 加载广场内容
 	const loadSquareContent = useCallback(async (location?: string, tab?: string) => {
@@ -539,7 +577,7 @@ export default function SquarePage() {
 
 				{/* 错误信息 */}
 				{error && !isLoading && !isGettingLocation && (
-					<div className="flex-1 flex items-center justify-center">
+					<div className="flex-1 flex items-center justify-center text-[#0F1728]">
 						<ErrorState
 							error={error}
 							onRetry={() => isAuthenticated && loadSquareContent(userLocation)}

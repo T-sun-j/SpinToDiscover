@@ -51,22 +51,20 @@ export default function RegisterPage() {
 
 			const { latitude, longitude } = position.coords;
 			
-			// 使用反向地理编码获取地址信息
-			try {
-				const response = await fetch(
-					`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-				);
+			// 根据当前语言模式决定使用中文还是英文地址
+			const localityLanguage = 'en';
+
+			// Use reverse geocoding to get address information
+			const response = await fetch(
+				`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${localityLanguage}`
+			);
+
+			if (response.ok) {
 				const data = await response.json();
-				
-				if (data.city && data.countryName) {
-					setUserLocation(`${data.city}, ${data.countryName}`);
-				} else if (data.locality && data.countryName) {
-					setUserLocation(`${data.locality}, ${data.countryName}`);
-				} else {
-					setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-				}
-			} catch (geocodeError) {
-				// 如果反向地理编码失败，使用坐标
+				// 根据语言模式格式化地址：国家，城市
+				let locationString = `${data.countryName || ''}, ${data.city || data.locality || ''}`;
+				setUserLocation(locationString);
+			} else {
 				setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 			}
 		} catch (error) {

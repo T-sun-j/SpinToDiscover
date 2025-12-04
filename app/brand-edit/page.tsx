@@ -13,11 +13,10 @@ import { AuthGuard } from '../../components/AuthGuard';
 import { updateUserBrand, uploadAvatar, getUserInfo } from '../../lib/auth';
 import { classNames } from '../../lib/utils/classNames';
 import { UI_CONSTANTS } from '../../lib/constants';
-import { getCurrentLocationString } from '../../lib/utils/geolocation';
 import { buildAvatarUrl } from '../../lib/api';
 
 export default function BrandEditPage() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const router = useRouter();
     const { getEmail } = useAuth();
     const { userParams } = useUserParams();
@@ -103,48 +102,75 @@ export default function BrandEditPage() {
     }, [userParams?.userId, userParams?.token]); // 只依赖必要的值
 
     // 获取用户地理位置
-    const getUserLocation = useCallback(async () => {
+    const getUserLocation = useCallback(() => {
+        if (!navigator.geolocation) {
+            setError(t('brandEditPage.locationError') as string);
+            return;
+        }
+
         setIsGettingLocation(true);
         setError(null);
 
-        try {
-            const locationString = await getCurrentLocationString({
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 300000 // 5分钟缓存
-            });
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const { latitude, longitude } = position.coords;
 
-            setFormData(prev => ({
-                ...prev,
-                location: locationString
-            }));
-        } catch (error) {
-            console.error('获取位置失败:', error);
-            let errorMessage = t('brandEditPage.locationFailed');
+                    // 根据当前语言模式决定使用中文还是英文地址
+                    const localityLanguage = 'en';
 
-            // 根据错误类型设置不同的错误消息
-            if (error && typeof error === 'object' && 'code' in error) {
+                    // Use reverse geocoding to get address information
+                    const response = await fetch(
+                        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${localityLanguage}`
+                    );
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 根据语言模式格式化地址：国家，省市
+                        let locationString = `${data.countryName || ''}, ${ data.city || data.locality || ''}`;
+                        setFormData(prev => ({
+                            ...prev,
+                            location: locationString
+                        }));
+                    } else {
+                        // 如果API失败，使用坐标
+                        const fallbackLocation = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+                        setFormData(prev => ({
+                            ...prev,
+                            location: fallbackLocation
+                        }));
+                    }
+                } catch (error) {
+                    console.error('Failed to get address info:', error);
+                    setError(t('brandEditPage.locationParseError') as string);
+                } finally {
+                    setIsGettingLocation(false);
+                }
+            },
+            (error) => {
+                console.error('Failed to get location:', error);
+                let errorMessage = t('brandEditPage.locationFailed');
                 switch (error.code) {
-                    case 1: // PERMISSION_DENIED
+                    case error.PERMISSION_DENIED:
                         errorMessage = t('brandEditPage.locationPermissionDenied');
                         break;
-                    case 2: // POSITION_UNAVAILABLE
+                    case error.POSITION_UNAVAILABLE:
                         errorMessage = t('brandEditPage.locationUnavailable');
                         break;
-                    case 3: // TIMEOUT
+                    case error.TIMEOUT:
                         errorMessage = t('brandEditPage.locationTimeout');
                         break;
-                    case -1: // 浏览器不支持
-                        errorMessage = t('brandEditPage.locationError');
-                        break;
                 }
+                setError(errorMessage as string);
+                setIsGettingLocation(false);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000 // 5 minutes cache
             }
-
-            setError(errorMessage as string);
-        } finally {
-            setIsGettingLocation(false);
-        }
-    }, [t]);
+        );
+    }, [language, t]);
 
     // 处理输入变化
     const handleInputChange = (field: string, value: string) => {

@@ -52,7 +52,7 @@ export default function ReleasePage() {
           const { latitude, longitude } = position.coords;
 
           // 根据当前语言模式决定使用中文还是英文地址
-          const localityLanguage = language === 'en' ? 'en' : 'zh';
+          const localityLanguage = 'en';
 
           // Use reverse geocoding to get address information
           const response = await fetch(
@@ -62,14 +62,7 @@ export default function ReleasePage() {
           if (response.ok) {
             const data = await response.json();
             // 根据语言模式格式化地址
-            let locationString;
-            if (localityLanguage === 'en') {
-              // 英文模式：使用英文地址格式
-              locationString = `${data.countryName || ''}, ${data.city || data.locality || ''}`;
-            } else {
-              // 中文模式：使用中文地址格式
-              locationString = `${data.countryName || ''}，${data.city || data.locality || ''}`;
-            }
+            let locationString = `${data.countryName || ''}, ${data.city || data.locality || ''}`;
             setUserLocation(locationString);
           } else {
             setUserLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
