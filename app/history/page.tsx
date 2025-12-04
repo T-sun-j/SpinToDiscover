@@ -171,9 +171,6 @@ export default function HistoryPage() {
             {historyData.map((item, index) => (
               <div key={item.id}>
                 <HistoryItem item={item} />
-                {index < historyData.length - 1 && (
-                  <div className="" style={{marginTop: '10px', borderBottom: '1px solid #e5e7eb' }}></div>
-                )}
               </div>
             ))}
           </>

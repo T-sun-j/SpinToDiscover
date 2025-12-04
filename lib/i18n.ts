@@ -850,7 +850,7 @@ export const translations: Record<Language, Translations> = {
       protectDescription: 'Spin to Protect is the charitable initiative of SpinLinX',
     },
     privacy: {
-      title: 'SpinLinX Privacy Policy',
+      title: 'Privacy Policy',
       back: 'Back',
       lastUpdated: 'Last Updated: 2025',
       introduction: 'SpinLinX ("The Orbit Tree Limited") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and safeguard your personal information.',
@@ -1389,7 +1389,7 @@ export const translations: Record<Language, Translations> = {
       protectDescription: 'Spin to Protect 是 SpinLinX 的慈善倡议',
     },
     privacy: {
-      title: 'SpinLinX 隐私条款',
+      title: '隐私条款',
       back: '返回',
       lastUpdated: '最后更新：2025',
       introduction: 'SpinLinX（"The Orbit Tree Limited"）致力于保护用户的隐私。本隐私条款说明我们如何收集、使用、存储及保护您的个人信息。',

@@ -45,14 +45,14 @@ export function Header({
       {/* 左侧：Logo */}
       <div className="flex items-center gap-4">
         <Link href={logoLink} className="flex items-center gap-2 ml-2">
-          <Image
-            src={transparent ? "/img/logo-new-w.png" : "/img/logo-new-d.png"}
+        {!transparent &&<Image
+            src="/img/logo-new-d.png"
             alt="logo"
             width={52}
             height={22}
             priority
             className="h-12 w-auto"
-          />
+          />}
         </Link>  
       </div>
 

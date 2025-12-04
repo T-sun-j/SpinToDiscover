@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '../../components/ui/button';
-import { Search, MapPin, Bookmark, Heart, SquareArrowOutUpRight, Filter, FileX, X, Earth } from 'lucide-react';
+import { Search, MapPin, Bookmark, Heart, SquareArrowOutUpRight, Funnel, FileX, X, Earth } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Header } from '../../components/Header';
@@ -505,7 +505,7 @@ export default function SquarePage() {
 							onClick={() => router.push(`/region-select?from=square&filterLocation=${filterLocation}`)}
 							className="px-0"
 						>
-							<Image src="/img/Filter.png" alt="Filter" width={6} height={6} className='w-6 h-6' />
+							<Funnel className='h-6 w-6 text-[#0F1728]' />
 						</Button>
 
 						{/* 显示当前选择的地区 - 只显示三个字加省略号 */}
