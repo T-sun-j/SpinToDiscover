@@ -11,24 +11,29 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
-import { postSquareContent, getUserInfo, uploadAvatar, uploadVideo } from '../../lib/auth';
-import { PostSquareRequest } from '../../lib/api';
+import { postSquareContent, editSquareContent, getUserInfo, uploadAvatar, uploadVideo, getSquareContentDetail } from '../../lib/auth';
+import { PostSquareRequest, EditSquareRequest, buildAvatarUrl, SERVER_CONFIG } from '../../lib/api';
 import { LoadingSpinner } from '../../components/ui/LoadingStates';
+import { useSearchParams } from 'next/navigation';
 
 export default function ReleasePage() {
   const { t, language } = useLanguage();
   const { authInfo, isAuthenticated } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const postId = searchParams.get('postId');
   const [brandInfoChecked, setBrandInfoChecked] = useState(false);
-  const [images, setImages] = useState<string[]>([]); // Placeholder image
-  const [imageFiles, setImageFiles] = useState<File[]>([]); // Store image files
-  const [videoFile, setVideoFile] = useState<File | null>(null); // Store video file
-  const [videoUrl, setVideoUrl] = useState<string | null>(null); // Store video URL for display
+  const [images, setImages] = useState<string[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [existingImagePaths, setExistingImagePaths] = useState<string[]>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [existingVideoPath, setExistingVideoPath] = useState<string>('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [brandName, setBrandName] = useState('');
   const [briefDescription, setBriefDescription] = useState('');
-  const [userBrandInfo, setUserBrandInfo] = useState<any>(null); // 存储完整的用户品牌信息
+  const [userBrandInfo, setUserBrandInfo] = useState<any>(null);
   const [allowingComments, setAllowingComments] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,7 +41,6 @@ export default function ReleasePage() {
   const [userLocation, setUserLocation] = useState<string>('');
   const [isGettingLocation, setIsGettingLocation] = useState(false);
 
-  // Get user location
   const getUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setErrorMessage(t('releasePage.locationError') as string);
@@ -50,18 +54,14 @@ export default function ReleasePage() {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-
-          // 根据当前语言模式决定使用中文还是英文地址
           const localityLanguage = 'en';
 
-          // Use reverse geocoding to get address information
           const response = await fetch(
             `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${localityLanguage}`
           );
 
           if (response.ok) {
             const data = await response.json();
-            // 根据语言模式格式化地址
             let locationString = `${data.countryName || ''}, ${data.city || data.locality || ''}`;
             setUserLocation(locationString);
           } else {
@@ -94,17 +94,15 @@ export default function ReleasePage() {
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 300000 // 5 minutes cache
+        maximumAge: 300000
       }
     );
   }, [language]);
 
-  // Auto get location when component loads
   useEffect(() => {
     getUserLocation();
   }, [getUserLocation]);
 
-  // Clean up video URL when component unmounts
   useEffect(() => {
     return () => {
       if (videoUrl) {
@@ -113,7 +111,6 @@ export default function ReleasePage() {
     };
   }, [videoUrl]);
 
-  // Get user info and populate brand fields
   const fetchUserInfo = useCallback(async () => {
     if (!authInfo) {
       setErrorMessage(t('releasePage.authInfoMissing') as string);
@@ -129,10 +126,8 @@ export default function ReleasePage() {
 
       if (response.success && response.data) {
         const userInfo = response.data;
-        // 保存完整的用户品牌信息
         setUserBrandInfo(userInfo);
         
-        // Populate brand name and description for display
         if (userInfo.brand) {
           setBrandName(userInfo.brand);
         }
@@ -146,7 +141,79 @@ export default function ReleasePage() {
     }
   }, [authInfo, t]);
 
-  // Validate form data
+  const loadPostDetail = useCallback(async () => {
+    if (!postId || !authInfo) {
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrorMessage('');
+      
+      const response = await getSquareContentDetail({
+        userId: authInfo.userId,
+        token: authInfo.token,
+        postId: postId,
+      });
+
+      if (response.success && response.data) {
+        const postData = response.data;
+        
+        setTitle(postData.title || '');
+        setContent(postData.description || '');
+        setUserLocation(postData.location || '');
+        
+        if (postData.images && postData.images.length > 0) {
+          const imagePaths: string[] = [];
+          const imageUrls = postData.images.map((img: string) => {
+            let imagePath: string;
+            if (img && img.startsWith('http')) {
+              imagePath = img.replace(SERVER_CONFIG.STATIC_URL, '');
+            } else {
+              imagePath = img;
+            }
+            imagePaths.push(imagePath);
+            return buildAvatarUrl(img);
+          });
+          setImages(imageUrls);
+          setExistingImagePaths(imagePaths);
+        }
+        
+        if (postData.video) {
+          let videoPath: string;
+          if (postData.video.startsWith('http')) {
+            videoPath = postData.video.replace(SERVER_CONFIG.STATIC_URL, '');
+          } else {
+            videoPath = postData.video;
+          }
+          setExistingVideoPath(videoPath);
+          const videoUrlStr = buildAvatarUrl(postData.video);
+          setVideoUrl(videoUrlStr);
+        }
+        
+        if (postData.brandInfo) {
+          setBrandInfoChecked(true);
+          setBrandName(postData.brandInfo.brand || '');
+          setBriefDescription(postData.brandInfo.intro || '');
+          setUserBrandInfo(postData.brandInfo);
+        }
+      } else {
+        setErrorMessage(response.message || t('releasePage.loadDetailFailed') as string);
+      }
+    } catch (error) {
+      console.error('Failed to load post detail:', error);
+      setErrorMessage(error instanceof Error ? error.message : t('releasePage.loadDetailError') as string);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [postId, authInfo, t]);
+
+  useEffect(() => {
+    if (postId && authInfo) {
+      loadPostDetail();
+    }
+  }, [postId, authInfo, loadPostDetail]);
+
   const validateForm = useCallback(() => {
     if (!title.trim()) {
       setErrorMessage(t('releasePage.titleRequired') as string);
@@ -175,13 +242,11 @@ export default function ReleasePage() {
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
-      // Check if video file already exists
       if (videoFile) {
         setErrorMessage(t('releasePage.onlyOneVideoAllowed') as string);
         return;
       }
       setVideoFile(file);
-      // Create video URL for display
       const url = URL.createObjectURL(file);
       setVideoUrl(url);
     }
@@ -190,15 +255,18 @@ export default function ReleasePage() {
   const handleRemoveImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
     setImageFiles(imageFiles.filter((_, i) => i !== index));
+    if (postId && existingImagePaths.length > 0) {
+      setExistingImagePaths(existingImagePaths.filter((_, i) => i !== index));
+    }
   };
 
   const handleRemoveVideo = () => {
-    // Clean up video URL
-    if (videoUrl) {
+    if (videoUrl && videoUrl.startsWith('blob:')) {
       URL.revokeObjectURL(videoUrl);
     }
     setVideoFile(null);
     setVideoUrl(null);
+    setExistingVideoPath('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -208,7 +276,6 @@ export default function ReleasePage() {
     setSuccessMessage('');
 
     try {
-      // Validate required fields
       if (!validateForm()) {
         setIsSubmitting(false);
         return;
@@ -217,7 +284,6 @@ export default function ReleasePage() {
       let uploadedImages: string[] = [];
       let uploadedVideo: string = '';
 
-      // Upload images first
       if (imageFiles.length > 0) {
         setSuccessMessage(t('releasePage.uploadingImages') as string);
         for (const imageFile of imageFiles) {
@@ -234,14 +300,26 @@ export default function ReleasePage() {
           } catch (error) {
             console.error('Image upload failed:', error);
             setErrorMessage(`${t('releasePage.imageUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
-            setSuccessMessage(''); // Clear success message
+            setSuccessMessage('');
             setIsSubmitting(false);
             return;
           }
         }
       }
 
-      // Then upload video
+      if (postId && existingImagePaths.length > 0) {
+        const currentImageUrls = images.filter(img => !img.startsWith('data:'));
+        const keptExistingPaths = existingImagePaths.filter((path) => {
+          const fullUrl = buildAvatarUrl(path);
+          return currentImageUrls.some(url => {
+            const normalizedUrl = url.replace(SERVER_CONFIG.STATIC_URL, '');
+            const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+            return normalizedUrl === normalizedPath || url === fullUrl;
+          });
+        });
+        uploadedImages = [...uploadedImages, ...keptExistingPaths];
+      }
+
       if (videoFile) {
         setSuccessMessage(t('releasePage.uploadingVideo') as string);
         try {
@@ -254,46 +332,75 @@ export default function ReleasePage() {
         } catch (error) {
           console.error('Video upload failed:', error);
           setErrorMessage(`${t('releasePage.videoUploadError')}: ${error instanceof Error ? error.message : t('releasePage.unknownError')}`);
-          setSuccessMessage(''); // Clear success message
+          setSuccessMessage('');
           setIsSubmitting(false);
           return;
         }
+      } else if (postId && existingVideoPath && !videoFile) {
+        uploadedVideo = existingVideoPath;
       }
 
-      // Prepare post data
-      const postData: PostSquareRequest = {
-        userId: authInfo!.userId,
-        token: authInfo!.token,
-        title: title.trim(),
-        description: content.trim(),
-        location: userLocation as string,
-        images: uploadedImages.join(','),
-        video: uploadedVideo ? '/' + uploadedVideo : '',
-        intro: brandInfoChecked ? (userBrandInfo?.brief || briefDescription) : '',
-        website: brandInfoChecked ? (userBrandInfo?.officialsite || '') : '',
-        logo: brandInfoChecked ? (userBrandInfo?.logo || '') : '',
-        customerService: brandInfoChecked ? (userBrandInfo?.tel || '') : '',
-        workingHours: brandInfoChecked ? (userBrandInfo?.address || '') : '',
-      };
+      setSuccessMessage(postId ? t('releasePage.updatingContent') as string : t('releasePage.publishingContent') as string);
 
-      setSuccessMessage(t('releasePage.publishingContent') as string);
+      if (postId) {
+        const editData: EditSquareRequest = {
+          userId: authInfo!.userId,
+          token: authInfo!.token,
+          title: title.trim(),
+          description: content.trim(),
+          location: userLocation as string,
+          images: uploadedImages.join(','),
+          video: uploadedVideo ? (uploadedVideo.startsWith('/') ? uploadedVideo : '/' + uploadedVideo) : '',
+          intro: brandInfoChecked ? (userBrandInfo?.brief || briefDescription) : '',
+          website: brandInfoChecked ? (userBrandInfo?.officialsite || '') : '',
+          logo: brandInfoChecked ? (userBrandInfo?.logo || '') : '',
+          customerService: brandInfoChecked ? (userBrandInfo?.tel || '') : '',
+          workingHours: brandInfoChecked ? (userBrandInfo?.address || '') : '',
+          proId: postId,
+        };
 
-      // Call publish API
-      const response = await postSquareContent(postData);
+        const response = await editSquareContent(editData);
 
-      if (response.success) {
-        setSuccessMessage(t('releasePage.publishSuccess') as string);
-        // Redirect to personal page after success
-        setTimeout(() => {
-          router.push('/personal');
-        }, 2000);
+        if (response.success) {
+          setSuccessMessage(t('releasePage.updateSuccess') as string);
+          setTimeout(() => {
+            router.push('/personal');
+          }, 2000);
+        } else {
+          setErrorMessage(response.message || t('releasePage.updateError') as string);
+          setSuccessMessage('');
+        }
       } else {
-        setErrorMessage(response.message || t('releasePage.publishError') as string);
-        setSuccessMessage(''); // Clear success message
+        const postData: PostSquareRequest = {
+          userId: authInfo!.userId,
+          token: authInfo!.token,
+          title: title.trim(),
+          description: content.trim(),
+          location: userLocation as string,
+          images: uploadedImages.join(','),
+          video: uploadedVideo ? '/' + uploadedVideo : '',
+          intro: brandInfoChecked ? (userBrandInfo?.brief || briefDescription) : '',
+          website: brandInfoChecked ? (userBrandInfo?.officialsite || '') : '',
+          logo: brandInfoChecked ? (userBrandInfo?.logo || '') : '',
+          customerService: brandInfoChecked ? (userBrandInfo?.tel || '') : '',
+          workingHours: brandInfoChecked ? (userBrandInfo?.address || '') : '',
+        };
+
+        const response = await postSquareContent(postData);
+
+        if (response.success) {
+          setSuccessMessage(t('releasePage.publishSuccess') as string);
+          setTimeout(() => {
+            router.push('/personal');
+          }, 2000);
+        } else {
+          setErrorMessage(response.message || t('releasePage.publishError') as string);
+          setSuccessMessage('');
+        }
       }
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : t('releasePage.publishProcessError') as string);
-      setSuccessMessage(''); // 清除成功消息
+      setSuccessMessage('');
     } finally {
       setIsSubmitting(false);
     }
@@ -368,7 +475,6 @@ export default function ReleasePage() {
                     muted
                     preload="metadata"
                     onLoadedMetadata={(e) => {
-                      // 设置视频到第一帧
                       e.currentTarget.currentTime = 0.1;
                     }}
                   />
@@ -395,15 +501,13 @@ export default function ReleasePage() {
                       if (file.type.startsWith('image/')) {
                         handleImageUpload(e);
                       } else if (file.type.startsWith('video/')) {
-                        // Check if video file already exists
                         if (videoFile) {
                           setErrorMessage(t('releasePage.onlyOneVideoAllowed') as string);
-                          e.target.value = ""; // 重置input
+                          e.target.value = "";
                           return;
                         }
                         handleVideoUpload(e);
                       }
-                      // 重置input，否则无法重复选同一文件
                       e.target.value = "";
                     }}
                   />
@@ -453,11 +557,9 @@ export default function ReleasePage() {
                       const isChecked = e.target.checked;
                       setBrandInfoChecked(isChecked);
 
-                      // 如果勾选了品牌信息，则获取用户信息并填充
                       if (isChecked) {
                         await fetchUserInfo();
                       } else {
-                        // 如果取消勾选，清空品牌信息
                         setBrandName('');
                         setBriefDescription('');
                         setUserBrandInfo(null);

@@ -138,6 +138,24 @@ export interface PostSquareRequest {
   shopurl?: string;
 }
 
+// 编辑广场内容请求参数类型
+export interface EditSquareRequest {
+  userId: string;
+  token: string;
+  title: string;
+  description: string;
+  location: string;
+  images?: string;
+  video?: string;
+  website?: string;
+  logo?: string;
+  intro?: string;
+  operatingHours?: string;
+  customerService?: string;
+  workingHours?: string;
+  proId: string; // 产品ID，编辑时必需
+}
+
 // 获取广场内容列表请求参数类型
 export interface GetHomeListRequest {
   userId: string;

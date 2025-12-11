@@ -12,7 +12,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '../../../components/ui/alert-dialog';
-import { ArrowLeft, Edit, EyeOff, Eye, Trash2, MapPin, Star, Share2, ChevronLeft, Plus, CirclePlus, Loader2, Bookmark, Heart, SquareArrowOutUpRight, Earth } from 'lucide-react';
+import { ArrowLeft, Edit, EyeOff, Eye, Trash2, MapPin, Star, Share2, ChevronLeft, Plus, CirclePlus, Loader2, Bookmark, Heart, SquareArrowOutUpRight, Earth, PhoneCall, Clock, Mail, MapPinHouse } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { Header } from '../../../components/Header';
 import { Footer } from '../../../components/Footer';
@@ -620,8 +620,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
         }
     };
 
-    // 判断是否为查看自己的页面
-    const isOwnPage = targetUserId === authInfo?.userId;
 
     // 个人页面不需要强制登录验证，但需要处理未登录状态
     return (
@@ -686,97 +684,113 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         </div>
 
                     </div>
-                    {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
-                    {targetUserId !== authInfo?.userId && (
-                        <div className="flex items-center gap-2 ml-10" style={{ zIndex: 10 }}>
-                            <button
-                                onClick={handleFollowToggle}
-                                disabled={isFollowLoading}
-                                className={classNames(
-                                    'flex items-center px-2 w-24 h-6 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
-                                    isFollowing
-                                        ? 'w-36 text-[#11295b] hover:text-[#11295b] font-poppins font-semibold text-sm'
-                                        : ' bg-[#11295b] text-white hover:bg-[#11295b] hover:text-white font-poppins font-semibold text-sm'
-                                )}
-                            >
-                                {isFollowLoading ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Star className={classNames(
-                                        'h-4 w-4',
-                                        isFollowing ? 'mr-1 fill-[#12295B]' : ' ml-2 mr-1',
-                                    )} fill={isFollowing ? 'currentColor' : 'none'} />
-                                )}
-                                <span>
-                                    {isFollowLoading
-                                        ? t('personalPage.processing')
-                                        : isFollowing
-                                            ? t('personalPage.following')
-                                            : t('personalPage.follow')
-                                    }
-                                </span>
-                            </button>
-                        </div>
-                    )}
+
 
                     {/* 用户信息 */}
-                    <div className="relative flex flex-col gap-3 mt-3">
+                    <div className="flex flex-col gap-3 mt-3">
                         {/* 品牌信息 */}
                         {userInfo?.brand && (<div className="flex items-center">
-                            <span className="text-sm text-[#0F1728] text-left font-nunito  flex-shrink-0">{t('personalPage.brand')}:</span>
-                            <div className="flex items-center gap-2 flex-1 pl-1 text-sm">
+                            <span className="text-base text-[#0F1728] text-left font-nunito  flex-shrink-0">{t('personalPage.brand')}:</span>
+                            <div className="flex items-center gap-2 flex-1 pl-1 text-base">
                                 {userInfo?.brand ? (
                                     userInfo?.officialsite ? (
                                         <a
                                             href={userInfo.officialsite.startsWith('http') ? userInfo.officialsite : `https://${userInfo.officialsite}`}
-                                            className="text-[#0F1728] text-sm font-nunito underline font-semibold hover:opacity-80"
+                                            className="text-[#0F1728] text-base font-nunito underline font-semibold hover:opacity-80"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             {userInfo.brand}
                                         </a>
                                     ) : (
-                                        <span className="text-[#0F1728] text-sm font-nunito font-semibold">{userInfo.brand}</span>
+                                        <span className="text-[#0F1728] text-base font-nunito font-semibold">{userInfo.brand}</span>
                                     )
                                 ) : (
-                                    <span className="text-[#0F1728] text-sm font-nunito font-semibold">--</span>
+                                    <span className="text-[#0F1728] text-base font-nunito font-semibold">--</span>
                                 )}
 
                             </div>
                         </div>)}
-
-
                         {/* 简介 */}
-                        {userInfo?.brief && (
-                            <div className="flex items-start w-[70%]">
-                                <span className="text-sm text-[#0F1728] text-left font-nunito flex-shrink-0">{t('personalPage.brief')}:</span>
-                                <div className="flex-1 ml-3 w-full">
-                                    <p className="text-sm text-[#0F1728] font-inter w-full">{userInfo.brief}</p>
-                                    {userInfo?.tel && <p className="text-sm text-gray-700 font-inter pt-4 w-full"><span className="font-semibold mr-1">{t('personalPage.customerServiceHotline')}:</span>{userInfo?.tel}</p>}
-                                    {userInfo?.workHour && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.workHour')}:</span>{userInfo?.workHour}</p>}
-                                    {userInfo?.email && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.email')}:</span>{userInfo?.email}</p>}
-                                    {userInfo?.address && <p className="text-sm text-gray-700 font-inter w-full"><span className="font-semibold mr-1">{t('personalPage.address')}:</span>{userInfo?.address}</p>}
+                        <div className="flex">
+                            {userInfo?.brief && (<span className="text-base text-[#0F1728] text-left font-nunito flex-shrink-0">{t('personalPage.brief')}:</span>)}
+                            <div className="flex-1 ml-3 w-full">
+                                {userInfo?.brief && (<p className="text-base text-[#0F1728] font-inter w-full">{userInfo.brief}</p>)}
+                                <div className="flex items-center gap-2 mt-2" style={{ zIndex: 10 }}>
+                                    {/* Shop Now 按钮 */}
+                                    {userInfo?.shopurl && (
+                                        <button
+                                            onClick={() => window.open(userInfo?.shopurl?.startsWith('http') ? userInfo?.shopurl : `https://${userInfo?.shopurl}`, '_blank')}
+                                            className="flex items-center justify-center bg-[#12295B] text-white px-10 h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200 hover:opacity-90"
+                                        >
+                                            {t('personalPage.online')}
+                                        </button>
+                                    )}
+                                    {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
+                                    {targetUserId !== authInfo?.userId && (
+
+                                        <button
+                                            onClick={handleFollowToggle}
+                                            disabled={isFollowLoading}
+                                            className={classNames(
+                                                'flex items-center justify-center h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+                                                isFollowing
+                                                    ? classNames('bg-white text-[#11295b] hover:bg-gray-50', userInfo?.shopurl ? 'px-6' : 'px-0')
+                                                    : 'bg-white border border-[#11295b] text-[#11295b] hover:bg-gray-50 px-12'
+                                            )}
+                                        >
+                                            {isFollowLoading ? (
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                isFollowing ? <Star className={'h-5 w-5 mr-1'} /> : ""
+                                            )}
+                                            <span>
+                                                {isFollowLoading
+                                                    ? t('personalPage.follow')
+                                                    : isFollowing
+                                                        ? t('personalPage.following')
+                                                        : t('personalPage.follow')
+                                                }
+                                            </span>
+                                        </button>
+                                    )}
                                 </div>
+                                {userInfo?.tel && (
+                                    <p className="text-base text-gray-700 font-inter pt-4 w-full flex items-center pb-1">
+                                        <PhoneCall className="h-5 w-5 mr-1" />
+                                        {userInfo?.tel}
+                                    </p>
+                                )}
+                                {userInfo?.workHour && (
+                                    <p className="text-base text-gray-700 font-inter w-full flex items-center pb-1">
+                                        <Clock className="h-5 w-5 mr-1" />
+                                        {userInfo?.workHour}
+                                    </p>
+                                )}
+                                {userInfo?.email && (
+                                    <p className="text-base text-gray-700 font-inter w-full flex items-center pb-1">
+                                        <Mail className="h-5 w-5 mr-1" />
+                                        {userInfo?.email}
+                                    </p>
+                                )}
+                                {userInfo?.address && (
+                                    <div className="flex w-full items-start">
+                                        <MapPinHouse className="h-5 w-5 mt-0.5 flex-shrink-0 text-gray-700" />
+                                        <span className="text-base text-gray-700 font-inter break-words ml-1">{userInfo?.address}</span>
+                                    </div>
+                                )}
+                                {targetUserId === authInfo?.userId && (
+                                    <Link
+                                        href="/brand-edit"
+                                        className="mt-3 flex items-center hover:opacity-80"
+                                        style={{ zIndex: 10 }}
+                                    >
+                                        <Image src="/img/edit.png" alt="Edit" width={6} height={6} className="h-6 w-6" />
+                                    </Link>
+                                )}
                             </div>
-                        )}
-                        {userInfo?.shopurl && (<div className="flex items-center ml-10" style={{ zIndex: 10 }}>
-                            <button
-                                onClick={() => window.open(userInfo?.shopurl?.startsWith('http') ? userInfo?.shopurl : `https://${userInfo?.shopurl}`, '_blank')}
-                                className="flex items-center bg-[#12295B] text-white px-2 w-32 h-6 rounded-lg text-sm transition-all duration-200"
-                            >
-                                <span className="text-sm text-white font-poppins font-semibold text-center w-full">{t('personalPage.online')}</span>
-                            </button>
-                        </div>)}
-                        {targetUserId === authInfo?.userId && (
-                            <Link
-                                href="/brand-edit"
-                                className="ml-11 flex items-center hover:opacity-80"
-                                style={{ zIndex: 10 }}
-                            >
-                                <Image src="/img/edit.png" alt="Edit" width={5} height={5} className="h-5 w-5" />
-                            </Link>
-                        )}
-                        {userInfo?.logo && (
+                        </div>
+                        {/* {userInfo?.logo && (
                             <Image
                                 src={buildAvatarUrl(userInfo.logo)}
                                 alt="Brand Logo"
@@ -784,8 +798,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 height={32}
                                 className="absolute right-2 top-2 flex items-center h-24 w-24  object-cover"
                             />
-                        )}
-                        {/* Edit按钮布局到底部右下角 - 只有查看自己的页面时才显示 */}
+                        )} */}
 
                     </div>
 
@@ -836,7 +849,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                     {!loading && !error && postsData.length === 0 && (
                         <div className={classNames(
-                            'flex flex-col items-center justify-center text-[#11295b]',
+                            'flex flex-col items-center justify-center text-[#11295b] ',
                             UI_CONSTANTS.SPACING.PY_12
                         )}>
                             <div className={classNames(
@@ -1033,7 +1046,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation(); // 阻止事件冒泡
-                                                            router.push(`re`);
+                                                            router.push(`/release?postId=${post.id}`);
                                                         }}
 
                                                         className={classNames(
@@ -1095,27 +1108,16 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                 </div>
                 {/* Footer - 只有查看自己的页面时才显示发布按钮 */}
                 {targetUserId === authInfo?.userId && (
-                    <div className={classNames(UI_CONSTANTS.SPACING.PX_6, 'py-4 fixed bottom-14 left-0 right-0 z-10')}>
-                        <div className={classNames(
-                            HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
-                            UI_CONSTANTS.SPACING.GAP_4
-                        )}>
+                    <div className=" w-24  mx-auto px-6 py-4 fixed bottom-14 left-0 right-0 z-10">
+                        <div className="flex items-center justify-center gap-4">
                             {/* Post button */}
                             <Link href="/release">
                                 <Button
-                                    className={classNames(
-                                        'bg-white rounded-full  flex flex-col items-center justify-center gap-1 text-[#11295b]',
-                                        UI_CONSTANTS.COLORS.PRIMARY,
-                                        UI_CONSTANTS.FONTS.NUNITO,
-                                        'text-[17px] font-semibold'
-                                    )}
+                                    className="rounded-full flex flex-col items-center bg-transparent justify-center  gap-1 text-[#11295b] font-nunito text-[17px] font-semibold"
                                     size="lg"
                                 >
                                     <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
-                                    <span className={classNames(
-                                        'text-sm', 'text-[#0F1728]', 'font-semibold font-poppins'
-
-                                    )}>{t('personalCenter.post.button')}</span>
+                                    <span className="text-sm text-[#0F1728] font-semibold font-poppins bg-white">{t('personalCenter.post.button')}</span>
                                 </Button>
                             </Link>
                         </div>

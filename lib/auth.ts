@@ -10,6 +10,7 @@ import {
   LoginResponse,
   ApiResponse,
   PostSquareRequest, 
+  EditSquareRequest,
   GetHomeListRequest, 
   GetSquareDetailRequest,
   SquareListResponse,
@@ -309,6 +310,39 @@ export async function postSquareContent(postData: PostSquareRequest): Promise<Ap
       throw new Error(`发布广场内容失败: ${error.message}`);
     }
     throw new Error('发布广场内容过程中发生未知错误');
+  }
+}
+
+/**
+ * 编辑广场内容API
+ * @param editData 编辑数据
+ * @returns Promise<ApiResponse>
+ */
+export async function editSquareContent(editData: EditSquareRequest): Promise<ApiResponse> {
+  try {
+    const response = await request('editsquare', {
+      userId: editData.userId,
+      token: editData.token,
+      title: editData.title,
+      description: editData.description || '',
+      location: editData.location,
+      images: editData.images || '',
+      video: editData.video || '',
+      website: editData.website || '',
+      logo: editData.logo || '',
+      intro: editData.intro || '',
+      operatingHours: editData.operatingHours || '',
+      customerService: editData.customerService || '',
+      workingHours: editData.workingHours || '',
+      proId: editData.proId,
+    });
+    
+    return response;
+  } catch (error) {
+    if (error instanceof RequestError) {
+      throw new Error(`编辑广场内容失败: ${error.message}`);
+    }
+    throw new Error('编辑广场内容过程中发生未知错误');
   }
 }
 
