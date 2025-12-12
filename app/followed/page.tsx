@@ -8,7 +8,7 @@ import { Footer } from '../../components/Footer';
 import { AuthGuard } from '../../components/AuthGuard';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useApi } from '../../lib/hooks/useApi';
 import { getFollowedList, getFollowersList } from '../../lib/auth';
@@ -19,7 +19,9 @@ import { UI_CONSTANTS, ANIMATION_CONSTANTS } from '../../lib/constants';
 export default function FollowedPage() {
   const { t } = useLanguage();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('following');
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'following';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [followedUsers, setFollowedUsers] = useState<FollowUser[]>([]);
   const [followersUsers, setFollowersUsers] = useState<FollowUser[]>([]);
   const hasLoadedFollowed = useRef(false);
@@ -60,20 +62,19 @@ export default function FollowedPage() {
     null
   );
 
-  // 组件挂载时获取数据
+  // 组件挂载时根据URL参数获取数据
   useEffect(() => {
-    if (userParams && userParams.userId && userParams.token && !hasLoadedFollowed.current) {
-      hasLoadedFollowed.current = true;
-      executeFollowed();
+    if (userParams && userParams.userId && userParams.token) {
+      const tabFromUrl = searchParams.get('tab') || 'following';
+      if (tabFromUrl === 'following' && !hasLoadedFollowed.current) {
+        hasLoadedFollowed.current = true;
+        executeFollowed();
+      } else if (tabFromUrl === 'follower' && !hasLoadedFollowers.current) {
+        hasLoadedFollowers.current = true;
+        executeFollowers();
+      }
     }
-  }, [userParams?.userId, userParams?.token, executeFollowed]);
-
-  useEffect(() => {
-    if (userParams && userParams.userId && userParams.token && !hasLoadedFollowers.current) {
-      hasLoadedFollowers.current = true;
-      executeFollowers();
-    }
-  }, [userParams?.userId, userParams?.token, executeFollowers]);
+  }, [userParams?.userId, userParams?.token, searchParams, executeFollowed, executeFollowers]);
 
   // 更新关注用户数据
   useEffect(() => {
@@ -104,6 +105,8 @@ export default function FollowedPage() {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    // 更新URL参数
+    router.push(`/followed?tab=${tab}`, { scroll: false });
     
     // 切换tab时重新调用相应的API
     if (userParams && userParams.userId && userParams.token) {
@@ -114,6 +117,14 @@ export default function FollowedPage() {
       }
     }
   };
+
+  // 当URL参数变化时更新activeTab
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab') || 'following';
+    if (tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams, activeTab]);
 
 
   const currentUsers = activeTab === 'following' ? followedUsers : followersUsers;

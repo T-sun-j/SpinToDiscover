@@ -163,7 +163,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     otherId: targetUserId,
                 });
                 if (response.success && response) {
-                    console.log(response);
                     setUserInfoData(response);
                     setUserInfo(response.userData);
                     setIsFollowing(response.isFollow);
@@ -212,7 +211,6 @@ export default function PersonalPage({ params }: PersonalPageProps) {
             // 如果是查看其他用户页面，从getOtherUserInfo响应中获取作品数据
             if (targetUserId !== authInfo?.userId && userInfoData.proDataList) {
                 setPostsData(userInfoData.proDataList);
-                console.log(userInfoData.proDataList, 'userInfoData.proDataList');
                 setData({
                     posts: userInfoData.proDataList,
                     pagination: {
@@ -658,15 +656,11 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                 height={16}
                                 className={classNames(
                                     UI_CONSTANTS.BORDER_RADIUS.ROUNDED_FULL,
-                                    'w-9 h-9 object-cover'
+                                    'h-10 w-10 object-cover'
                                 )}
                             />
                             <div>
-                                <h2 className={classNames(
-                                    'text-sm text-[#0F1728]',
-                                    UI_CONSTANTS.COLORS.PRIMARY,
-                                    UI_CONSTANTS.FONTS.INTER
-                                )}>
+                                <h2 className="text-xl text-[#0F1728] flex items-center font-nunito">
                                     {userInfo?.nickname}
                                 </h2>
                             </div>
@@ -678,7 +672,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         )}>
 
                             <Button variant="ghost" size="icon" onClick={handleBack}>
-                                <ChevronLeft className='h-7 w-7 z-10' />
+                                <ChevronLeft className='h-8 w-8 z-10' />
                             </Button>
 
                         </div>
@@ -690,7 +684,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     <div className="flex flex-col gap-3 mt-3">
                         {/* 品牌信息 */}
                         {userInfo?.brand && (<div className="flex items-center">
-                            <span className="text-base text-[#0F1728] text-left font-nunito  flex-shrink-0">{t('personalPage.brand')}:</span>
+                            <span className="text-base text-[#0F1728] text-left font-inter  flex-shrink-0">{t('personalPage.brand')}:</span>
                             <div className="flex items-center gap-2 flex-1 pl-1 text-base">
                                 {userInfo?.brand ? (
                                     userInfo?.officialsite ? (
@@ -726,9 +720,8 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                             {t('personalPage.online')}
                                         </button>
                                     )}
-                                    {/* 关注按钮 - 只有查看其他用户页面时才显示 */}
-                                    {targetUserId !== authInfo?.userId && (
-
+                                    {/* 关注按钮 - 查看其他用户时显示关注/取消关注，查看自己时显示关注数量 */}
+                                    {targetUserId !== authInfo?.userId ? (
                                         <button
                                             onClick={handleFollowToggle}
                                             disabled={isFollowLoading}
@@ -752,7 +745,21 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                         : t('personalPage.follow')
                                                 }
                                             </span>
+                                            {isFollowing && userInfo?.followingCount !== undefined && (
+                                                <span className="text-base text-[#11295b] font-inter ml-1">{userInfo.followingCount}</span>
+                                            )}
                                         </button>
+                                    ) : (
+                                        userInfo?.followingCount !== undefined && (
+                                            <button
+                                                onClick={() => router.push('/followed?tab=follower')}
+                                                className={classNames("flex items-center justify-center bg-white text-[#11295b] hover:bg-gray-50 h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200", userInfo?.shopurl ? 'px-6' : 'px-0')}
+                                            >
+                                                <Star className="h-5 w-5 mr-1" />
+                                                <span>{t('personalPage.following')}</span>
+                                                <span className="text-base text-[#11295b] font-inter ml-1">{userInfo.followingCount}</span>
+                                            </button>
+                                        )
                                     )}
                                 </div>
                                 {userInfo?.tel && (

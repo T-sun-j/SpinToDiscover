@@ -462,8 +462,9 @@ export interface UserInfoResponse {
   customerService?: string | null;
   workHour?: string | null;
   shopurl?: string | null;
-  isFollow: boolean;
-  userData: UserInfoResponse;
+  isFollow?: boolean;
+  followingCount?: number;
+  userData?: UserInfoResponse;
 }
 
 // 头像上传请求参数类型
