@@ -76,6 +76,14 @@ export default function FollowedPage() {
     }
   }, [userParams?.userId, userParams?.token, searchParams, executeFollowed, executeFollowers]);
 
+  // 监听URL参数变化，确保tab同步
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab') || 'following';
+    if (tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams, activeTab]);
+
   // 更新关注用户数据
   useEffect(() => {
     if (followedData && followedData.success) {
@@ -118,13 +126,6 @@ export default function FollowedPage() {
     }
   };
 
-  // 当URL参数变化时更新activeTab
-  useEffect(() => {
-    const tabFromUrl = searchParams.get('tab') || 'following';
-    if (tabFromUrl !== activeTab) {
-      setActiveTab(tabFromUrl);
-    }
-  }, [searchParams, activeTab]);
 
 
   const currentUsers = activeTab === 'following' ? followedUsers : followersUsers;
