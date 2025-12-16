@@ -728,7 +728,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                             className={classNames(
                                                 'flex items-center justify-center h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
                                                 isFollowing
-                                                    ? classNames('bg-white text-[#11295b] hover:bg-gray-50', userInfo?.shopurl ? 'px-6' : 'px-0')
+                                                    ? classNames('bg-white border border-[#11295b] text-[#11295b] hover:bg-gray-50', userInfo?.shopurl ? 'px-6' : 'px-0')
                                                     : 'bg-white border border-[#11295b] text-[#11295b] hover:bg-gray-50 px-12'
                                             )}
                                         >
@@ -745,7 +745,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                                         : t('personalPage.follow')
                                                 }
                                             </span>
-                                            {isFollowing && userInfo?.followingCount !== undefined && (
+                                            {userInfo?.followingCount !== undefined && (
                                                 <span className="text-base text-[#11295b] font-inter ml-1">{userInfo.followingCount}</span>
                                             )}
                                         </button>
@@ -753,7 +753,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                                         userInfo?.followingCount !== undefined && (
                                             <button
                                                 onClick={() => router.push('/followed?tab=follower')}
-                                                className={classNames("flex items-center justify-center bg-white text-[#11295b] hover:bg-gray-50 h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200", userInfo?.shopurl ? 'px-6' : 'px-0')}
+                                                className={classNames("flex items-center bg-white border border-[#11295b] justify-center bg-white text-[#11295b] hover:bg-gray-50 h-10 rounded-md text-base font-poppins font-semibold transition-all duration-200", userInfo?.shopurl ? 'px-6' : 'px-0')}
                                             >
                                                 <Star className="h-5 w-5 mr-1" />
                                                 <span>{t('personalPage.following')}</span>
