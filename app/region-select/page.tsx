@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { classNames } from '../../lib/utils/classNames';
 import { UI_CONSTANTS, HISTORY_CONSTANTS } from '../../lib/constants';
+import { cities, City } from '../../lib/data/cities';
 
 export default function RegionSelectPage() {
     const { t } = useLanguage();
@@ -21,63 +22,11 @@ export default function RegionSelectPage() {
         : null;
     const [selectedRegion, setSelectedRegion] = useState(filterLocationParam || '');
     const [hasUserSelected, setHasUserSelected] = useState(false); // 标记用户是否选择了新位置
-    const [searchResults, setSearchResults] = useState<typeof regions>([]);
+    const [searchResults, setSearchResults] = useState<City[]>([]);
     const [isSearching, setIsSearching] = useState(false);
 
-    // 真实地区数据 - 中国主要城市
-    const regions = [
-        { name: 'Shanghai', country: 'China', fullName: 'China, Shanghai' },
-        { name: 'Beijing', country: 'China', fullName: 'China, Beijing' },
-        { name: 'Guangzhou', country: 'China', fullName: 'China, Guangzhou' },
-        { name: 'Shenzhen', country: 'China', fullName: 'China, Shenzhen' },
-        { name: 'Hangzhou', country: 'China', fullName: 'China, Hangzhou' },
-        { name: 'Nanjing', country: 'China', fullName: 'China, Nanjing' },
-        { name: 'Chengdu', country: 'China', fullName: 'China, Chengdu' },
-        { name: 'Wuhan', country: 'China', fullName: 'China, Wuhan' },
-        { name: 'Xi\'an', country: 'China', fullName: 'China, Xi\'an' },
-        { name: 'Suzhou', country: 'China', fullName: 'China, Suzhou' },
-        { name: 'Tianjin', country: 'China', fullName: 'China, Tianjin' },
-        { name: 'Chongqing', country: 'China', fullName: 'China, Chongqing' },
-        { name: 'Dongguan', country: 'China', fullName: 'China, Dongguan' },
-        { name: 'Foshan', country: 'China', fullName: 'China, Foshan' },
-        { name: 'Qingdao', country: 'China', fullName: 'China, Qingdao' },
-        { name: 'Dalian', country: 'China', fullName: 'China, Dalian' },
-        { name: 'Xiamen', country: 'China', fullName: 'China, Xiamen' },
-        { name: 'Ningbo', country: 'China', fullName: 'China, Ningbo' },
-        { name: 'Changsha', country: 'China', fullName: 'China, Changsha' },
-        { name: 'Zhengzhou', country: 'China', fullName: 'China, Zhengzhou' },
-        { name: 'Jinan', country: 'China', fullName: 'China, Jinan' },
-        { name: 'Harbin', country: 'China', fullName: 'China, Harbin' },
-        { name: 'Fuzhou', country: 'China', fullName: 'China, Fuzhou' },
-        { name: 'Kunming', country: 'China', fullName: 'China, Kunming' },
-        { name: 'Shijiazhuang', country: 'China', fullName: 'China, Shijiazhuang' },
-        { name: 'Nanchang', country: 'China', fullName: 'China, Nanchang' },
-        { name: 'Taiyuan', country: 'China', fullName: 'China, Taiyuan' },
-        { name: 'Hefei', country: 'China', fullName: 'China, Hefei' },
-        { name: 'Nanning', country: 'China', fullName: 'China, Nanning' },
-        { name: 'Guiyang', country: 'China', fullName: 'China, Guiyang' },
-        // 国际城市
-        { name: 'New York', country: 'USA', fullName: 'USA, New York' },
-        { name: 'Los Angeles', country: 'USA', fullName: 'USA, Los Angeles' },
-        { name: 'London', country: 'UK', fullName: 'UK, London' },
-        { name: 'Paris', country: 'France', fullName: 'France, Paris' },
-        { name: 'Tokyo', country: 'Japan', fullName: 'Japan, Tokyo' },
-        { name: 'Seoul', country: 'South Korea', fullName: 'South Korea, Seoul' },
-        { name: 'Singapore', country: 'Singapore', fullName: 'Singapore, Singapore' },
-        { name: 'Hong Kong', country: 'Hong Kong', fullName: 'Hong Kong, Hong Kong' },
-        { name: 'Sydney', country: 'Australia', fullName: 'Australia, Sydney' },
-        { name: 'Melbourne', country: 'Australia', fullName: 'Australia, Melbourne' },
-        { name: 'Toronto', country: 'Canada', fullName: 'Canada, Toronto' },
-        { name: 'Vancouver', country: 'Canada', fullName: 'Canada, Vancouver' },
-        { name: 'Berlin', country: 'Germany', fullName: 'Germany, Berlin' },
-        { name: 'Munich', country: 'Germany', fullName: 'Germany, Munich' },
-        { name: 'Amsterdam', country: 'Netherlands', fullName: 'Netherlands, Amsterdam' },
-        { name: 'Barcelona', country: 'Spain', fullName: 'Spain, Barcelona' },
-        { name: 'Madrid', country: 'Spain', fullName: 'Spain, Madrid' },
-        { name: 'Rome', country: 'Italy', fullName: 'Italy, Rome' },
-        { name: 'Milan', country: 'Italy', fullName: 'Italy, Milan' },
-        { name: 'Zurich', country: 'Switzerland', fullName: 'Switzerland, Zurich' }
-    ];
+    // 使用外部导入的城市数据
+    const regions = cities;
 
     // 处理搜索
     const handleSearch = (query: string) => {

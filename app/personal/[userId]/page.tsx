@@ -810,6 +810,23 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                     </div>
 
                 </div>
+                {/* Footer - 只有查看自己的页面时才显示发布按钮 */}
+                {targetUserId === authInfo?.userId && (
+                    <div className=" w-24  mx-auto px-6 py-2 mb-4 z-10">
+                        <div className="flex items-center justify-center gap-4">
+                            {/* Post button */}
+                            <Link href="/release">
+                                <Button
+                                    className="rounded-full flex flex-col items-center bg-transparent justify-center  gap-1 text-[#11295b] font-nunito text-[17px] font-semibold"
+                                    size="lg"
+                                >
+                                    <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
+                                    <span className="text-sm text-[#0F1728] font-semibold font-poppins bg-white">{t('personalCenter.post.button')}</span>
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                )}
 
                 {/* My Posts section */}
                 <div className=" px-4">
@@ -892,12 +909,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
 
                     {!loading && !error && postsData.length > 0 && (
                         <div
-                            className={
-                                `flex-1 overflow-y-auto ` +
-                                (targetUserId === authInfo?.userId
-                                    ? 'h-[calc(72vh-230px)]'
-                                    : 'h-[calc(72vh-100px)]')
-                            }
+                            className={`flex-1 overflow-y-auto `}
                         >
                             <div className="space-y-0">
                                 {postsData.map((post, index) => (
@@ -1113,23 +1125,7 @@ export default function PersonalPage({ params }: PersonalPageProps) {
                         </div>
                     )}
                 </div>
-                {/* Footer - 只有查看自己的页面时才显示发布按钮 */}
-                {targetUserId === authInfo?.userId && (
-                    <div className=" w-24  mx-auto px-6 py-4 fixed bottom-14 left-0 right-0 z-10">
-                        <div className="flex items-center justify-center gap-4">
-                            {/* Post button */}
-                            <Link href="/release">
-                                <Button
-                                    className="rounded-full flex flex-col items-center bg-transparent justify-center  gap-1 text-[#11295b] font-nunito text-[17px] font-semibold"
-                                    size="lg"
-                                >
-                                    <Image src="/img/post.png" alt="post" width={16} height={16} className='h-14 w-14' />
-                                    <span className="text-sm text-[#0F1728] font-semibold font-poppins bg-white">{t('personalCenter.post.button')}</span>
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                )}
+
                 <Footer />
 
                 {/* 删除确认对话框 */}

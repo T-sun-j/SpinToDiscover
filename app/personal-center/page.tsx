@@ -112,7 +112,7 @@ export default function PersonalCenterPage() {
                     )}
 
                     {error && (
-                        <div className={classNames(
+                        <div onClick={() => handleLogout()} className={classNames(
                             HISTORY_CONSTANTS.LAYOUT.FLEX_CENTER,
                             'py-4'
                         )}>
@@ -126,7 +126,7 @@ export default function PersonalCenterPage() {
                                 UI_CONSTANTS.FONTS.NUNITO
                             )}>{t("userInfo.error")}</span>
                             <button
-                                onClick={() => execute()}
+                                onClick={() => handleLogout()}
                                 className={classNames(
                                     'ml-2 p-1',
                                     UI_CONSTANTS.COLORS.PRIMARY,
